@@ -24,6 +24,10 @@ class autonLayout(StackLayout):
         AutonSwitchDisp = normalLabel("Cubes put in switch:\n\n" + str(self.robot.autonSwitch), lightOrange)
         displist.append(AutonSwitchDisp)
 
+        self.clear_widgets()
+        for widg in displist:
+            self.add_widget(widg)
+
         def AchangeSwitch(self, change):
             self.robot.autonSwitch += change
             if self.robot.autonSwitch < 0:
