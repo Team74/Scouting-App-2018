@@ -13,8 +13,7 @@ lightOrange = [(201/255),(170/255),(28/255)]
 black = [0, 0, 0, 1]
 
 class LoginLayout(StackLayout):
-    def __init__(self, robot):
-        self.robot = robot
+    def __init__(self):
         super(LoginLayout, self).__init__()
         self.display()
 
@@ -22,19 +21,20 @@ class LoginLayout(StackLayout):
         displist = []
 
         #row 1
-        scouter = bigLabel("scouter", seaFoamGreen); displist.append(scouter)
+        scouterDisp = bigLabel("scouter", seaFoamGreen); displist.append(scouterDisp)
         scoutInput = TextInput(text=str(""), multiline=False, size_hint=(.5, .25)); displist.append(scoutInput)
 
         #row 2
-        team= bigLabel("team", seaFoamGreen); displist.append(team)
+        teamDisp = bigLabel("team", seaFoamGreen); displist.append(teamDisp)
         teamInput = TextInput(text=str(""), multiline=False, size_hint=(.5, .25)); displist.append(teamInput)
 
         #row 3
-        Round= bigLabel("round", seaFoamGreen); displist.append(Round)
+        RoundDisp = bigLabel("round", seaFoamGreen); displist.append(RoundDisp)
         roundInput = TextInput(text=str(""), multiline=False, size_hint=(.5, .25)); displist.append(roundInput)
 
         #row 4
-        
+        pitScout = bigLabel("Pit Scouting", fairBlue); displist.append(pitScout)
+        go = bigLabel("Go", fairBlue); displist.append(go)
 
         self.clear_widgets()
         for widg in displist:
