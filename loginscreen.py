@@ -20,7 +20,21 @@ class LoginLayout(StackLayout):
 
     def display(self):
         displist = []
-        test = bigLabel("test", seaFoamGreen); displist.append(test)
+
+        #row 1
+        scouter = bigLabel("scouter", seaFoamGreen); displist.append(scouter)
+        scoutInput = TextInput(text=str(""), multiline=False, size_hint=(.5, .25)); displist.append(scoutInput)
+
+        #row 2
+        team= bigLabel("team", seaFoamGreen); displist.append(team)
+        teamInput = TextInput(text=str(""), multiline=False, size_hint=(.5, .25)); displist.append(teamInput)
+
+        #row 3
+        Round= bigLabel("round", seaFoamGreen); displist.append(Round)
+        roundInput = TextInput(text=str(""), multiline=False, size_hint=(.5, .25)); displist.append(roundInput)
+
+        #row 4
+        
 
         self.clear_widgets()
         for widg in displist:
