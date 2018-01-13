@@ -13,7 +13,8 @@ lightOrange = [(201/255),(170/255),(28/255)]
 black = [0, 0, 0, 1]
 
 class LoginLayout(StackLayout):
-    def __init__(self):
+    def __init__(self, screenSwitcher):
+        self.screenSwitcher = screenSwitcher
         super(LoginLayout, self).__init__()
         self.display()
 
