@@ -54,3 +54,6 @@ def smallLabel(text, color=[.5,.5,.5], height=.25):
     return ColorLabel(text, (.125, height), color)
 def smallButton(text, color=[.5,.5,.5], height=.25):
     return ColorButton(text, (.125, height), color)
+
+def bigLabel(text, color=[.5,.5,.5], height=.25):
+    return ColorLabel(text, (.5, height), color)
