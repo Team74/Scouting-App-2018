@@ -18,6 +18,15 @@ class Robot(object):
         self.autonScale = 0 # boolean, whether or not they scored in the scale
         self.autonExchange = 0 # boolean, whether or not they scored in the scale
 
+    def dumpData(self):
+        return (self.teamNumber, self.eventName, self.scouter, self.switch, self.exchange, self.climb, self.notes, self.startingPosition, self.autonSwitch, self.autonScale, self.autonExchange) # this order matches that of the database
+
+    def localSave(self):
+        database = sqlite.connect("scoutingdatabase.db")
+        database.execute("INSERT INTO matchdata VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", self.dumpData())
+        database.commit()
+        database.close()
+
 class PitRobot(object):
     def __init__(self, teamNumber, drivetrainType="tank variants", cubeOffGround=0, canSwitch=0, canScale=0, canExchange=0, image=None, notes=""):
         self.teamNumber = teamNumber
