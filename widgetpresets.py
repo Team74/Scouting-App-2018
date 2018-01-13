@@ -60,6 +60,11 @@ def smallLabel(text, color=[.5,.5,.5], height=.25):
 def smallButton(text, color=[.5,.5,.5], height=.25):
     return ColorButton(text, (.125, height), color)
 
+def largeSubLabel(text, color=[.5,.5,.5]):
+    return ColorLabel(text, (1, .5), color)
+def smallSubButton(text, color=[.5,.5,.5]):
+    return ColorButton(text, (.5, .5), color)
+
 def bigLabel(text, color=[.5,.5,.5], height=.25):
     return ColorLabel(text, (.5, height), color)
 def bigButton(text, color=[.5,.5,.5], height=.25):
