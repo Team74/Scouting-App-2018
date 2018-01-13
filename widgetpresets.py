@@ -30,7 +30,8 @@ Builder.load_string("""
             source: "/colors/background.jpg"
             pos: self.x - 1, self.y - 1
             size: self.width + 2, self.height + 2
-""") # uses BorderImage to outline every widget in white
+
+""") # uses BorderImage and Rectangle to outline every widget in white
 
 class ColorLabel(Label):
     def __init__(self, text, sizehint, color):
@@ -43,8 +44,7 @@ class ColorButton(Button):
         mutedColor = []
         for colorValue in color:
             mutedColor.append(colorValue-(30/255))
-        print(mutedColor)
-        self.rgb = mutedColor
+        self.rgb = mutedColor+[1]
         super(ColorButton, self).__init__(text=str(text), size_hint=sizehint)
         self.size = (self.width - 2, self.height - 2)
 
