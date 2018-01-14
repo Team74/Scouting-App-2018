@@ -33,6 +33,8 @@ Builder.load_string("""
 
 """) # uses BorderImage and Rectangle to outline every widget in white
 
+grey = [.5,.5,.5]
+
 class ColorLabel(Label):
     def __init__(self, text, sizehint, color):
         self.rgb = color
@@ -48,24 +50,29 @@ class ColorButton(Button):
         super(ColorButton, self).__init__(text=str(text), size_hint=sizehint)
         self.size = (self.width - 2, self.height - 2)
 
-def normalLabel(text, color=[.5,.5,.5], height=.25):
+def normalLabel(text, color=grey, height=.25):
     return ColorLabel(text, (.25, height), color)
-def normalButton(text, color=[.5,.5,.5], height=.25):
+def normalButton(text, color=grey, height=.25):
     return ColorButton(text, (.25, height), color)
 def normalTextInput(height=.25):
     return TextInput()
 
-def smallLabel(text, color=[.5,.5,.5], height=.25):
+def smallLabel(text, color=grey, height=.25):
     return ColorLabel(text, (.125, height), color)
-def smallButton(text, color=[.5,.5,.5], height=.25):
+def smallButton(text, color=grey, height=.25):
     return ColorButton(text, (.125, height), color)
 
-def largeSubLabel(text, color=[.5,.5,.5]):
+def largeSubLabel(text, color=grey):
     return ColorLabel(text, (1, .5), color)
-def smallSubButton(text, color=[.5,.5,.5]):
+def smallSubButton(text, color=grey):
     return ColorButton(text, (.5, .5), color)
 
-def bigLabel(text, color=[.5,.5,.5], height=.25):
+def bigLabel(text, color=grey, height=.25):
     return ColorLabel(text, (.5, height), color)
-def bigButton(text, color=[.5,.5,.5], height=.25):
+def bigButton(text, color=grey, height=.25):
     return ColorButton(text, (.5, height), color)
+
+def halfButton(text, color=grey):
+    return ColorButton(text, (.5, .5), color)
+def halfSubButton(text, color=grey):
+    return ColorButton(text, (1, .5), color)

@@ -3,7 +3,8 @@ from kivy.uix.stacklayout import StackLayout
 from widgetpresets import *
 
 class MenuLayout(StackLayout):
-    def __init__(self, menu):
+    def __init__(self, screenSwitcher):
+        self.screenSwitcher = screenSwitcher
         super(MenuLayout, self).__init__()
         self.display()
 
