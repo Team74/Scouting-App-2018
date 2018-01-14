@@ -74,3 +74,5 @@ def sLable(text, color=[.5,.5,.5], height=.125):
 
 def halfButton(text, color=[.5,.5,.5]):
     return ColorButton(text, (.5, .5), color)
+def halfSubButton(text, color=[.5,.5,.5]):
+    return ColorButton(text, (1, .5), color)

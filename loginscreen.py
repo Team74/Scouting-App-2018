@@ -13,8 +13,8 @@ lightOrange = [(201/255),(170/255),(28/255)]
 black = [0, 0, 0, 1]
 
 class LoginLayout(StackLayout):
-    def __init__(self, robot):
-        self.robot = robot
+    def __init__(self, screenSwitcher):
+        self.screenSwitcher = screenSwitcher
         super(LoginLayout, self).__init__()
         self.display()
 
@@ -34,7 +34,7 @@ class LoginLayout(StackLayout):
         roundInput = TextInput(text=str(""), multiline=False, size_hint=(.5, .25)); displist.append(roundInput)
 
         #row 4
-        
+
 
         self.clear_widgets()
         for widg in displist:

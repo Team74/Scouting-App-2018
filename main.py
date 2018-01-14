@@ -1,14 +1,23 @@
 from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
 
-from widgetpresets import *
-from robotclass import *
-from teleopscreen import *
-from loginscreen import *
+from menuscreen import MenuLayout
+from loginscreen import LoginLayout
+from teleopscreen import TeleopLayout
+
+class ScreenSwitcher(BoxLayout):
+    def __init__(self):
+        super(ScreenSwitcher, self).__init__()
+        self.currentScreen = LoginLayout(self)
+        display()
+
+    def display(self):
+        self.clear_widgets
+        self.add_widget(self.currentScreen)
 
 class MyApp(App):
     def build(self):
-        #return LoginLayout(Robot(1, "none", "some gay"))
-        return TeleopLayout(Robot(1, "none", "some gay"))#team, event, scouter
+        return ScreenSwitcher()
 
 if __name__ == "__main__":
     MyApp().run()
