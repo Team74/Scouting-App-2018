@@ -104,12 +104,18 @@ class TeleopLayout(StackLayout):
 
     def changeSwitch(self, change):
         self.robot.switch += change
+        if self.robot.switch < 0:
+            self.robot.switch = 0
         self.display()
     def changeScale(self, change):
         self.robot.scale += change
+        if self.robot.scale < 0:
+            self.robot.scale = 0
         self.display()
     def changeExchange(self, change):
         self.robot.exchange += change
+        if self.robot.exchange < 0:
+            self.robot.exchange = 0
         self.display()
     def changeClimb(self, change):
         self.robot.climb = change

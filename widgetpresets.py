@@ -68,11 +68,4 @@ def smallSubButton(text, color=[.5,.5,.5]):
 def bigLabel(text, color=[.5,.5,.5], height=.25):
     return ColorLabel(text, (.5, height), color)
 def bigButton(text, color=[.5,.5,.5], height=.25):
-    return ColorButton(text, (.3, height), color)
-def sLable(text, color=[.5,.5,.5], height=.125):
-    return ColorLabel(text, (.3, height), color)
-
-def halfButton(text, color=[.5,.5,.5]):
-    return ColorButton(text, (.5, .5), color)
-def halfSubButton(text, color=[.5,.5,.5]):
-    return ColorButton(text, (1, .5), color)
+    return ColorButton(text, (.5, height), color)
