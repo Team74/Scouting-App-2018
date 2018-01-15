@@ -9,7 +9,7 @@ class ScreenSwitcher(BoxLayout):
     def __init__(self):
         super(ScreenSwitcher, self).__init__()
         self.currentScreen = LoginLayout(self)
-        display()
+        self.display()
 
     def display(self):
         self.clear_widgets

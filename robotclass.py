@@ -13,7 +13,7 @@ class Robot(object):
         self.notes = notes # string, notable things on robot
         # auton #
         self.startingPosition = 0 #TODO: which position is which?
-        self.attemptedSwitchSide = "left" #string - "left", "right"
+        self.attemptedSwitchSide = "Left" #string - "left", "right"
         self.autonSwitch = 0 # boolean, whether or not they scored in the switch
         self.autonScale = 0 # boolean, whether or not they scored in the scale
         self.autonExchange = 0 # boolean, whether or not they scored in the scale
