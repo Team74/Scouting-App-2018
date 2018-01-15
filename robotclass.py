@@ -13,18 +13,23 @@ class Robot(object):
         self.climb = climb # string - "did not climb", "tried but failed", "levitated", "climbed"
         self.notes = notes # string, notable things on robot
         # auton #
-        self.startingPosition = 0 #TODO: which position is which?
+        self.startingPosition = "left" #string - "left", "middle", "right"
         self.attemptedSwitchSide = "left" #string - "left", "right"
-        self.autonSwitch = 0 # boolean, whether or not they scored in the switch
-        self.autonScale = 0 # boolean, whether or not they scored in the scale
-        self.autonExchange = 0 # boolean, whether or not they scored in the scale
+        self.autonSwitch = 0 # integer, how many cubes scored in switch
+        self.autonScale = 0 # integer, how many cubes scored in scale
+        self.autonExchange = 0 # integer, how many cubes scored in scale
 
     def dumpData(self):
-        return (self.teamNumber, self.eventName, self.scouter, self.switch, self.exchange, self.climb, self.notes, self.startingPosition, self.autonSwitch, self.autonScale, self.autonExchange) # this order matches that of the database
+        return (self.teamNumber, self.roundNumber, self.eventName, self.scouter, self.switch, self.scale, self.exchange, self.climb, self.notes, self.startingPosition, self.attemptedSwitchSide, self.autonSwitch, self.autonScale, self.autonExchange) # this order matches that of the database
 
-    def localSave(self):
-        database = sqlite.connect("scoutingdatabase.db")
-        database.execute("INSERT INTO matchdata VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", self.dumpData())
+    def localSave(self, _): # _ is there for throwaway on_release argument passed by the button
+        database = sqlite3.connect("scoutingdatabase.db") # opens database
+        cursor = database.cursor() # acts as a placeholder, allows for fetchone()
+        cursor.execute("SELECT * FROM matchdata WHERE teamNumber=? AND roundNumber=? AND eventName=?", self.dumpData()[:3]) # checking if the current robot matches one in the database
+        if cursor.fetchone(): # if there was a match in the database:
+            database.execute("UPDATE matchdata SET switch=?, scale=?, exchange=?, climb=?, notes=?, startingPosition=?, attemptedSwitchSide=?, autonSwitch=?, autonScale=?, autonExchange=? WHERE teamNumber=? AND roundNumber=? AND eventName=? AND scouter=?", self.dumpData()[4:] + self.dumpData()[:4])
+        else: #if there was not a match in the database:
+            database.execute("INSERT INTO matchdata VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", self.dumpData())
         database.commit()
         database.close()
 

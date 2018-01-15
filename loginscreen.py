@@ -21,12 +21,12 @@ class LoginLayout(StackLayout):
     def display(self):
         displist = []
 
-        #row 1
+        # scouter display
         scouterDisp = bigLabel("scouter", seaFoamGreen)
         displist.append(scouterDisp)
-
-        scoutInput = TextInput(text=str(""), multiline=False, size_hint=(.5, .25))
-        displist.append(scoutInput)
+        # scouter input
+        scouterInput = TextInput(text=str(""), multiline=False, size_hint=(.5, .25))
+        displist.append(scouterInput)
 
         #row 2
         teamDisp = bigLabel("team", seaFoamGreen)
@@ -48,7 +48,7 @@ class LoginLayout(StackLayout):
 
         goButton = bigButton("Go", fairBlue)
         def teleopSwitch(_):
-            self.switcher.robot = Robot(int(teamInput.text), int(roundInput.text), scoutInput.text, self.switcher.eventName)
+            self.switcher.robot = Robot(int(teamInput.text), int(roundInput.text), self.switcher.eventName, scouter Input.text)
             self.switcher.switch("teleop")
         goButton.bind(on_release=teleopSwitch)
         displist.append(goButton)

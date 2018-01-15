@@ -50,29 +50,24 @@ class ColorButton(Button):
         super(ColorButton, self).__init__(text=str(text), size_hint=sizehint)
         self.size = (self.width - 2, self.height - 2)
 
-def normalLabel(text, color=grey, height=.25):
-    return ColorLabel(text, (.25, height), color)
-def normalButton(text, color=grey, height=.25):
-    return ColorButton(text, (.25, height), color)
-def normalTextInput(height=.25):
-    return TextInput()
+def quarterLabel(text, color=grey):
+    return ColorLabel(text, (.25, .25), color)
+def quarterButton(text, color=grey):
+    return ColorButton(text, (.25, .25), color)
 
-def smallLabel(text, color=grey, height=.25):
-    return ColorLabel(text, (.125, height), color)
-def smallButton(text, color=grey, height=.25):
-    return ColorButton(text, (.125, height), color)
+def eighthLabel(text, color=grey):
+    return ColorLabel(text, (.125, .25), color)
+def eighthButton(text, color=grey):
+    return ColorButton(text, (.125, .25), color)
 
-def largeSubLabel(text, color=grey):
+def fullLabel(text, color=grey):
     return ColorLabel(text, (1, .5), color)
-def smallSubButton(text, color=grey):
-    return ColorButton(text, (.5, .5), color)
-
-def bigLabel(text, color=grey, height=.25):
-    return ColorLabel(text, (.5, height), color)
-def bigButton(text, color=grey, height=.25):
-    return ColorButton(text, (.5, height), color)
-
+def fullButton(text, color=grey):
+    return ColorButton(text, (1, .5), color)
 def halfButton(text, color=grey):
     return ColorButton(text, (.5, .5), color)
-def halfSubButton(text, color=grey):
-    return ColorButton(text, (1, .5), color)
+
+def bigLabel(text, color=grey):
+    return ColorLabel(text, (.5, .25), color)
+def bigButton(text, color=grey):
+    return ColorButton(text, (.5, .25), color)
