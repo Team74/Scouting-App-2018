@@ -12,10 +12,10 @@ brintGreen = [(28/255),(201/255),(40/255)]
 lightOrange = [(201/255),(170/255),(28/255)]
 black = [0, 0, 0, 1]
 
-class autonLayout(StackLayout):
+class AutonLayout(StackLayout):
     def __init__(self, robot):
         self.robot = robot
-        super(autonLayout, self).__init__()
+        super(AutonLayout, self).__init__()
         self.display()
 
     def display(self):
@@ -77,7 +77,7 @@ class autonLayout(StackLayout):
         for widg in displist:
             self.add_widget(widg)
 
-        def AutonChangeSwitch(self, change):
+    def changeSwitch(self, change):
             self.robot.autonSwitch += change
             if self.robot.autonSwitch < 0:
                 self.robot.autonSwitch = 0

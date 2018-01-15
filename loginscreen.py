@@ -14,28 +14,44 @@ black = [0, 0, 0, 1]
 
 class LoginLayout(StackLayout):
     def __init__(self, screenSwitcher):
-        self.screenSwitcher = screenSwitcher
+        self.switcher = screenSwitcher
         super(LoginLayout, self).__init__()
         self.display()
 
     def display(self):
         displist = []
 
-        #row 1
-        scouterDisp = bigLabel("scouter", seaFoamGreen); displist.append(scouterDisp)
-        scoutInput = TextInput(text=str(""), multiline=False, size_hint=(.5, .25)); displist.append(scoutInput)
+        # scouter display
+        scouterDisp = bigLabel("scouter", seaFoamGreen)
+        displist.append(scouterDisp)
+        # scouter input
+        scouterInput = TextInput(text=str(""), multiline=False, size_hint=(.5, .25))
+        displist.append(scouterInput)
 
         #row 2
-        teamDisp = bigLabel("team", seaFoamGreen); displist.append(teamDisp)
-        teamInput = TextInput(text=str(""), multiline=False, size_hint=(.5, .25)); displist.append(teamInput)
+        teamDisp = bigLabel("team", seaFoamGreen)
+        displist.append(teamDisp)
+
+        teamInput = TextInput(text=str(""), multiline=False, size_hint=(.5, .25))
+        displist.append(teamInput)
 
         #row 3
-        RoundDisp = bigLabel("round", seaFoamGreen); displist.append(RoundDisp)
-        roundInput = TextInput(text=str(""), multiline=False, size_hint=(.5, .25)); displist.append(roundInput)
+        roundDisp = bigLabel("round", seaFoamGreen)
+        displist.append(roundDisp)
+
+        roundInput = TextInput(text=str(""), multiline=False, size_hint=(.5, .25))
+        displist.append(roundInput)
 
         #row 4
-        pitScout = bigLabel("Pit Scouting", fairBlue); displist.append(pitScout)
-        go = bigLabel("Go", fairBlue); displist.append(go)
+        pitScout = bigLabel("Pit Scouting", fairBlue)
+        displist.append(pitScout)
+
+        goButton = bigButton("Go", fairBlue)
+        def teleopSwitch(_):
+            self.switcher.robot = Robot(int(teamInput.text), int(roundInput.text), self.switcher.eventName, scouter Input.text)
+            self.switcher.switch("teleop")
+        goButton.bind(on_release=teleopSwitch)
+        displist.append(goButton)
 
         self.clear_widgets()
         for widg in displist:
