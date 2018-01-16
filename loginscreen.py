@@ -48,7 +48,7 @@ class LoginLayout(StackLayout):
 
         goButton = bigButton("Go", fairBlue)
         def teleopSwitch(_):
-            self.switcher.robot = Robot(int(teamInput.text), int(roundInput.text), self.switcher.eventName, scouter Input.text)
+            self.switcher.robot = Robot(int(teamInput.text), int(roundInput.text), self.switcher.eventName, scouterInput.text)
             self.switcher.switch("teleop")
         goButton.bind(on_release=teleopSwitch)
         displist.append(goButton)
