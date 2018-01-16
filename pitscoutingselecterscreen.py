@@ -31,7 +31,6 @@ class PitScoutingSelecterLayout(StackLayout):
         cursor.execute("SELECT * FROM pitscoutingdata")
         for teamData in cursor.fetchall():
             teamNumber = str(teamData[0])
-            print(teamNumber)
             button = ColorButton(teamNumber, (.875, None), fairBlue, height=40)
             button.bind(on_release=lambda x: self.pitScouterMainSwitch(teamNumber))
             scrolllist.append(button)
