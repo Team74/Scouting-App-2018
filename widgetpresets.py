@@ -39,7 +39,6 @@ class ColorLabel(Label):
     def __init__(self, text, sizehint, color):
         self.rgb = color
         super(ColorLabel, self).__init__(text=str(text), size_hint=sizehint)
-        self.size = (self.width - 2, self.height - 2)
 
 class ColorButton(Button):
     def __init__(self, text, sizehint, color):
@@ -48,7 +47,6 @@ class ColorButton(Button):
             mutedColor.append(colorValue-(30/255))
         self.rgb = mutedColor+[1]
         super(ColorButton, self).__init__(text=str(text), size_hint=sizehint)
-        self.size = (self.width - 2, self.height - 2)
 
 def quarterLabel(text, color=grey):
     return ColorLabel(text, (.25, .25), color)
@@ -71,3 +69,8 @@ def bigLabel(text, color=grey):
     return ColorLabel(text, (.5, .25), color)
 def bigButton(text, color=grey):
     return ColorButton(text, (.5, .25), color)
+
+def oneEighthLabel(text, color=grey):
+    return ColorLabel(text, (.125, .125), color)
+def sevenEighthButton(text, color=grey):
+    return ColorButton(text, (.875, .125), color)

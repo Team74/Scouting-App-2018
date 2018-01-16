@@ -43,12 +43,13 @@ class LoginLayout(StackLayout):
         displist.append(roundInput)
 
         #row 4
-        pitScout = bigLabel("Pit Scouting", fairBlue)
+        pitScout = bigButton("Pit Scouting", fairBlue)
+        pitScout.bind(on_release=lambda x: self.switcher.switch("pit scouting"))
         displist.append(pitScout)
 
         goButton = bigButton("Go", fairBlue)
         def teleopSwitch(_):
-            self.switcher.robot = Robot(int(teamInput.text), int(roundInput.text), self.switcher.eventName, scouter Input.text)
+            self.switcher.robot = Robot(int(teamInput.text), int(roundInput.text), self.switcher.eventName, scouterInput.text)
             self.switcher.switch("teleop")
         goButton.bind(on_release=teleopSwitch)
         displist.append(goButton)

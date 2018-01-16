@@ -38,7 +38,7 @@ class TeleopLayout(StackLayout):
         displist.append(climbButton1)
         # "tried but failed" button for climb options
         climb2Color = darkMagenta if self.switcher.robot.climb == "tried but failed" else lightMagenta # darkening the currently selected climb option
-        climbButton2 = eighthButton("Robot \nattempted to\nclimb but\nfailed", climb2Color)
+        climbButton2 = eighthButton("Robot\nattempted to\nclimb but\nfailed", climb2Color)
         climbButton2.bind(on_release=lambda x: self.changeClimb("tried but failed"))
         displist.append(climbButton2)
 

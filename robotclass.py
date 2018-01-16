@@ -34,13 +34,14 @@ class Robot(object):
         database.close()
 
 class PitRobot(object):
-    def __init__(self, teamNumber, drivetrainType="tank variants", cubeOffGround=0, canSwitch=0, canScale=0, canExchange=0, image=None, notes=""):
+    def __init__(self, teamNumber, drivetrain="tank variants", groundPickup=0, switchCapability=0, scaleCapability=0, exchangeCapability=0, climbCapability=0 image=None, notes=""):
         self.teamNumber = teamNumber
 
-        self.drivetrainType = "tank variants" # string, "tank variants", "mecanum", "swerve", "holonomic"
-        self.cubeOffGround = 0 # boolean, whether or not they can pick up cubes off the ground
-        self.canSwitch = 0 # boolean, whether or not they can drop a cube onto the switch
-        self.canScale = 0 # boolean, whether or not they can drop a cube onto the scale
-        self.canExchange = 0 # boolean, whether or not they can put a cube into the exchange
-        self.image = None #TODO: PIL??
-        self.notes = ""
+        self.drivetrain = drivetrain # string, "tank variants", "mecanum", "swerve", "holonomic"
+        self.groundPickup = groundPickup # boolean, whether or not they can pick up cubes off the ground
+        self.switchCapability = switchCapablity # boolean, whether or not they can drop a cube onto the switch
+        self.scaleCapability = scaleCapability # boolean, whether or not they can drop a cube onto the scale
+        self.exchangeCapability = exchangeCapability # boolean, whether or not they can put a cube into the exchange
+        self.climbCapability = climbCapability # boolean, whether or not they can climb
+        self.image = image #TODO: will be a path name, make use of kivy's built in camera
+        self.notes = notes
