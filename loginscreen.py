@@ -43,7 +43,8 @@ class LoginLayout(StackLayout):
         displist.append(roundInput)
 
         #row 4
-        pitScout = bigLabel("Pit Scouting", fairBlue)
+        pitScout = bigButton("Pit Scouting", fairBlue)
+        pitScout.bind(on_release=lambda x: self.switcher.switch("pit scouting"))
         displist.append(pitScout)
 
         goButton = bigButton("Go", fairBlue)

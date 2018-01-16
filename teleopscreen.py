@@ -5,14 +5,6 @@ from widgetpresets import *
 from robotclass import *
 import sqlite3
 
-#color presets
-seaFoamGreen = [(14/255),(201/255),(170/255)]
-darkMagenta = [(171/255),(0/255),(117/255)]
-lightMagenta = [(231/255),(58/255),(177/255)]
-fairBlue = [(28/255),(129/255),(201/255)]
-lightOrange = [(201/255),(170/255),(28/255)]
-black = [0, 0, 0, 1]
-
 class TeleopLayout(StackLayout):
     def __init__(self, screenSwitcher):
         self.switcher = screenSwitcher
@@ -38,7 +30,7 @@ class TeleopLayout(StackLayout):
         displist.append(climbButton1)
         # "tried but failed" button for climb options
         climb2Color = darkMagenta if self.switcher.robot.climb == "tried but failed" else lightMagenta # darkening the currently selected climb option
-        climbButton2 = eighthButton("Robot \nattempted to\nclimb but\nfailed", climb2Color)
+        climbButton2 = eighthButton("Robot\nattempted to\nclimb but\nfailed", climb2Color)
         climbButton2.bind(on_release=lambda x: self.changeClimb("tried but failed"))
         displist.append(climbButton2)
 
