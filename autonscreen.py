@@ -16,8 +16,8 @@ red = [1, 0, 0]
 darkRed = [(115/255), 0, 0]
 
 class AutonLayout(StackLayout):
-    def __init__(self, robot):
-        self.robot = robot
+    def __init__(self, ScreenSwitcher):
+        self.switcher = ScreenSwitcher
         super(AutonLayout, self).__init__()
         self.display()
 
@@ -27,7 +27,7 @@ class AutonLayout(StackLayout):
         # row 1
 
         # displays cubes in switch in auton
-        AutonSwitchDisp = quarterLabel("Cubes put in switch:\n\n" + str(self.robot.autonSwitch), lightOrange)
+        AutonSwitchDisp = quarterLabel("Cubes put in switch:\n\n" + str(self.switcher.robot.autonSwitch), lightOrange)
         displist.append(AutonSwitchDisp)
         # displays team number
         teamDisp = quarterLabel("Team: " + str(self.switcher.robot.teamNumber), black)
@@ -36,14 +36,14 @@ class AutonLayout(StackLayout):
         eventDisp = quarterLabel("Event: " + self.switcher.robot.eventName, black)
         displist.append(eventDisp)
         # "Left" for attemptedSwitchSide
-        side1Color = darkMagenta if self.switcher.robot.attemptedSwitchSide == "Left" else lightMagenta
+        side1Color = darkMagenta if self.switcher.robot.attemptedSwitchSide == "left" else lightMagenta
         sideButton1 = eighthButton("Robot\nattempted\nthe Left\nside", side1Color)
-        sideButton1.bind(on_release=lambda x: self.changeSide("Left"))
+        sideButton1.bind(on_release=lambda x: self.changeSide("left"))
         displist.append(sideButton1)
         # "Right" for attemptedSwitchSide
-        side2Color = darkMagenta if self.switcher.robot.attemptedSwitchSide == "Right" else lightMagenta
+        side2Color = darkMagenta if self.switcher.robot.attemptedSwitchSide == "right" else lightMagenta
         sideButton2 = eighthButton("Robot\nattempted\nthe Right\nside", side2Color)
-        sideButton2.bind(on_release=lambda x: self.changeSide("Right"))
+        sideButton2.bind(on_release=lambda x: self.changeSide("right"))
         displist.append(sideButton2)
 
         # row 2
@@ -57,15 +57,16 @@ class AutonLayout(StackLayout):
         AutonSwitchInc.bind(on_release=lambda x : self.changeSwitch(1))
         displist.append(AutonSwitchInc)
         # menu button
-        menuButton = quarterButton("Menu") # TODO: create menu, hook up to teleop
+        menuButton = quarterButton("Menu")
+        menuButton.bind(on_release=lambda x: self.switcher.switch("menu"))
         displist.append(menuButton)
         # displays scouter name
         scouterDisp = quarterLabel("Scouter: " + self.switcher.robot.scouter, black)
         displist.append(scouterDisp)
         # "None" for attemptedSwitchSide
-        side3Color = darkMagenta if self.switcher.robot.attemptedSwitchSide == "None" else lightMagenta
+        side3Color = darkMagenta if self.switcher.robot.attemptedSwitchSide == "none" else lightMagenta
         sideButton3 = quarterButton("Robot\ndidn't\nattempt\nthe switch", side3Color)
-        sideButton3.bind(on_release=lambda x: self.changeSide("None"))
+        sideButton3.bind(on_release=lambda x: self.changeSide("none"))
         displist.append(sideButton3)
 
         #row 3
@@ -102,43 +103,43 @@ class AutonLayout(StackLayout):
         startLayout = StackLayout(size_hint=(.5, .5))
         displist.append(startLayout)
         # left for starting position
-        startColor1 = darkRed if self.switcher.robot.startingPosition == "Left" else red
-        startButton1 = tripleSideButton("Strated in\nLeft position", startColor1)
-        startButton1.bind(on_release=lambda x: self.changeStart("Left"))
+        startColor1 = darkRed if self.switcher.robot.startingPosition == "left" else red
+        startButton1 = tripleSideButton("Started in the\nLeft position", startColor1)
+        startButton1.bind(on_release=lambda x: self.changeStart("left"))
         startLayout.add_widget(startButton1)
         # middle for starting position
-        startColor2 = darkRed if self.switcher.robot.startingPosition == "Middle" else red
-        startButton2 = tripleMiddleButton("Strated in\nMiddle position", startColor2)
-        startButton2.bind(on_release=lambda x: self.changeStart("Middle"))
+        startColor2 = darkRed if self.switcher.robot.startingPosition == "middle" else red
+        startButton2 = tripleMiddleButton("Started in the\nMiddle position", startColor2)
+        startButton2.bind(on_release=lambda x: self.changeStart("middle"))
         startLayout.add_widget(startButton2)
         # right for starting position
-        startColor3 = darkRed if self.switcher.robot.startingPosition == "Right" else red
-        startButton3 = tripleSideButton("Strated in\nRight position", startColor3)
-        startButton3.bind(on_release=lambda x: self.changeStart("Right"))
+        startColor3 = darkRed if self.switcher.robot.startingPosition == "right" else red
+        startButton3 = tripleSideButton("Started in the\nRight position", startColor3)
+        startButton3.bind(on_release=lambda x: self.changeStart("right"))
         startLayout.add_widget(startButton3)
 
         self.clear_widgets()
         for widg in displist:
             self.add_widget(widg)
 
-        def changeSwitch(self, change):
-            self.switcher.robot.autonSwitch += change
-            if self.switcher.robot.autonSwitch < 0:
-                self.switcher.robot.autonSwitch = 0
-            self.display()
-        def changeSide(self, change):
-            self.switcher.robot.attemptedSwitchSide = change
-            self.display()
-        def changeScale(self, change):
-            self.switcher.robot.autonScale += change
-            if self.switcher.robot.autonScale < 0:
-                self.switcher.robot.autonScale = 0
-            self.display()
-        def changeExchange(self, change):
-            self.switcher.robot.autonExchange += change
-            if self.switcher.robot.autonExchange < 0:
-                self.switcher.robot.autonExchange = 0
-            self.display()
-        def changeStart(self, change):
-            self.switcher.robot.startingPosition = change
-            self.display()
+    def changeSwitch(self, change):
+        self.switcher.robot.autonSwitch += change
+        if self.switcher.robot.autonSwitch < 0:
+            self.switcher.robot.autonSwitch = 0
+        self.display()
+    def changeSide(self, change):
+        self.switcher.robot.attemptedSwitchSide = change
+        self.display()
+    def changeScale(self, change):
+        self.switcher.robot.autonScale += change
+        if self.switcher.robot.autonScale < 0:
+            self.switcher.robot.autonScale = 0
+        self.display()
+    def changeExchange(self, change):
+        self.switcher.robot.autonExchange += change
+        if self.switcher.robot.autonExchange < 0:
+            self.switcher.robot.autonExchange = 0
+        self.display()
+    def changeStart(self, change):
+        self.switcher.robot.startingPosition = change
+        self.display()
