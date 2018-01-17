@@ -3,8 +3,11 @@ from kivy.uix.boxlayout import BoxLayout
 
 from menuscreen import MenuLayout
 from loginscreen import LoginLayout
+from autonscreen import AutonLayout
 from teleopscreen import TeleopLayout
+from pitscoutingscreen import PitScoutingLayout
 from pitscoutingselecterscreen import PitScoutingSelecterLayout
+
 from robotclass import *
 
 class ScreenSwitcher(BoxLayout):
@@ -12,7 +15,7 @@ class ScreenSwitcher(BoxLayout):
         super(ScreenSwitcher, self).__init__()
         self.eventName = "Test"
         self.robot = Robot(1, 1, "placeholder", "placeholder")
-        self.screens = {"login": LoginLayout(self), "menu": MenuLayout(self), "teleop": TeleopLayout(self), "pitscouting selecter": PitScoutingSelecterLayout(self)}
+        self.screens = {"login": LoginLayout(self), "menu": MenuLayout(self), "teleop": TeleopLayout(self), "pitscouting selecter": PitScoutingSelecterLayout(self), "auton": AutonLayout(self), "pitscouting main": PitScoutingLayout(self)}
         self.currentScreen = self.screens["login"]
         self.display()
 

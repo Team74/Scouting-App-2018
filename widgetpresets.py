@@ -68,8 +68,18 @@ def fullLabel(text, color=grey):
     return ColorLabel(text, (1, .5), color)
 def fullButton(text, color=grey):
     return ColorButton(text, (1, .5), color)
+def halfLabel(text, color=grey):
+    return ColorLabel(text, (.5, .5), color)
 def halfButton(text, color=grey):
     return ColorButton(text, (.5, .5), color)
+
+def quaterHalfButton(text, color=grey):
+    return ColorButton(text, (.25, .5), color)
+
+def tripleSideButton(text, color=grey):
+    return ColorButton(text, (1/3, 1), color)
+def tripleMiddleButton(text, color=grey):
+    return ColorButton(text, (1/3, 1), color)
 
 def bigLabel(text, color=grey):
     return ColorLabel(text, (.5, .25), color)

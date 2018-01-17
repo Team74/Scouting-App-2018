@@ -48,4 +48,4 @@ class PitScoutingSelecterLayout(StackLayout):
 
     def pitScouterMainSwitch(self, robot):
         self.switcher.robot = PitRobot(robot)
-        self.switcher.switch("pit scouting main")
+        self.switcher.switch("pitscouting main")
