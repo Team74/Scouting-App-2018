@@ -76,10 +76,8 @@ def halfButton(text, color=grey):
 def quaterHalfButton(text, color=grey):
     return ColorButton(text, (.25, .5), color)
 
-def tripleSideButton(text, color=grey):
-    return ColorButton(text, (.3333333333333333333333, 1), color)
-def tripleMiddleButton(text, color=grey):
-    return ColorButton(text, (.3333333333333333333334, 1), color)
+def tripleButton(text, color=grey):
+    return ColorButton(text, ((1/3), 1), color)
 
 def bigLabel(text, color=grey):
     return ColorLabel(text, (.5, .25), color)

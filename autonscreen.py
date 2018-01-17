@@ -5,7 +5,7 @@ from robotclass import *
 import sqlite3
 
 seaFoamGreen = [(14/255),(201/255),(170/255)]
-darkMagenta = [(201/255),(28/255),(147/255)]
+darkMagenta = [(171/255),(0/255),(117/255)]
 lightMagenta = [(231/255),(58/255),(177/255)]
 fairBlue = [(28/255),(129/255),(201/255)]
 brintGreen = [(28/255),(201/255),(40/255)]
@@ -104,17 +104,17 @@ class AutonLayout(StackLayout):
         displist.append(startLayout)
         # left for starting position
         startColor1 = darkRed if self.switcher.robot.startingPosition == "left" else red
-        startButton1 = tripleSideButton("Started in the\nLeft position", startColor1)
+        startButton1 = tripleButton("Started in the\nLeft position", startColor1)
         startButton1.bind(on_release=lambda x: self.changeStart("left"))
         startLayout.add_widget(startButton1)
         # middle for starting position
         startColor2 = darkRed if self.switcher.robot.startingPosition == "middle" else red
-        startButton2 = tripleMiddleButton("Started in the\nMiddle position", startColor2)
+        startButton2 = tripleButton("Started in the\nMiddle position", startColor2)
         startButton2.bind(on_release=lambda x: self.changeStart("middle"))
         startLayout.add_widget(startButton2)
         # right for starting position
         startColor3 = darkRed if self.switcher.robot.startingPosition == "right" else red
-        startButton3 = tripleSideButton("Started in the\nRight position", startColor3)
+        startButton3 = tripleButton("Started in the\nRight position", startColor3)
         startButton3.bind(on_release=lambda x: self.changeStart("right"))
         startLayout.add_widget(startButton3)
 
