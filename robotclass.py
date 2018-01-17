@@ -34,7 +34,7 @@ class Robot(object):
         database.close()
 
 class PitRobot(object):
-    def __init__(self, teamNumber, drivetrain="tank variants", groundPickup=0, switchCapability=0, scaleCapability=0, exchangeCapability=0, climbCapability=0 image=None, notes=""):
+    def __init__(self, teamNumber, drivetrain="tank variants", groundPickup=0, switchCapability=0, scaleCapability=0, exchangeCapability=0, climbCapability=0, image=None, notes=""):
         self.teamNumber = teamNumber
 
         self.drivetrain = drivetrain # string, "tank variants", "mecanum", "swerve", "holonomic"

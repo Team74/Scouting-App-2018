@@ -33,20 +33,26 @@ Builder.load_string("""
 
 """) # uses BorderImage and Rectangle to outline every widget in white
 
+seaFoamGreen = [(14/255),(201/255),(170/255)]
+darkMagenta = [(171/255),(0/255),(117/255)]
+lightMagenta = [(231/255),(58/255),(177/255)]
+fairBlue = [(28/255),(129/255),(201/255)]
+lightOrange = [(201/255),(170/255),(28/255)]
+black = [0, 0, 0]
 grey = [.5,.5,.5]
 
 class ColorLabel(Label):
-    def __init__(self, text, sizehint, color):
+    def __init__(self, text, sizehint, color, **kwargs):
         self.rgb = color
-        super(ColorLabel, self).__init__(text=str(text), size_hint=sizehint)
+        super(ColorLabel, self).__init__(text=str(text), size_hint=sizehint, **kwargs)
 
 class ColorButton(Button):
-    def __init__(self, text, sizehint, color):
+    def __init__(self, text, sizehint, color, **kwargs):
         mutedColor = []
         for colorValue in color:
             mutedColor.append(colorValue-(30/255))
         self.rgb = mutedColor+[1]
-        super(ColorButton, self).__init__(text=str(text), size_hint=sizehint)
+        super(ColorButton, self).__init__(text=str(text), size_hint=sizehint, **kwargs)
 
 def quarterLabel(text, color=grey):
     return ColorLabel(text, (.25, .25), color)
@@ -69,8 +75,3 @@ def bigLabel(text, color=grey):
     return ColorLabel(text, (.5, .25), color)
 def bigButton(text, color=grey):
     return ColorButton(text, (.5, .25), color)
-
-def oneEighthLabel(text, color=grey):
-    return ColorLabel(text, (.125, .125), color)
-def sevenEighthButton(text, color=grey):
-    return ColorButton(text, (.875, .125), color)
