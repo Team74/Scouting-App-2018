@@ -36,10 +36,9 @@ class Robot(object):
 class PitRobot(object):
     def __init__(self, teamNumber, drivetrain="tank variants", groundPickup=0, switchCapability=0, scaleCapability=0, exchangeCapability=0, climbCapability=0, image=None, notes=""):
         self.teamNumber = teamNumber
-
         self.drivetrain = drivetrain # string, "tank variants", "mecanum", "swerve", "holonomic"
         self.groundPickup = groundPickup # boolean, whether or not they can pick up cubes off the ground
-        self.switchCapability = switchCapablity # boolean, whether or not they can drop a cube onto the switch
+        self.switchCapability = switchCapability # boolean, whether or not they can drop a cube onto the switch
         self.scaleCapability = scaleCapability # boolean, whether or not they can drop a cube onto the scale
         self.exchangeCapability = exchangeCapability # boolean, whether or not they can put a cube into the exchange
         self.climbCapability = climbCapability # boolean, whether or not they can climb
