@@ -48,9 +48,15 @@ class LoginLayout(StackLayout):
 
         goButton = bigButton("Go", fairBlue)
         def teleopSwitch(_):
-            if not int(teamInput.text):
-                self.switcher.robot = Robot(int(teamInput.text), int(roundInput.text), self.switcher.eventName, scouterInput.text)
-                self.switcher.switch("teleop")
+            number = "1234567890"
+            for i in teamInput.text:
+                if not i in number:
+                    return
+            for i in roundInput.text:
+                if not i in number:
+                    return
+            self.switcher.robot = Robot(int(teamInput.text), int(roundInput.text), self.switcher.eventName, scouterInput.text)
+            self.switcher.switch("teleop")
         goButton.bind(on_release=teleopSwitch)
         displist.append(goButton)
 
