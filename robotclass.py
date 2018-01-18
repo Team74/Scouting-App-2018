@@ -54,6 +54,6 @@ class PitRobot(object):
         cursor = database.cursor() # acts as a placeholder, allows for fetchone()
         cursor.execute("SELECT * FROM pitscoutingdata WHERE teamNumber=?", (self.teamNumber,))
         if not cursor.fetchone():
-            database.execute("INSERT INTO pitscoutingdata VALUES (?,?,?,?,?,?,?,?,?)", self.pitDumpData())
+            database.execute("INSERT INTO pitscoutingdata VALUES (?,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)", (self.teamNumber,))
         database.commit()
         database.close()
