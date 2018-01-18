@@ -30,12 +30,12 @@ class PitScoutingSelecterLayout(StackLayout):
         cursor = database.cursor()
         cursor.execute("SELECT * FROM pitscoutingdata")
         for teamData in cursor.fetchall():
-            teamNumber = str(teamData[0])
-            button = ColorButton(teamNumber, (.875, None), fairBlue, height=40)
-            button.bind(on_release=lambda x: self.pitScouterMainSwitch(teamNumber))
+            teamNumber = teamData[0]
+            button = ColorButton(str(teamNumber), (.875,None), fairBlue, height=40)
+            button.bind(on_release=self.pitScouterMainSwitch)
             scrolllist.append(button)
             hasBeenScouted = "scouted" if teamData[1] else "NOT SCOUTED"
-            labelBackground = [0, 1, 0] if teamData[1] else [1, 0, 0]
+            labelBackground = green if teamData[1] else red
             label = ColorLabel(hasBeenScouted, (.125,None), labelBackground, height=40)
             scrolllist.append(label)
 
@@ -46,6 +46,6 @@ class PitScoutingSelecterLayout(StackLayout):
         for widget in displist:
             self.add_widget(widget)
 
-    def pitScouterMainSwitch(self, robot):
-        self.switcher.robot = PitRobot(robot)
+    def pitScouterMainSwitch(self, numberButton):
+        self.switcher.robot = PitRobot(numberButton.text)
         self.switcher.switch("pitscouting main")

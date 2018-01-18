@@ -4,16 +4,6 @@ from widgetpresets import *
 from robotclass import *
 import sqlite3
 
-seaFoamGreen = [(14/255),(201/255),(170/255)]
-darkMagenta = [(201/255),(28/255),(147/255)]
-lightMagenta = [(231/255),(58/255),(177/255)]
-fairBlue = [(28/255),(129/255),(201/255)]
-brintGreen = [(28/255),(201/255),(40/255)]
-lightOrange = [(201/255),(170/255),(28/255)]
-black = [0, 0, 0, 1]
-grey = [.5,.5,.5]
-red = [1, 0, 0]
-darkRed = [(115/255), 0, 0]
 
 class AutonLayout(StackLayout):
     def __init__(self, ScreenSwitcher):

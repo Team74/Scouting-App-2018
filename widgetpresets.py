@@ -33,13 +33,18 @@ Builder.load_string("""
 
 """) # uses BorderImage and Rectangle to outline every widget in white
 
-seaFoamGreen = [(14/255),(201/255),(170/255)]
-darkMagenta = [(171/255),(0/255),(117/255)]
-lightMagenta = [(231/255),(58/255),(177/255)]
-fairBlue = [(28/255),(129/255),(201/255)]
-lightOrange = [(201/255),(170/255),(28/255)]
+seaFoamGreen = [14/255, 201/255, 170/255]
+darkMagenta = [171/255, 0/255, 117/255]
+lightMagenta = [231/255, 58/255, 177/255]
+fairBlue = [28/255, 129/255, 201/255]
+lightOrange = [255/255, 150/255, 75/255]
+red = [1, 0, 0]
+tameRed = [200/255, 0, 0]
+darkRed = [115/255, 0, 0]
+green = [0, 1, 0]
+tameGreen = [0, 200/255, 0]
 black = [0, 0, 0]
-grey = [.5,.5,.5]
+grey = [.5, .5, .5]
 
 class ColorLabel(Label):
     def __init__(self, text, sizehint, color, **kwargs):
