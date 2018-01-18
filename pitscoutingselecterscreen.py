@@ -61,13 +61,9 @@ class PitScoutingSelecterLayout(StackLayout):
         self.switcher.switch("pitscouting main")
 
     def addPitRobot(self, teamNumber):
-<<<<<<< HEAD
-        PitRobot(str(teamNumber)).addRobot()
-=======
         number = "1234567890"
         for i in teamNumber:
             if not i in number:
                 return
-        PitRobot(str(teamNumber)).pitLocalSave()
->>>>>>> 9eb81f8ace649fe45d673c0ffec70a2abd275813
+        PitRobot(str(teamNumber)).addRobot()
         self.display()
