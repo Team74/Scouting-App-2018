@@ -19,7 +19,6 @@ class AutonLayout(StackLayout):
     def __init__(self, ScreenSwitcher):
         self.switcher = ScreenSwitcher
         super(AutonLayout, self).__init__()
-        self.display()
 
     def display(self):
         displist = []

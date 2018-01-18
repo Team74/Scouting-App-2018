@@ -9,7 +9,6 @@ class TeleopLayout(StackLayout):
     def __init__(self, screenSwitcher):
         self.switcher = screenSwitcher
         super(TeleopLayout, self).__init__()
-        self.display()
 
     def display(self):
         displist = []

@@ -6,7 +6,6 @@ class MenuLayout(StackLayout):
     def __init__(self, screenSwitcher):
         self.switcher = screenSwitcher
         super(MenuLayout, self).__init__()
-        self.display()
 
     def display(self):
         displist = []

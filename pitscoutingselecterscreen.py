@@ -11,7 +11,6 @@ class PitScoutingSelecterLayout(StackLayout):
     def __init__(self, screenSwitcher):
         self.switcher = screenSwitcher
         super(PitScoutingSelecterLayout, self).__init__()
-        self.display()
 
     def display(self):
         scrolllist = []

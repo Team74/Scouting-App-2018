@@ -7,13 +7,15 @@ class PitScoutingLayout(StackLayout):
     def __init__(self, screenSwitcher):
         self.switcher = screenSwitcher
         super(PitScoutingLayout, self).__init__()
-        self.display()
 
     def display(self):
         displist = []
 
         # switch capability
-        switchCanButton = quarterButton("CAN put cube on switch", seaFoamGreen)
+        print("ree")
+        colorSwitchCan = darkSeaFoamGreen if self.switcher.robot.switchCapability else seaFoamGreen
+        switchCanButton = quarterButton("CAN put cube on switch", colorSwitchCan)
+        switchCanButton.bind(on_release=lambda x: self.changeSwitch(1))
         displist.append(switchCanButton)
 
         # menu button
@@ -30,7 +32,8 @@ class PitScoutingLayout(StackLayout):
 
 
         # switch capability
-        switchCantButton = quarterButton("CANT put cube on switch", seaFoamGreen)
+        colorSwitchCant = darkSeaFoamGreen if not self.switcher.robot.switchCapability else seaFoamGreen
+        switchCantButton = quarterButton("CANT put cube on switch", colorSwitchCant)
         displist.append(switchCantButton)
 
         # drivetrain layout
@@ -100,22 +103,20 @@ class PitScoutingLayout(StackLayout):
         self.display()
 
     def changeGround(self, change):
-        self.switcher.robot.groundPickup = not self.switcher.robot.groundPickup
-        self.display()
+        self.switcher.robot.groundPickup = change
 
     def changeSwitch(self, change):
-        self.switcher.robot.switchCapability = not self.switcher.robot.switchCapability
-        self.display()
+        self.switcher.robot.switchCapability = change
 
     def changeScale(self, change):
-        self.switcher.robot.scaleCapability = not self.switcher.robot.scaleCapability
+        self.switcher.robot.scaleCapability = change
 
     def changeExchange(self, change):
-        self.switcher.robot.exchangeCapability = not self.switcher.robot.exchangeCapability
+        self.switcher.robot.exchangeCapability = change
         self.display()
 
     def changeClimb(self, change):
-        self.switcher.robot.climbCapability = not self.switcher.robot.climbCapability
+        self.switcher.robot.climbCapability = change
         self.display()
 
     def changeImage(self):

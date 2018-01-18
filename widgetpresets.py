@@ -34,16 +34,20 @@ Builder.load_string("""
 """) # uses BorderImage and Rectangle to outline every widget in white
 
 seaFoamGreen = [14/255, 201/255, 170/255]
-darkMagenta = [171/255, 0/255, 117/255]
+darkSeaFoamGreen = [0/255, 141/255, 110/255]
 lightMagenta = [231/255, 58/255, 177/255]
+darkMagenta = [171/255, 0/255, 117/255]
 fairBlue = [28/255, 129/255, 201/255]
-darkblue = [0, 0, 1]
+darkFairBlue = [0/255, 69/255, 141/255]
 lightOrange = [255/255, 150/255, 75/255]
+darkOrange = [195/255, 90/255, 15/255]
 red = [1, 0, 0]
 tameRed = [200/255, 0, 0]
 darkRed = [115/255, 0, 0]
+darkTameRed = [140/255, 0, 0]
 green = [0, 1, 0]
 tameGreen = [0, 200/255, 0]
+darkTameGreen = [0, 140/255, 0]
 black = [0, 0, 0]
 grey = [.5, .5, .5]
 
