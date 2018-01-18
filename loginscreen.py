@@ -44,7 +44,7 @@ class LoginLayout(StackLayout):
 
         #row 4
         pitScout = bigButton("Pit Scouting", fairBlue)
-        pitScout.bind(on_release=lambda x: self.switcher.switch("pit scouting"))
+        pitScout.bind(on_release=lambda x: self.switcher.switch("pitscouting selecter"))
         displist.append(pitScout)
 
         goButton = bigButton("Go", fairBlue)
