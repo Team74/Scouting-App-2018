@@ -16,8 +16,12 @@ class PitScoutingSelecterLayout(StackLayout):
         scrolllist = []
         displist = []
 
-        searchBar = TextInput(size_hint=(1,.1))
+        searchBar = TextInput(size_hint=(.875,.1))
         displist.append(searchBar)
+
+        back = ColorButton("Back", (.125, .1), darkblue)
+        back.bind(on_release=lambda x: self.switcher.switch("login"))
+        displist.append(back)
 
         teamList = ScrollView(size_hint=(1, None), size=(Window.width, Window.height-searchBar.height))
         displist.append(teamList)
@@ -57,5 +61,13 @@ class PitScoutingSelecterLayout(StackLayout):
         self.switcher.switch("pitscouting main")
 
     def addPitRobot(self, teamNumber):
+<<<<<<< HEAD
         PitRobot(str(teamNumber)).addRobot()
+=======
+        number = "1234567890"
+        for i in teamNumber:
+            if not i in number:
+                return
+        PitRobot(str(teamNumber)).pitLocalSave()
+>>>>>>> 9eb81f8ace649fe45d673c0ffec70a2abd275813
         self.display()
