@@ -12,7 +12,6 @@ class PitScoutingLayout(StackLayout):
         displist = []
 
         # switch capability
-        print("ree")
         colorSwitchCan = darkSeaFoamGreen if self.switcher.robot.switchCapability else seaFoamGreen
         switchCanButton = quarterButton("CAN put cube on switch", colorSwitchCan)
         switchCanButton.bind(on_release=lambda x: self.changeSwitch(1))
@@ -27,13 +26,16 @@ class PitScoutingLayout(StackLayout):
         displist.append(teamDisp)
 
         # climb capability
-        climbCanButton = quarterButton("CAN climb", darkMagenta)
+        colorClimbCan = lightMagenta if self.switcher.robot.climbCapability else darkMagenta
+        climbCanButton = quarterButton("CAN climb", colorClimbCan)
+        climbCanButton.bind(on_release=lambda x: self.changeClimb(1))
         displist.append(climbCanButton)
 
 
         # switch capability
         colorSwitchCant = darkSeaFoamGreen if not self.switcher.robot.switchCapability else seaFoamGreen
-        switchCantButton = quarterButton("CANT put cube on switch", colorSwitchCant)
+        switchCantButton = quarterButton("CAN'T put cube on switch", colorSwitchCant)
+        switchCantButton.bind(on_release=lambda x: self.changeSwitch(0))
         displist.append(switchCantButton)
 
         # drivetrain layout
@@ -57,7 +59,9 @@ class PitScoutingLayout(StackLayout):
         drivetrainLayout.add_widget(holoDriveButton)
 
         # climb capability
-        climbCantButton = quarterButton("CAN'T climb", darkMagenta)
+        colorClimbCant = lightMagenta if not self.switcher.robot.climbCapability else darkMagenta
+        climbCantButton = quarterButton("CAN'T climb", colorClimbCant)
+        climbCantButton.bind(on_release=lambda x: self.changeClimb(0))
         displist.append(climbCantButton)
 
 
@@ -104,12 +108,15 @@ class PitScoutingLayout(StackLayout):
 
     def changeGround(self, change):
         self.switcher.robot.groundPickup = change
+        self.display()
 
     def changeSwitch(self, change):
         self.switcher.robot.switchCapability = change
+        self.display()
 
     def changeScale(self, change):
         self.switcher.robot.scaleCapability = change
+        self.display()
 
     def changeExchange(self, change):
         self.switcher.robot.exchangeCapability = change
