@@ -46,14 +46,20 @@ class PitRobot(object):
         self.image = image #TODO: will be a path name, make use of kivy's built in camera
         self.notes = notes
 
-    def pitDumpData(self):
-        return (self.teamNumber, self.drivetrain, self.groundPickup, self.switchCapability, self.scaleCapability, self.exchangeCapability, self.climbCapability, self.image, self.notes)
+    def dumpData(self):
+        return [self.teamNumber, self.drivetrain, self.groundPickup, self.switchCapability, self.scaleCapability, self.exchangeCapability, self.climbCapability, self.image, self.notes]
 
-    def pitLocalSave(self):
+    def addRobot(self):
         database = sqlite3.connect("scoutingdatabase.db") # opens database
         cursor = database.cursor() # acts as a placeholder, allows for fetchone()
         cursor.execute("SELECT * FROM pitscoutingdata WHERE teamNumber=?", (self.teamNumber,))
         if not cursor.fetchone():
             database.execute("INSERT INTO pitscoutingdata VALUES (?,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)", (self.teamNumber,))
+        database.commit()
+        database.close()
+
+    def localSave(self):
+        database = sqlite3.connect("scoutingdatabase.db")
+        database.execute("UPDATE pitscoutingdata SET drivetrain=?, groundPickup=?, switchCapability=?, scaleCapability=?, exchangeCapability=?, climbCapability=?, image=?, notes=? WHERE teamNumber=?", self.dumpData()[1:] + [self.teamNumber])
         database.commit()
         database.close()

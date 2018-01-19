@@ -10,30 +10,32 @@ class PitScoutingLayout(StackLayout):
 
     def display(self):
         displist = []
+        robot = self.switcher.robot
 
         # switch capability
-        colorSwitchCan = darkSeaFoamGreen if self.switcher.robot.switchCapability else seaFoamGreen
+        colorSwitchCan = darkSeaFoamGreen if robot.switchCapability else seaFoamGreen
         switchCanButton = quarterButton("CAN put cube on switch", colorSwitchCan)
         switchCanButton.bind(on_release=lambda x: self.changeSwitch(1))
         displist.append(switchCanButton)
 
         # menu button
         menuButton = quarterButton("Menu")
+        menuButton.bind(on_release=lambda x: self.switcher.switch("pitscouting menu"))
         displist.append(menuButton)
 
         # team display
-        teamDisp = quarterLabel("Team: " + str(self.switcher.robot.teamNumber), black)
+        teamDisp = quarterLabel("Team: " + str(robot.teamNumber), black)
         displist.append(teamDisp)
 
         # climb capability
-        colorClimbCan = lightMagenta if self.switcher.robot.climbCapability else darkMagenta
+        colorClimbCan = darkMagenta if robot.climbCapability else lightMagenta
         climbCanButton = quarterButton("CAN climb", colorClimbCan)
         climbCanButton.bind(on_release=lambda x: self.changeClimb(1))
         displist.append(climbCanButton)
 
 
         # switch capability
-        colorSwitchCant = darkSeaFoamGreen if not self.switcher.robot.switchCapability else seaFoamGreen
+        colorSwitchCant = darkSeaFoamGreen if not robot.switchCapability else seaFoamGreen
         switchCantButton = quarterButton("CAN'T put cube on switch", colorSwitchCant)
         switchCantButton.bind(on_release=lambda x: self.changeSwitch(0))
         displist.append(switchCantButton)
@@ -43,34 +45,46 @@ class PitScoutingLayout(StackLayout):
         displist.append(drivetrainLayout)
 
         # tank drive
-        tankDriveButton = halfButton("Tank drive / tank variants", fairBlue)
+        colorTankDrive = darkFairBlue if robot.drivetrain == "tank" else fairBlue
+        tankDriveButton = halfButton("Tank drive / tank variants", colorTankDrive)
+        tankDriveButton.bind(on_release=lambda x: self.changeDrivetrain("tank"))
         drivetrainLayout.add_widget(tankDriveButton)
 
         # swerve drive
-        swerveDriveButton = halfButton("Swerve drive", fairBlue)
+        colorSwerveDrive = darkFairBlue if robot.drivetrain == "swerve" else fairBlue
+        swerveDriveButton = halfButton("Swerve drive", colorSwerveDrive)
+        swerveDriveButton.bind(on_release=lambda x: self.changeDrivetrain("swerve"))
         drivetrainLayout.add_widget(swerveDriveButton)
 
         # mecanum drive
-        mecanumDriveButton = halfButton("Mecanum drive", fairBlue)
+        colorMecanumDrive = darkFairBlue if robot.drivetrain == "mecanum" else fairBlue
+        mecanumDriveButton = halfButton("Mecanum drive", colorMecanumDrive)
+        mecanumDriveButton.bind(on_release=lambda x: self.changeDrivetrain("mecanum"))
         drivetrainLayout.add_widget(mecanumDriveButton)
 
         # holographic drive
-        holoDriveButton = halfButton("Holographic drive", fairBlue)
+        colorHoloDrive = darkFairBlue if robot.drivetrain == "holographic" else fairBlue
+        holoDriveButton = halfButton("Holographic drive", colorHoloDrive)
+        holoDriveButton.bind(on_release=lambda x: self.changeDrivetrain("holographic"))
         drivetrainLayout.add_widget(holoDriveButton)
 
         # climb capability
-        colorClimbCant = lightMagenta if not self.switcher.robot.climbCapability else darkMagenta
+        colorClimbCant = darkMagenta if not robot.climbCapability else lightMagenta
         climbCantButton = quarterButton("CAN'T climb", colorClimbCant)
         climbCantButton.bind(on_release=lambda x: self.changeClimb(0))
         displist.append(climbCantButton)
 
 
         # scale capability
-        scaleCanButton = quarterButton("CAN put cube on scale", tameRed)
+        colorScaleCan = darkTameRed if robot.scaleCapability else tameRed
+        scaleCanButton = quarterButton("CAN put cube on scale", colorScaleCan)
+        scaleCanButton.bind(on_release=lambda x: self.changeScale(1))
         displist.append(scaleCanButton)
 
         # ground capability
-        groundCanButton = quarterButton("CAN pick up cubes off ground", tameGreen)
+        colorGroundCan = darkTameGreen if robot.groundPickup else tameGreen
+        groundCanButton = quarterButton("CAN pick up cubes off ground", colorGroundCan)
+        groundCanButton.bind(on_release=lambda x: self.changeGround(1))
         displist.append(groundCanButton)
 
         # photo button
@@ -78,16 +92,22 @@ class PitScoutingLayout(StackLayout):
         displist.append(photoButton)
 
         # exchange capability
-        exchangeCanButton = quarterButton("CAN put cube in exchange", lightOrange)
+        colorExchangeCan = darkOrange if robot.exchangeCapability else lightOrange
+        exchangeCanButton = quarterButton("CAN put cube in exchange", colorExchangeCan)
+        exchangeCanButton.bind(on_release=lambda x: self.changeExchange(1))
         displist.append(exchangeCanButton)
 
 
         # scale capability
-        scaleCantButton = quarterButton("CAN'T put cube in scale", tameRed)
+        colorScaleCant = darkTameRed if not robot.scaleCapability else tameRed
+        scaleCantButton = quarterButton("CAN'T put cube in scale", colorScaleCant)
+        scaleCantButton.bind(on_release=lambda x: self.changeScale(0))
         displist.append(scaleCantButton)
 
         # ground capability
-        groundCantButton = quarterButton("CAN'T pick up cubes off ground", tameGreen)
+        colorGroundCant = darkTameGreen if not robot.groundPickup else tameGreen
+        groundCantButton = quarterButton("CAN'T pick up cubes off ground", colorGroundCant)
+        groundCantButton.bind(on_release=lambda x: self.changeGround(0))
         displist.append(groundCantButton)
 
         # notes
@@ -95,7 +115,9 @@ class PitScoutingLayout(StackLayout):
         displist.append(notesInput)
 
         # exchange capability
-        exchangeCantButton = quarterButton("CAN'T put cube in exchange", lightOrange)
+        colorExchangeCant = darkOrange if not robot.exchangeCapability else lightOrange
+        exchangeCantButton = quarterButton("CAN'T put cube in exchange", colorExchangeCant)
+        exchangeCantButton.bind(on_release=lambda x: self.changeExchange(0))
         displist.append(exchangeCantButton)
 
         self.clear_widgets()

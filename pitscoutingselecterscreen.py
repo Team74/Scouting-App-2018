@@ -37,6 +37,7 @@ class PitScoutingSelecterLayout(StackLayout):
             labelBackground = green if teamData[1] else red
             label = ColorLabel(hasBeenScouted, (.125,None), labelBackground, height=40)
             scrolllist.append(label)
+        database.close()
 
         addTeam = ColorButton("add team", (.5, None), darkblue, height=40)
         addTeam.bind(on_release=lambda x: self.addPitRobot(addText.text))
@@ -56,5 +57,5 @@ class PitScoutingSelecterLayout(StackLayout):
         self.switcher.switch("pitscouting main")
 
     def addPitRobot(self, teamNumber):
-        PitRobot(str(teamNumber)).pitLocalSave()
+        PitRobot(str(teamNumber)).addRobot()
         self.display()
