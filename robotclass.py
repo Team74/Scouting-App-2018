@@ -36,6 +36,7 @@ class Robot(object):
 class PitRobot(object):
     def __init__(self, teamNumber, drivetrain="tank variants", groundPickup=0, switchCapability=0, scaleCapability=0, exchangeCapability=0, climbCapability=0, image=None, notes=""):
         self.teamNumber = teamNumber
+        print(self.teamNumber)
         self.drivetrain = drivetrain # string, "tank variants", "mecanum", "swerve", "holonomic"
         self.groundPickup = groundPickup # boolean, whether or not they can pick up cubes off the ground
         self.switchCapability = switchCapability # boolean, whether or not they can drop a cube onto the switch
@@ -44,3 +45,15 @@ class PitRobot(object):
         self.climbCapability = climbCapability # boolean, whether or not they can climb
         self.image = image #TODO: will be a path name, make use of kivy's built in camera
         self.notes = notes
+
+    def pitDumpData(self):
+        return (self.teamNumber, self.drivetrain, self.groundPickup, self.switchCapability, self.scaleCapability, self.exchangeCapability, self.climbCapability, self.image, self.notes)
+
+    def pitLocalSave(self):
+        database = sqlite3.connect("scoutingdatabase.db") # opens database
+        cursor = database.cursor() # acts as a placeholder, allows for fetchone()
+        cursor.execute("SELECT * FROM pitscoutingdata WHERE teamNumber=?", (self.teamNumber,))
+        if not cursor.fetchone():
+            database.execute("INSERT INTO pitscoutingdata VALUES (?,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)", (self.teamNumber,))
+        database.commit()
+        database.close()

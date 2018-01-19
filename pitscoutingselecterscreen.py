@@ -38,6 +38,12 @@ class PitScoutingSelecterLayout(StackLayout):
             label = ColorLabel(hasBeenScouted, (.125,None), labelBackground, height=40)
             scrolllist.append(label)
 
+        addTeam = ColorButton("add team", (.5, None), darkblue, height=40)
+        addTeam.bind(on_release=lambda x: self.addPitRobot(addText.text))
+        scrolllist.append(addTeam)
+        addText = TextInput(text=str(""), multiline=False, size_hint=(.5, None))
+        scrolllist.append(addText)
+
         for widget in scrolllist:
             teamListLayout.add_widget(widget)
 
@@ -48,3 +54,7 @@ class PitScoutingSelecterLayout(StackLayout):
     def pitScouterMainSwitch(self, numberButton):
         self.switcher.robot = PitRobot(numberButton.text)
         self.switcher.switch("pitscouting main")
+
+    def addPitRobot(self, teamNumber):
+        PitRobot(str(teamNumber)).pitLocalSave()
+        self.display()

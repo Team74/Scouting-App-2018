@@ -39,6 +39,7 @@ lightMagenta = [231/255, 58/255, 177/255]
 darkMagenta = [171/255, 0/255, 117/255]
 fairBlue = [28/255, 129/255, 201/255]
 darkFairBlue = [0/255, 69/255, 141/255]
+darkblue = [0, 0, 1]
 lightOrange = [255/255, 150/255, 75/255]
 darkOrange = [195/255, 90/255, 15/255]
 red = [1, 0, 0]
@@ -86,10 +87,8 @@ def halfButton(text, color=grey):
 def quaterHalfButton(text, color=grey):
     return ColorButton(text, (.25, .5), color)
 
-def tripleSideButton(text, color=grey):
-    return ColorButton(text, (1/3, 1), color)
-def tripleMiddleButton(text, color=grey):
-    return ColorButton(text, (1/3, 1), color)
+def tripleButton(text, color=grey):
+    return ColorButton(text, ((1/3), 1), color)
 
 def bigLabel(text, color=grey):
     return ColorLabel(text, (.5, .25), color)
