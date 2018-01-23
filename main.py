@@ -15,7 +15,7 @@ class ScreenSwitcher(BoxLayout):
     def __init__(self):
         super(ScreenSwitcher, self).__init__()
         self.eventName = "Test"
-        self.robot = Robot(1, 1, "placeholder", "placeholder")
+        self.robot = Robot(1, 1, self.eventName, "placeholder")
         self.screens = {"login": LoginLayout(self), "menu": MenuLayout(self), "teleop": TeleopLayout(self), "pitscouting selecter": PitScoutingSelecterLayout(self), "auton": AutonLayout(self), "pitscouting main": PitScoutingLayout(self), "pitscouting menu": PitMenuLayout(self)}
         self.currentScreen = self.screens["login"]
         self.display()

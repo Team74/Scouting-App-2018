@@ -20,11 +20,7 @@ class PitScoutingLayout(StackLayout):
 
         # menu button
         menuButton = quarterButton("Menu")
-<<<<<<< HEAD
         menuButton.bind(on_release=lambda x: self.switcher.switch("pitscouting menu"))
-=======
-        menuButton.bind(on_release=lambda x: self.switcher.switch("pitscouting selecter"))
->>>>>>> 9eb81f8ace649fe45d673c0ffec70a2abd275813
         displist.append(menuButton)
 
         # team display

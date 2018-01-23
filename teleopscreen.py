@@ -43,7 +43,7 @@ class TeleopLayout(StackLayout):
         displist.append(switchInc)
         # menu button
         menuButton = quarterButton("Menu")
-        menuButton.bind(on_release=lambda x: self.switcher.switch("menu"))
+        menuButton.bind(on_release=self.switchMenu)
         displist.append(menuButton)
         # displays scouter name
         scouterDisp = quarterLabel("Scouter: " + self.switcher.robot.scouter, black)
@@ -65,8 +65,8 @@ class TeleopLayout(StackLayout):
         scaleDisp = fullLabel("Cubes put in scale:\n\n" + str(self.switcher.robot.scale), fairBlue)
         scaleLayout.add_widget(scaleDisp)
         # input for notes
-        notesTextInput = TextInput(size_hint=(.5, .5))
-        displist.append(notesTextInput)
+        self.notesTextInput = TextInput(text=self.switcher.robot.notes, size_hint=(.5, .5))
+        displist.append(self.notesTextInput)
         # displays cubes in exchange
         exchangeLayout = StackLayout(size_hint=(.25, .5))
         displist.append(exchangeLayout)
@@ -93,6 +93,11 @@ class TeleopLayout(StackLayout):
         self.clear_widgets()
         for widg in displist:
             self.add_widget(widg)
+
+    def switchMenu(self, _):
+        self.switcher.robot.notes = self.notesTextInput.text
+        print("saving notes: %s" % self.notesTextInput.text)
+        self.switcher.switch("menu")
 
     def changeSwitch(self, change):
         self.switcher.robot.switch += change

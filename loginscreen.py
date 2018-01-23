@@ -5,13 +5,6 @@ from widgetpresets import *
 from robotclass import *
 import sqlite3
 
-seaFoamGreen = [(14/255),(201/255),(170/255)]
-darkMagenta = [(201/255),(28/255),(147/255)]
-fairBlue = [(28/255),(129/255),(201/255)]
-brintGreen = [(28/255),(201/255),(40/255)]
-lightOrange = [(201/255),(170/255),(28/255)]
-black = [0, 0, 0, 1]
-
 class LoginLayout(StackLayout):
     def __init__(self, screenSwitcher):
         self.switcher = screenSwitcher
@@ -49,11 +42,15 @@ class LoginLayout(StackLayout):
         goButton = bigButton("Go", fairBlue)
         def teleopSwitch(_):
             number = "1234567890"
+            #checking to see if team number and round number are input correctly so we dont have data type mismatch in sql database
+            if not teamInput.text and not roundInput.text: return
             for i in teamInput.text:
                 if not i in number:
+                    teamInput.text_hint = "invalid team number"
                     return
             for i in roundInput.text:
                 if not i in number:
+                    roundInput.text_hint = "invalid round number"
                     return
             self.switcher.robot = Robot(int(teamInput.text), int(roundInput.text), self.switcher.eventName, scouterInput.text)
             self.switcher.switch("teleop")
