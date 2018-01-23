@@ -46,7 +46,7 @@ class PitScoutingSelecterLayout(StackLayout):
         addTeam = ColorButton("add team", (.5, None), darkblue, height=40)
         addTeam.bind(on_release=lambda x: self.addPitRobot(addText.text))
         scrolllist.append(addTeam)
-        addText = TextInput(text=str(""), multiline=False, size_hint=(.5, None))
+        addText = TextInput(text=str(""), multiline=False, size_hint=(.5, None), height=40)
         scrolllist.append(addText)
 
         for widget in scrolllist:
