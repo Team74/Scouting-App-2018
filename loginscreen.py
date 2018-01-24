@@ -53,9 +53,13 @@ class LoginLayout(StackLayout):
         displist.append(roundInput)
 
         #row 4
-        pitScout = bigButton("Pit Scouting", fairBlue)
+        pitScout = quarterButton("Pit Scouting", fairBlue)
         pitScout.bind(on_release=lambda x: self.switcher.switch("pitscouting selecter"))
         displist.append(pitScout)
+
+        dataview = quarterButton('dataview', fairBlue)
+        dataview.bind(on_release=lambda x: self.switcher.switch("dataview"))
+        displist.append(dataview)
 
         goButton = bigButton("Go", fairBlue)
         def teleopSwitch(_):
@@ -71,7 +75,7 @@ class LoginLayout(StackLayout):
                     roundInput.text_hint = "invalid round number"
                     return
             self.switcher.robot = Robot(int(teamInput.text), int(roundInput.text), self.switcher.eventName, scouterInput.text)
-            self.switcher.switch("teleop")
+            self.switcher.switch("auton")
         goButton.bind(on_release=teleopSwitch)
         displist.append(goButton)
 

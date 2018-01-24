@@ -20,7 +20,7 @@ class PitScoutingLayout(StackLayout):
 
         # menu button
         menuButton = quarterButton("Menu")
-        menuButton.bind(on_release=lambda x: self.switcher.switch("pitscouting menu"))
+        menuButton.bind(on_release=self.switchMenu)
         displist.append(menuButton)
 
         # team display
@@ -63,9 +63,9 @@ class PitScoutingLayout(StackLayout):
         drivetrainLayout.add_widget(mecanumDriveButton)
 
         # holographic drive
-        colorHoloDrive = darkFairBlue if robot.drivetrain == "holographic" else fairBlue
-        holoDriveButton = halfButton("Holographic drive", colorHoloDrive)
-        holoDriveButton.bind(on_release=lambda x: self.changeDrivetrain("holographic"))
+        colorHoloDrive = darkFairBlue if robot.drivetrain == "holonomic" else fairBlue
+        holoDriveButton = halfButton("Holonomic drive", colorHoloDrive)
+        holoDriveButton.bind(on_release=lambda x: self.changeDrivetrain("holonomic"))
         drivetrainLayout.add_widget(holoDriveButton)
 
         # climb capability
@@ -111,8 +111,8 @@ class PitScoutingLayout(StackLayout):
         displist.append(groundCantButton)
 
         # notes
-        notesInput = TextInput(size_hint=(.25, .25))
-        displist.append(notesInput)
+        self.notesInput = TextInput(size_hint=(.25, .25))
+        displist.append(self.notesInput)
 
         # exchange capability
         colorExchangeCant = darkOrange if not robot.exchangeCapability else lightOrange
@@ -123,6 +123,10 @@ class PitScoutingLayout(StackLayout):
         self.clear_widgets()
         for widget in displist:
             self.add_widget(widget)
+
+    def switchMenu(self, _):
+        self.switcher.robot.notes = self.notesInput.text
+        self.switcher.switch("pitscouting menu")
 
     def changeDrivetrain(self, change):
         self.switcher.robot.drivetrain = change

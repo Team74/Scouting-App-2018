@@ -96,7 +96,6 @@ class TeleopLayout(StackLayout):
 
     def switchMenu(self, _):
         self.switcher.robot.notes = self.notesTextInput.text
-        print("saving notes: %s" % self.notesTextInput.text)
         self.switcher.switch("menu")
 
     def changeSwitch(self, change):
