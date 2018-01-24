@@ -1,6 +1,11 @@
 from kivy.uix.stacklayout import StackLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.scrollview import ScrollView
+from kivy.core.window import Window
+
+from widgetpresets import *
+from robotclass import *
+import sqlite3
 
 class DataViewLayout(StackLayout):
     def __init__(self, screenSwitcher):
@@ -9,41 +14,55 @@ class DataViewLayout(StackLayout):
 
     def display(self):
         scrolllist = []
+        def appendScroll(text, sizeHint, color, font_size="15sp"):
+            scrolllist.append(ColorLabel(text, sizeHint, color, height=40, font_size=font_size))
         displist = []
 
-        searchBar = TextInput(size_hint=(.875,.1))
+        searchBar = TextInput(size_hint=(.75,.1))
         displist.append(searchBar)
+
+        go = ColorButton("Go", (.125, .1), darkblue)
+        go.bind(on_release=lambda x: self.display())
 
         back = ColorButton("Back", (.125, .1), darkblue)
         back.bind(on_release=lambda x: self.switcher.switch("login"))
         displist.append(back)
 
-        eventList = ScrollView(size_hint=(1, None), size = (Window.width, Window.height-searchBar.height)) # make widgets and layouts for this
-        displist.append(eventList) # corresponding with the variables
-        eventListLayout = StackLayout(size_hint_y=None)
-        eventListLayout.bind(minimum_height=eventListLayout.setter('height'))
-        eventList.add_widget(eventListLayout)
+        dataTable = ScrollView(size_hint=(1, None), size = (Window.width, Window.height-searchBar.height)) # make widgets and layouts for this
+        displist.append(dataTable) # corresponding with the variables
+        dataTableLayout = StackLayout(size_hint_y=None)
+        dataTableLayout.bind(minimum_height=dataTableLayout.setter('height'))
+        dataTable.add_widget(dataTableLayout)
+
+        thirdSH = (2/36, None) #SH = size hint
+        miniSH = (1/24, None)
+        largeSH = (1/12, None)
+
+        appendScroll("team", largeSH, tameGreen) # 0
+        appendScroll("round", largeSH, tameGreen) # 1
+        appendScroll("event", largeSH, tameGreen) # 2
+        appendScroll("switch", largeSH, fairBlue) # 4
+        appendScroll("scale", largeSH, fairBlue) # 5
+        appendScroll("exchange", largeSH, fairBlue, "13sp") # 6
+        appendScroll("climb", largeSH, fairBlue) # 7
+        appendScroll("start\npos", largeSH, tameRed) # 9
+        appendScroll("switch\nside", largeSH, tameRed) # 10
+        appendScroll("auton\nswitch", largeSH, tameRed) # 11
+        appendScroll("auton\nscale", largeSH, tameRed) # 12
+        appendScroll("auton\nexchange", largeSH, tameRed, "13sp") # 13
 
         database = sqlite3.connect("scoutingdatabase.db") # data calling from db
         cursor = database.cursor()
-        cursor.execute("SELECT * FROM matchdata")
+        cursor.execute("SELECT teamNumber, roundNumber, eventName, switch, scale, exchange, climb, startingPosition, attemptedSwitchSide, autonSwitch, autonScale, autonExchange FROM matchdata") # TODO: ORDER BY, add capability to order by based on the text input on the top
         for teamData in cursor.fetchall():
-            roundNumber = teamData[1]
-            teamNumber = teamData[0]
-            button = ColorButton("Round: %s, Team: %s" % (roundNumber, teamNumber), (1, None), darkblue)
-            scrolllist.append(button)
-            button.bind(on_release=self.dataViewSwitch)
+            for data in teamData:
+                appendScroll(data, largeSH, grey)
+
         database.close()
+
+        for widget in scrolllist:
+            dataTableLayout.add_widget(widget)
 
         self.clear_widgets()
         for widget in displist:
             self.add_widget(widget)
-
-    def dataViewSwitch(self, numberButton):
-        buttonText = list(numberButton.text)
-        roundNumber, teamNumber = buttonText.split(",")
-        roundNumber = [x for x in roundNumber if x in "1234567890"]
-        teamNumber = [x for x in teamNumber if x in "1234567890"]
-
-        self.switcher.robot = Robot(numberButton.text)
-        self.switcher.switch('')
