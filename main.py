@@ -6,6 +6,7 @@ from loginscreen import LoginLayout
 from autonscreen import AutonLayout
 from teleopscreen import TeleopLayout
 from pitmenuscreen import PitMenuLayout
+from dataviewscreen import DataViewLayout
 from pitscoutingscreen import PitScoutingLayout
 from pitscoutingselecterscreen import PitScoutingSelecterLayout
 
@@ -16,8 +17,8 @@ class ScreenSwitcher(BoxLayout):
         super(ScreenSwitcher, self).__init__()
         self.eventName = "Test"
         self.robot = Robot(1, 1, self.eventName, "placeholder")
-        self.screens = {"login": LoginLayout(self), "menu": MenuLayout(self), "teleop": TeleopLayout(self), "pitscouting selecter": PitScoutingSelecterLayout(self), "auton": AutonLayout(self), "pitscouting main": PitScoutingLayout(self), "pitscouting menu": PitMenuLayout(self)}
-        self.currentScreen = self.screens["login"]
+        self.screens = {"login": LoginLayout(self), "menu": MenuLayout(self), "teleop": TeleopLayout(self), "pitscouting selecter": PitScoutingSelecterLayout(self), "auton": AutonLayout(self), "pitscouting main": PitScoutingLayout(self), "pitscouting menu": PitMenuLayout(self), "dataview": DataViewLayout(self)}
+        self.currentScreen = self.screens["dataview"]
         self.display()
 
     def display(self):

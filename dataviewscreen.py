@@ -1,6 +1,11 @@
 from kivy.uix.stacklayout import StackLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.scrollview import ScrollView
+from kivy.core.window import Window
+
+from widgetpresets import *
+from robotclass import *
+import sqlite3
 
 class DataViewLayout(StackLayout):
     def __init__(self, screenSwitcher):
@@ -28,22 +33,26 @@ class DataViewLayout(StackLayout):
         cursor = database.cursor()
         cursor.execute("SELECT * FROM matchdata")
         for teamData in cursor.fetchall():
+            print(teamData[0])
             roundNumber = teamData[1]
             teamNumber = teamData[0]
-            button = ColorButton("Round: %s, Team: %s" % (roundNumber, teamNumber), (1, None), darkblue)
+            eventName = teamData[2]
+            button = ColorButton("Round: %s, Team: %s, %s" % (roundNumber, teamNumber, eventName), (1, None), fairBlue)
             scrolllist.append(button)
             button.bind(on_release=self.dataViewSwitch)
         database.close()
+
+        for widget in scrolllist:
+            eventListLayout.add_widget(widget)
 
         self.clear_widgets()
         for widget in displist:
             self.add_widget(widget)
 
     def dataViewSwitch(self, numberButton):
-        buttonText = list(numberButton.text)
-        roundNumber, teamNumber = buttonText.split(",")
-        roundNumber = [x for x in roundNumber if x in "1234567890"]
-        teamNumber = [x for x in teamNumber if x in "1234567890"]
+        roundNumber, teamNumber, eventName = numberButton.text.split(", ")
+        roundNumber = "".join([x for x in roundNumber if x in "1234567890"])
+        teamNumber = "".join([x for x in teamNumber if x in "1234567890"])
 
-        self.switcher.robot = Robot(numberButton.text)
-        self.switcher.switch('')
+        self.switcher.robot = Robot(int(teamNumber), int(roundNumber), eventName, "ree")
+        self.switcher.switch('dataview screen')
