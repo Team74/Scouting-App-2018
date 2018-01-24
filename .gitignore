@@ -1,3 +1,5 @@
 build/*
 buildapp/*
 bin/*
+__pycache__/*
+scoutingdatabase.db

@@ -53,7 +53,7 @@ class LoginLayout(StackLayout):
                     roundInput.text_hint = "invalid round number"
                     return
             self.switcher.robot = Robot(int(teamInput.text), int(roundInput.text), self.switcher.eventName, scouterInput.text)
-            self.switcher.switch("teleop")
+            self.switcher.switch("auton")
         goButton.bind(on_release=teleopSwitch)
         displist.append(goButton)
 
