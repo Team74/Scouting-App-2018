@@ -10,7 +10,25 @@ class LoginLayout(StackLayout):
         self.switcher = screenSwitcher
         super(LoginLayout, self).__init__()
 
+
     def display(self):
+        database = sqlite3.connect("scoutingdatabase.db")
+        cursor = database.cursor()
+        cursor.execute("SELECT * FROM crash WHERE Exited=0")
+        result = cursor.fetchone()
+        if result:
+            if not result[2] == "placeholder":
+                self.switcher.robot = Robot(int(result[0]), int(result[1]), self.switcher.eventName, result[2])
+                database.execute("UPDATE crash SET Exited=1")
+                database.commit()
+                database.close()
+                self.switcher.switch("teleop")
+            else:
+                database.commit()
+                database.close()
+        else:
+            database.commit()
+            database.close()
         displist = []
 
         # scouter display
