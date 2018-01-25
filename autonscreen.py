@@ -11,100 +11,78 @@ class AutonLayout(StackLayout):
 
     def display(self):
         displist = []
+        def appendLabel(text, sizeHint, color, widget=None, **kwargs):
+            label = ColorLabel(text, sizeHint, color, **kwargs)
+            if not widget: displist.append(label)
+            else: widget.add_widget(label)
+        def appendButton(text, sizeHint, color, bind, widget=None, **kwargs):
+            button = ColorButton(text, sizeHint, color, **kwargs)
+            button.bind(on_release=bind)
+            if not widget: displist.append(button)
+            else: widget.add_widget(button)
 
         # row 1
 
         # displays cubes in switch in auton
-        AutonSwitchDisp = quarterLabel("Cubes put in switch:\n\n" + str(self.switcher.robot.autonSwitch), lightOrange)
-        displist.append(AutonSwitchDisp)
+        appendLabel("Cubes put in switch:\n\n" + str(self.switcher.robot.autonSwitch), quarterQuarter, lightOrange)
         # displays team number
-        teamDisp = quarterLabel("Team: " + str(self.switcher.robot.teamNumber), black)
-        displist.append(teamDisp)
+        appendLabel("Team: " + str(self.switcher.robot.teamNumber), quarterQuarter, black)
         # displays event name
-        eventDisp = quarterLabel("Event: " + self.switcher.robot.eventName, black)
-        displist.append(eventDisp)
+        appendLabel("Event: " + self.switcher.robot.eventName, quarterQuarter, black)
         # "Left" for attemptedSwitchSide
         side1Color = darkMagenta if self.switcher.robot.attemptedSwitchSide == "left" else lightMagenta
-        sideButton1 = eighthButton("Robot\nattempted\nthe Left\nside", side1Color)
-        sideButton1.bind(on_release=lambda x: self.changeSide("left"))
-        displist.append(sideButton1)
+        appendButton("Robot\nattempted\nthe Left\nside", eighthQuarter, side1Color, lambda x: self.changeSide("left"))
         # "Right" for attemptedSwitchSide
         side2Color = darkMagenta if self.switcher.robot.attemptedSwitchSide == "right" else lightMagenta
-        sideButton2 = eighthButton("Robot\nattempted\nthe Right\nside", side2Color)
-        sideButton2.bind(on_release=lambda x: self.changeSide("right"))
-        displist.append(sideButton2)
+        appendButton("Robot\nattempted\nthe Right\nside", eighthQuarter, side2Color, lambda x: self.changeSide("right"))
 
         # row 2
 
         # decrement AutonSwitchDisp
-        AutonSwitchDec = eighthButton("-", lightOrange)
-        AutonSwitchDec.bind(on_release=lambda x : self.changeSwitch(-1))
-        displist.append(AutonSwitchDec)
+        appendButton("-", eighthQuarter, lightOrange, lambda x : self.changeSwitch(-1))
         # increment AutonSwitchDisp
-        AutonSwitchInc = eighthButton('+', lightOrange)
-        AutonSwitchInc.bind(on_release=lambda x : self.changeSwitch(1))
-        displist.append(AutonSwitchInc)
+        appendButton('+', eighthQuarter, lightOrange, lambda x : self.changeSwitch(1))
         # menu button
-        menuButton = quarterButton("Menu")
-        menuButton.bind(on_release=lambda x: self.switcher.switch("menu"))
-        displist.append(menuButton)
+        appendButton("Menu", quarterQuarter, grey, lambda x: self.switcher.switch("menu"))
         # displays scouter name
-        scouterDisp = quarterLabel("Scouter: " + self.switcher.robot.scouter, black)
-        displist.append(scouterDisp)
+        appendLabel("Scouter: " + self.switcher.robot.scouter, quarterQuarter, black)
         # "None" for attemptedSwitchSide
         side3Color = darkMagenta if self.switcher.robot.attemptedSwitchSide == "none" else lightMagenta
-        sideButton3 = quarterButton("Robot\ndidn't\nattempt\nthe switch", side3Color)
-        sideButton3.bind(on_release=lambda x: self.changeSide("none"))
-        displist.append(sideButton3)
+        appendButton("Robot\ndidn't\nattempt\nthe switch", quarterQuarter, side3Color, lambda x: self.changeSide("none"))
 
         #row 3
 
-        # scale & ecchange display
+        # scale & exchange display
         # multi row 1
-        multiLayout = StackLayout(size_hint=(.5, .5))
+        multiLayout = StackLayout(size_hint=halfHalf)
         displist.append(multiLayout)
         # scale disp for auton
-        AutonScaleDisp = halfLabel("Cubes put in scale\nin auton:\n" + str(self.switcher.robot.autonScale), fairBlue)
-        multiLayout.add_widget(AutonScaleDisp)
+        appendLabel("Cubes put in scale\nin auton:\n" + str(self.switcher.robot.autonScale), halfHalf, fairBlue, multiLayout)
         # exchange disp for auton
-        autonExchangeDisp = halfLabel("Cubes put in\nExchange\nin auton:\n" + str(self.switcher.robot.autonExchange), grey)
-        multiLayout.add_widget(autonExchangeDisp)
+        appendLabel("Cubes put in\nExchange\nin auton:\n" + str(self.switcher.robot.autonExchange), halfHalf, grey, multiLayout)
         # multi row 2
         # decrement for auton scale
-        AutonScaleDec = quaterHalfButton("-", fairBlue)
-        AutonScaleDec.bind(on_release=lambda x: self.changeScale(-1))
-        multiLayout.add_widget(AutonScaleDec)
+        appendButton("-", quarterHalf, fairBlue, lambda x: self.changeScale(-1), multiLayout)
         # increment for auton scale
-        AutonScaleInc = quaterHalfButton("+", fairBlue)
-        AutonScaleInc.bind(on_release=lambda x: self.changeScale(1))
-        multiLayout.add_widget(AutonScaleInc)
+        appendButton("+", quarterHalf, fairBlue, lambda x: self.changeScale(1), multiLayout)
         # decrement for auton exchange
-        autonExchangeDec = quaterHalfButton("-", grey)
-        autonExchangeDec.bind(on_release=lambda x: self.changeExchange(-1))
-        multiLayout.add_widget(autonExchangeDec)
+        appendButton("-", quarterHalf, grey, lambda x: self.changeExchange(-1), multiLayout)
         # increment for auton exchange
-        autonExchangeInc = quaterHalfButton("+", grey)
-        autonExchangeInc.bind(on_release=lambda x: self.changeExchange(1))
-        multiLayout.add_widget(autonExchangeInc)
+        appendButton("+", quarterHalf, grey, lambda x: self.changeExchange(1), multiLayout)
         #end of multiLayout
+
         # starting position display
-        startLayout = StackLayout(size_hint=(.5, .5))
+        startLayout = StackLayout(size_hint=halfHalf)
         displist.append(startLayout)
         # left for starting position
         startColor1 = darkRed if self.switcher.robot.startingPosition == "left" else red
-        startButton1 = tripleButton("Started in the\nLeft position", startColor1)
-        startButton1.bind(on_release=lambda x: self.changeStart("left"))
-        startLayout.add_widget(startButton1)
+        appendButton("Started in the\nLeft position", thirdWhole, startColor1, lambda x: self.changeStart("left"), startLayout)
         # middle for starting position
         startColor2 = darkRed if self.switcher.robot.startingPosition == "middle" else red
-        startButton2 = tripleButton("Started in the\nMiddle position", startColor2)
-        startButton2.bind(on_release=lambda x: self.changeStart("middle"))
-        startLayout.add_widget(startButton2)
+        appendButton("Started in the\nMiddle position", thirdWhole, startColor2, lambda x: self.changeStart("middle"), startLayout)
         # right for starting position
         startColor3 = darkRed if self.switcher.robot.startingPosition == "right" else red
-        startButton3 = tripleButton("Started in the\nRight position", startColor3)
-        startButton3.bind(on_release=lambda x: self.changeStart("right"))
-        startLayout.add_widget(startButton3)
+        appendButton("Started in the\nRight position", thirdWhole, startColor3, lambda x: self.changeStart("right"), startLayout)
 
         self.clear_widgets()
         for widg in displist:

@@ -65,31 +65,39 @@ class ColorButton(Button):
         self.rgb = mutedColor+[1]
         super(ColorButton, self).__init__(text=str(text), size_hint=sizehint, **kwargs)
 
+quarterQuarter = (.25, .25)
 def quarterLabel(text, color=grey):
     return ColorLabel(text, (.25, .25), color)
 def quarterButton(text, color=grey):
     return ColorButton(text, (.25, .25), color)
 
+eighthQuarter = (.125, .25)
 def eighthLabel(text, color=grey):
     return ColorLabel(text, (.125, .25), color)
 def eighthButton(text, color=grey):
     return ColorButton(text, (.125, .25), color)
 
+wholeHalf = (1, .5)
 def fullLabel(text, color=grey):
     return ColorLabel(text, (1, .5), color)
 def fullButton(text, color=grey):
     return ColorButton(text, (1, .5), color)
+
+halfHalf = (.5, .5)
 def halfLabel(text, color=grey):
     return ColorLabel(text, (.5, .5), color)
 def halfButton(text, color=grey):
     return ColorButton(text, (.5, .5), color)
 
+quarterHalf = (.25, .5)
 def quaterHalfButton(text, color=grey):
     return ColorButton(text, (.25, .5), color)
 
+thirdWhole = (1/3, 1)
 def tripleButton(text, color=grey):
     return ColorButton(text, ((1/3), 1), color)
 
+halfQuarter = (.5, .25)
 def bigLabel(text, color=grey):
     return ColorLabel(text, (.5, .25), color)
 def bigButton(text, color=grey):
