@@ -32,7 +32,7 @@ version = 73.2.1
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
-# version.filename = %(source.dir)s/main.py
+# version.filename = %(source.dir)s/PhotoScreen.py
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
