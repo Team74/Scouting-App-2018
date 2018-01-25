@@ -1,6 +1,7 @@
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 
+from robotclass import *
 from menuscreen import MenuLayout
 from loginscreen import LoginLayout
 from autonscreen import AutonLayout
@@ -9,8 +10,8 @@ from pitmenuscreen import PitMenuLayout
 from dataviewscreen import DataViewLayout
 from pitscoutingscreen import PitScoutingLayout
 from pitscoutingselecterscreen import PitScoutingSelecterLayout
-
 from robotclass import *
+import sqlite3
 
 class ScreenSwitcher(BoxLayout):
     def __init__(self):
@@ -32,7 +33,19 @@ class ScreenSwitcher(BoxLayout):
 
 class MyApp(App):
     def build(self):
-        return ScreenSwitcher()
+        self.screenSwitcher = ScreenSwitcher()
+        return self.screenSwitcher
 
 if __name__ == "__main__":
-    MyApp().run()
+    myapp = MyApp()
+    try:
+        myapp.run()
+    except Exception as error:
+        robot = myapp.screenSwitcher.robot
+        robot.localSave("ree")
+        if isinstance(robot, PitRobot): raise error
+        database = sqlite3.connect("scoutingdatabase.db")
+        database.execute("UPDATE crash SET Team=?, Round=?, Scouter=?, Exited=?", (robot.teamNumber, robot.roundNumber, robot.scouter, 0))
+        database.commit()
+        database.close()
+        raise error
