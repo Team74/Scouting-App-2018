@@ -18,12 +18,12 @@ class DataViewLayout(StackLayout):
         def appendLabel(text, color, font_size="15sp"):
             scrolllist.append(ColorLabel(text, (1/12, None), color, height=40, font_size=font_size))
         def appendButton(text, color, bind, font_size="15sp"):
-            button = ColorButton(text, (1/12, None), [x + .3 for x in color], height=40, font_size=font_size)
+            button = ColorButton(text, (1/12, None), [x + (30/255) for x in color], height=40, font_size=font_size)
             button.bind(on_release=bind)
             scrolllist.append(button)
         displist = []
 
-        searchBar = TextInput(size_hint=(.75,.1), multiline=False, request_focus=True)
+        searchBar = TextInput(size_hint=(.75,.1), multiline=False)
         searchBar.bind(on_text_validate=lambda x: self.processQuery(searchBar.text))
         displist.append(searchBar)
 
@@ -55,7 +55,7 @@ class DataViewLayout(StackLayout):
         # nonmeta auton
         appendLabel("start\npos", tameRed) # 9
         appendLabel("switch\nside", tameRed) # 10
-        appendButton("auton\nswitch", tameRed, lambda x: self.processQuery("auton button")) # 11
+        appendButton("auton\nswitch", tameRed, lambda x: self.processQuery("auton switch")) # 11
         appendButton("auton\nscale", tameRed, lambda x: self.processQuery("auton scale")) # 12
         appendButton("auton\nexchange", tameRed, lambda x: self.processQuery("auton exchange"), "13sp") # 13
 
@@ -108,13 +108,13 @@ class DataViewLayout(StackLayout):
                     self.query = "WHERE exchange=%s" % i
         if "climb" in search or "climbed" in search:
             if len(search) >= 2:
-                self.query = "WHERE climb=%s" % search[1]
+                self.query = "WHERE climb='%s'" % " ".join(search[1:])
         if "start" in search and "pos" in search:
             if len(search) >= 3:
-                self.query = "WHERE startPos=%s" % search[2]
+                self.query = "WHERE startingPosition='%s'" % search[2]
         if "switch" in search and "side" in search:
             if len(search) >= 3:
-                self.query = "WHERE switchSide=%s" % search[2]
+                self.query = "WHERE attemptedSwitchSide='%s'" % search[2]
         if "auton" in search and "switch" in search:
             self.query = "ORDER BY autonSwitch DESC"
             for i in search:
@@ -129,7 +129,7 @@ class DataViewLayout(StackLayout):
             self.query = "ORDER BY autonExchange DESC"
             for i in search:
                 if i[0] in "1234567890":
-                    self.query = "WHERE autonExchange=%s" % i
+                    self.query = "WHERE autonExchange='%s'" % i
 
 
         self.display()
