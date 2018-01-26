@@ -11,12 +11,13 @@ class PitScoutingSelecterLayout(StackLayout):
     def __init__(self, screenSwitcher):
         self.switcher = screenSwitcher
         super(PitScoutingSelecterLayout, self).__init__()
+        self.query = ""
 
     def display(self):
         scrolllist = []
         displist = []
 
-        searchBar = TextInput(size_hint=(.875,.1))
+        searchBar = TextInput(size_hint=(.875,.1), multiline=False)
         displist.append(searchBar)
 
         back = ColorButton("Back", (.125, .1), darkblue)
@@ -31,7 +32,7 @@ class PitScoutingSelecterLayout(StackLayout):
 
         database = sqlite3.connect("scoutingdatabase.db")
         cursor = database.cursor()
-        cursor.execute("SELECT * FROM pitscoutingdata")
+        cursor.execute("SELECT * FROM pitscoutingdata " + self.query)
         for teamData in cursor.fetchall():
             teamNumber = teamData[0]
             button = ColorButton(str(teamNumber), (.875,None), fairBlue, height=40)
@@ -47,6 +48,7 @@ class PitScoutingSelecterLayout(StackLayout):
         addTeam.bind(on_release=lambda x: self.addPitRobot(addText.text))
         scrolllist.append(addTeam)
         addText = TextInput(text=str(""), multiline=False, size_hint=(.5, None), height=40)
+        addText.bind(on_validate_text=lambda x: self.addPitRobot(addText.text))
         scrolllist.append(addText)
 
         for widget in scrolllist:
@@ -55,6 +57,18 @@ class PitScoutingSelecterLayout(StackLayout):
         self.clear_widgets()
         for widget in displist:
             self.add_widget(widget)
+
+    def processQuery(self, search):
+        search = search.split()
+        if "scouted" in search and not "not" in search:
+            self.query = "WHERE NOT drivetrain=NULL"
+        if "not" in search and "scouted" in search:
+            self.query = "WHERE drivetrain=NULL"
+        if "team" in search:
+            if len(search) >= 2:
+                self.query = "WHERE teamNumber=%s" % search[1]
+        if search[0][0] in "1234567890":
+            self.query = "WHERE teamNumber=%s" % search[0]
 
     def pitScouterMainSwitch(self, numberButton):
         self.switcher.robot = PitRobot(numberButton.text)
