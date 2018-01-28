@@ -75,7 +75,7 @@ class PitScoutingLayout(StackLayout):
         appendButton("CAN pick up cubes off ground", quarterQuarter, colorGroundCan, lambda x: self.changeGround(1))
 
         # photo button
-        appendButton("Photo", quarterQuarter, lightMagenta, lambda x: print("ree"))
+        appendLabel("Photo", quarterQuarter, lightMagenta)
 
         # exchange capability
         colorExchangeCan = darkOrange if robot.exchangeCapability else lightOrange

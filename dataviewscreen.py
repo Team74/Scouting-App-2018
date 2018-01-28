@@ -1,6 +1,6 @@
-from kivy.uix.stacklayout import StackLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.scrollview import ScrollView
+from kivy.uix.stacklayout import StackLayout
 from kivy.core.window import Window
 
 from widgetpresets import *
