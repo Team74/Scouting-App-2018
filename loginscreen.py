@@ -65,7 +65,7 @@ class LoginLayout(StackLayout):
         def teleopSwitch(_):
             number = "1234567890"
             #checking to see if team number and round number are input correctly so we dont have data type mismatch in sql database
-            if not teamInput.text and not roundInput.text: return
+            if not teamInput.text or not roundInput.text or not scouterInput.text: return
             for i in teamInput.text:
                 if not i in number:
                     teamInput.text_hint = "invalid team number"

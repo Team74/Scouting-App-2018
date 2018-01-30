@@ -16,7 +16,7 @@ source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,db
 
 # (list) List of inclusions using pattern matching
-source.include_patterns = assets/*,images/*.png/,*.db
+source.include_patterns = assets/*,images/*.png/
 
 # (list) Source files to exclude (let empty to not exclude anything)
 #source.exclude_exts = spec
@@ -36,7 +36,7 @@ version = 73.2.1
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
-requirements = sqlite3, kivy, python3crystax, plyer, android
+requirements = sqlite3, kivy, python3crystax, plyer, android, mysql-connector-python
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
