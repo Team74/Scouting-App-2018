@@ -28,8 +28,9 @@ class MenuLayout(StackLayout):
         # teleop switch
         appendButton("Teleop", halfHalf, grey, lambda x: self.switcher.switch("teleop"))
 
-        # login switch
-        appendButton("Change team (data will be lost if not saved)", halfHalf, grey, lambda x: self.switcher.switch("login"))
+        # change team button
+        appendButton("Change team (data will be lost if not saved)", halfHalf, grey, on_release=lambda x: self.switcher.switch("login"))
+
         # layout for save and export buttons
         databaseLayout = StackLayout(size_hint=halfHalf)
         displist.append(databaseLayout)
@@ -58,5 +59,5 @@ class MenuLayout(StackLayout):
         if not ip:
             self.ipInputTextHint = "enter IP here"
             self.display()
-            return 
+            return
         mysqldb = mysql.connector.connect(user="jaga663", passwd="chaos", host=ip, database="scoutingdata")
