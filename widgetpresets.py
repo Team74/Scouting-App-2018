@@ -77,6 +77,7 @@ def eighthLabel(text, color=grey):
 def eighthButton(text, color=grey):
     return ColorButton(text, (.125, .25), color)
 
+halfWhole = (.5, .8)
 wholeHalf = (1, .5)
 def fullLabel(text, color=grey):
     return ColorLabel(text, (1, .5), color)
@@ -102,3 +103,6 @@ def bigLabel(text, color=grey):
     return ColorLabel(text, (.5, .25), color)
 def bigButton(text, color=grey):
     return ColorButton(text, (.5, .25), color)
+
+halfWhole = (.5, .8)
+wholefifth = (1, .2)
