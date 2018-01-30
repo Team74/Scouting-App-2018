@@ -102,3 +102,7 @@ def bigLabel(text, color=grey):
     return ColorLabel(text, (.5, .25), color)
 def bigButton(text, color=grey):
     return ColorButton(text, (.5, .25), color)
+
+quarterThird = (.25, 1/3)
+threeQuarterThird = (.75, 1/3)
+eighthHalf = (.125, .5)

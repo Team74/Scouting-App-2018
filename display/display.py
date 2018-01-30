@@ -6,10 +6,13 @@ from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 from kivy.uix.stacklayout import StackLayout
 
+import os
+import mysql.connector
+
 class DisplayLayout(StackLayout):
     def __init__(self):
         super(DisplayLayout, self).__init__()
-        self.displayMain("")
+        self.displayMain("_")
 
     def displayMain(self, _):
         self.displist = []
@@ -31,8 +34,8 @@ class DisplayLayout(StackLayout):
         button.bind(on_release=bind)
         self.displist.append(button)
     def appendPicture(self, source, size_hint):
-        widget = Widget(size_hint=size_hint)
-        widget.add_widget(Image(source=source))
+        photo = Image(source=source, size_hint=size_hint, allow_stretch=True, keep_ratio=False)
+        self.displist.append(photo)
 
     def addAll(self):
         self.clear_widgets()
