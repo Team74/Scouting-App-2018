@@ -52,11 +52,42 @@ class MenuLayout(StackLayout):
     def export(self, ip):
         for char in ip:
             if not char in "1234567890.":
-                self.ipInputTextHint = "incorrect IP"
+                self.ipInputTextHint = "wait a minute\n\nthat's not an ip???///???!?"
                 self.display()
                 return
         if not ip:
             self.ipInputTextHint = "enter IP here"
             self.display()
-            return 
-        mysqldb = mysql.connector.connect(user="jaga663", passwd="chaos", host=ip, database="scoutingdata")
+            return
+        try: #TIMEOUT IS IN SECONDS, NOT MILLISECONDS
+            mysqldb = mysql.connector.connect(connection_timeout=1, user="jaga663", passwd="chaos", host=ip, database="Scouting2018")
+        except mysql.connector.errors.InterfaceError:
+            self.ipInputTextHint = "incorrect IP"
+            self.display()
+            return
+        mysqlc = mysqldb.cursor()
+        sqlitedb = sqlite3.connect("scoutingdatabase.db")
+        sqlitec = sqlitedb.cursor()
+        sqlitec.execute("SELECT * FROM matchdata")
+        for row in sqlitec.fetchall():
+            mysqlc.execute("SELECT * FROM matchdata WHERE teamNumber=%s, roundNumber=%s, eventName=%s", row[:3])
+            if mysqlc.fetchone():
+                mysqldb.execute("""
+                    UPDATE matchdata SET
+                    scouter=%s, switch=%s, scale=%s, exchange=%s, climb=%s, notes=%s,
+                    startingPosition=%s, attemptedSwitchSide=%s, autonSwitch=%s, autonScale=%s, autonExchange=%s
+                    WHERE teamNumber=%s, roundNumber=%s, eventName=%s
+                """, row[4:] + row[:3])
+            else:
+                mysqldb.execute("INSERT INTO matchdata VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", row)
+        sqlitec.execute("SELECT * FROM pitscoutingdata")
+        for row in sqlitec.fetchall():
+            mysqlc.execute("SELECT * FROM pitscoutingdata WHERE teamNumber=%s", row[0])
+            if mysqlc.fetchone():
+                mysqldb.execute("""
+                    UPDATE pitscoutingdata SET
+                    drivetrain=%s, groundCapability=%s, scaleCapability=%s, switchCapability=%s, exchangeCapability=%s, image=%s, notes=%s
+                    WHERE teamNumber=%s
+                """, row[2:] + [row[0]])
+            else:
+                mysqldb.execute("INSERT INTO pitscoutingdata VALUES (%S,%s,%s,%s,%s,%s,%s,%s)")

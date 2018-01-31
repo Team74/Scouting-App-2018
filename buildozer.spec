@@ -36,7 +36,7 @@ version = 73.2.1
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
-requirements = sqlite3, kivy, python3crystax, plyer, android
+requirements = sqlite3, kivy, python3crystax, plyer, android, mysql-connector-python
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes

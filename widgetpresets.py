@@ -105,4 +105,3 @@ def bigButton(text, color=grey):
 
 quarterThird = (.25, 1/3)
 threeQuarterThird = (.75, 1/3)
-eighthHalf = (.125, .5)

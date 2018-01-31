@@ -31,7 +31,12 @@ class Robot(object):
         cursor.execute("SELECT * FROM matchdata WHERE teamNumber=? AND roundNumber=? AND eventName=?", self.dumpData()[:3]) # checking if the current robot matches one in the database
         if cursor.fetchone(): # if there was a match in the database:
             print("found match, updating with %s" % str(self.dumpData()[4:]))
-            database.execute("UPDATE matchdata SET switch=?, scale=?, exchange=?, climb=?, notes=?, startingPosition=?, attemptedSwitchSide=?, autonSwitch=?, autonScale=?, autonExchange=? WHERE teamNumber=? AND roundNumber=? AND eventName=?", self.dumpData()[4:] + self.dumpData()[:3]) #list splicing - gives all nonmeta (actual game data) values, then gives meta (team number, round, event, scouter) values
+            database.execute("""
+                UPDATE matchdata SET
+                switch=?, scale=?, exchange=?, climb=?, notes=?,
+                startingPosition=?, attemptedSwitchSide=?, autonSwitch=?, autonScale=?, autonExchange=?
+                WHERE teamNumber=? AND roundNumber=? AND eventName=?
+            """, self.dumpData()[4:] + self.dumpData()[:3]) #list splicing - gives all nonmeta (actual game data) values, then gives meta (team number, round, event, scouter) values
         else: #if there was not a match in the database:
             print("no match")
             database.execute("INSERT INTO matchdata VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", self.dumpData())
