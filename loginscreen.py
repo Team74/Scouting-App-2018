@@ -9,6 +9,7 @@ class LoginLayout(StackLayout):
     def __init__(self, screenSwitcher):
         self.switcher = screenSwitcher
         super(LoginLayout, self).__init__()
+        self.round = 1
 
 
     def display(self):
@@ -49,9 +50,17 @@ class LoginLayout(StackLayout):
         roundDisp = bigLabel("round", seaFoamGreen)
         displist.append(roundDisp)
 
-        roundInput = TextInput(text=str(""), multiline=False, size_hint=(.5, .25))
+        roundInput = TextInput(text=str(self.round), multiline=False, size_hint=quarterQuarter)
         displist.append(roundInput)
 
+        roundInc = ColorButton("+", (.125, .25))
+        roundInc.bind(on_release=lambda x: self.changeRound(int(roundInput.text)+1))
+        displist.append(roundInc)
+
+        roundDec = ColorButton("-", (.125, .25))
+        roundDec.bind(on_release=lambda x: self.changeRound(int(roundInput.text)+1))
+        displist.append(roundDec)
+        
         #row 4
         pitScout = quarterButton("Pit Scouting", fairBlue)
         pitScout.bind(on_release=lambda x: self.switcher.switch("pitscouting selecter"))
@@ -82,3 +91,6 @@ class LoginLayout(StackLayout):
         self.clear_widgets()
         for widg in displist:
             self.add_widget(widg)
+
+    def changeRound(self, change)
+        self.round = change

@@ -37,8 +37,10 @@ class TeleopLayout(StackLayout):
 
         # decrement switchDisp
         appendButton("-", eighthQuarter, seaFoamGreen, lambda x: self.changeSwitch(-1))
+            #stop time // dont save
         # increment switchDisp
         appendButton("+", eighthQuarter, seaFoamGreen, lambda x: self.changeSwitch(1))
+            #start time
         # menu button
         appendButton("Menu", quarterQuarter, grey, self.switchMenu)
         # displays scouter name
