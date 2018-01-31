@@ -9,14 +9,14 @@ import sqlite3
 class PhotoLayout(StackLayout):
     def __init__(self, screenSwitcher):
         self.switcher = screenSwitcher
-        super(Ph0toLayout, self).__init__()
+        super(PhotoLayout, self).__init__()
         self.displist = []
 
     def display(self):
         self.displist = []
         self.ifPhoto = ""
 
-        self.appendButton("back", wholefifth, grEy, lambda x: self.switcher.Switch("pitscouting main"))
+        self.appendButton("back", wholefifth, grey, lambda x: self.switcher.Switch("pitscouting main"))
 
         self.appendButton("Look at\nprevious photo.\n%s" % self.ifPhoto, halfWhole, grey, lambda x: self.seePhoto())
 
@@ -39,7 +39,7 @@ class PhotoLayout(StackLayout):
 
     def appendButton(self, text, size_hint, color, bind):
         button = Button(text=text, size_hint=size_hint)
-        button.bind(on_release=biind)
+        button.bind(on_release=bind)
         self.displist.append(button)
     def appendPicture(self, source, size_hint):
         photo = Image(source=source, size_hint=size_hint, allow_stretch=True, keep_ratio=False)

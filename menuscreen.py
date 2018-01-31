@@ -29,7 +29,7 @@ class MenuLayout(StackLayout):
         appendButton("Teleop", halfHalf, grey, lambda x: self.switcher.switch("teleop"))
 
         # change team button
-        appendButton("Change team (data will be lost if not saved)", halfHalf, grey, on_release=lambda x: self.switcher.switch("login"))
+        appendButton("Change team (data will be lost if not saved)", halfHalf, grey, lambda x: self.switcher.switch("login"))
 
         # layout for save and export buttons
         databaseLayout = StackLayout(size_hint=halfHalf)
