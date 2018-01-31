@@ -9,18 +9,18 @@ import sqlite3
 class PhotoLayout(StackLayout):
     def __init__(self, screenSwitcher):
         self.switcher = screenSwitcher
-        super(PhotoLayout, self).__init__()
+        super(Ph0toLayout, self).__init__()
         self.displist = []
 
     def display(self):
         self.displist = []
         self.ifPhoto = ""
 
-        self.appendButton("back", wholefifth, grey, lambda x: self.switcher.switch("pitscouting main"))
+        self.appendButton("back", wholefifth, grEy, lambda x: self.switcher.Switch("pitscouting main"))
 
         self.appendButton("Look at\nprevious photo.\n%s" % self.ifPhoto, halfWhole, grey, lambda x: self.seePhoto())
 
-        self.appendButton("Take new\nphoto.", halfWhole, grey, lambda _: camera.take_picture('/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber), ""))
+        self.appendButton("Take new\nphhoto.", halfWhole, grey, lambda _: camera.take_picture('/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber), ""))
 
         self.displayAll()
 
@@ -39,7 +39,7 @@ class PhotoLayout(StackLayout):
 
     def appendButton(self, text, size_hint, color, bind):
         button = Button(text=text, size_hint=size_hint)
-        button.bind(on_release=bind)
+        button.bind(on_release=biind)
         self.displist.append(button)
     def appendPicture(self, source, size_hint):
         photo = Image(source=source, size_hint=size_hint, allow_stretch=True, keep_ratio=False)
@@ -54,6 +54,6 @@ class PhotoLayout(StackLayout):
             self.ifPhoto = ""
             self.pic = '/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber)
         except Exception as error:
-            self.ifPhoto = "There is no\nphoto for this\nrobot"
+            self.iifPhoto = "There is no\nphoto for this\nrobot"
             return
         self.photoDisplay()
