@@ -21,7 +21,7 @@ class Robot(object):
 
         self.reloadRobot(self.teamNumber, self.roundNumber)
 
-    def dumpData(self):
+    def dumpData(self): #function for putting all values into a list ordered like the sqlite database
         return (self.teamNumber, self.roundNumber, self.eventName, self.scouter, self.switch, self.scale, self.exchange, self.climb, self.notes, self.startingPosition, self.attemptedSwitchSide, self.autonSwitch, self.autonScale, self.autonExchange) # this order matches that of the database
 
     def localSave(self, _): # _ is there for throwaway on_release argument passed by the button
@@ -30,13 +30,12 @@ class Robot(object):
         cursor = database.cursor() # acts as a placeholder, allows for fetchone()
         cursor.execute("SELECT * FROM matchdata WHERE teamNumber=? AND roundNumber=? AND eventName=?", self.dumpData()[:3]) # checking if the current robot matches one in the database
         if cursor.fetchone(): # if there was a match in the database:
-            print("found match, updating with %s" % str(self.dumpData()[4:]))
+            print("found match, updating with %s" % str(self.dumpData()[3:]))
             database.execute("""
                 UPDATE matchdata SET
-                switch=?, scale=?, exchange=?, climb=?, notes=?,
+                scouter=?, switch=?, scale=?, exchange=?, climb=?, notes=?,
                 startingPosition=?, attemptedSwitchSide=?, autonSwitch=?, autonScale=?, autonExchange=?
-                WHERE teamNumber=? AND roundNumber=? AND eventName=?
-            """, self.dumpData()[4:] + self.dumpData()[:3]) #list splicing - gives all nonmeta (actual game data) values, then gives meta (team number, round, event, scouter) values
+                WHERE teamNumber=? AND roundNumber=? AND eventName=?""", self.dumpData()[3:] + self.dumpData()[:3]) #list splicing - gives all nonmeta (actual game data) values, then gives meta (team number, round, event, scouter) values
         else: #if there was not a match in the database:
             print("no match")
             database.execute("INSERT INTO matchdata VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", self.dumpData())
