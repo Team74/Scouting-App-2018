@@ -6,7 +6,6 @@ from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 from kivy.uix.stacklayout import StackLayout
 
-
 import os
 import io
 import binascii
@@ -18,14 +17,13 @@ class DisplayLayout(StackLayout):
         self.displayMain("_")
         database = mysql.connector.connect(connection_timeout=1, user="jaga663", passwd="chaos", host="10.111.49.49", database="Scouting2018")
         cursor = database.cursor()
-        cursor.execute("SELECT image FROM pitscoutingdata")
-        for image in cursor.fetchall():
-            """image = image[0]
-            image.strip()
-            image = binascii.unhexlify(image)
-            print(type(image))
-            image = io.BytesIO(image)
-            print(type(image))"""
+        cursor.execute("SELECT teamNumber, image FROM pitscoutingdata")
+        currentDir = os.path.dirname(os.path.realpath(__file__))
+        for data in cursor.fetchall():
+            teamNumber = data[0]
+            image = data[1]
+            imageFile = open("%s/pitimages/%s.jpg" % (currentDir, teamNumber), "wb")
+            imageFile.write(image)
 
         database.close()
 

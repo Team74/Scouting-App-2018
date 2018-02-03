@@ -89,7 +89,8 @@ class MenuLayout(StackLayout):
         for pitscoutdata in sqlitec.fetchall(): # see robotclass PitRobot.dumpData() for order of row
             row = list(pitscoutdata)
             try:
-                row[7] = open("colors/background.jpg", "rb").read() # TODO: fix this, make it work, so that it functions properly and doesn't break, throwing an error in the program and making people mad
+                row[7] = open("colors/background.jpg", "rb").read()
+                print(len(row[7]))
             except FileNotFoundError:
                 print("unable to find file %s" % row[7])
 
@@ -97,7 +98,7 @@ class MenuLayout(StackLayout):
             if mysqlc.fetchone(): # if a row similar to the one in the mysql database exists
                 mysqlc.execute("""
                     UPDATE pitscoutingdata SET
-                    drivetrain=%s, groundPickup=%s, scaleCapability=%s, switchCapability=%s, exchangeCapability=%s, image=%s, notes=%s
+                    drivetrain=%s, groundPickup=%s, scaleCapability=%s, switchCapability=%s, exchangeCapability=%s, image=_binary %s, notes=%s
                     WHERE teamNumber=%s
                 """, row[2:] + [row[0]]) # replace instead of insert
             else: # if there was no match
