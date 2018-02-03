@@ -38,7 +38,8 @@ class MenuLayout(StackLayout):
         # save button
         appendButton("Save", wholeHalf, grey, self.switcher.robot.localSave, databaseLayout)
         # ip input text
-        ipInput = TextInput(size_hint=quarterHalf, hint_text=self.ipInputTextHint)
+        ipInput = TextInput(size_hint=quarterHalf, multiline=False, hint_text=self.ipInputTextHint)
+        ipInput.bind(on_text_validate=lambda x: self.export(ipInput.text))
         # export button
         appendButton("Export all", halfHalf, grey, lambda x: self.export(ipInput.text), databaseLayout)
         # mysql ip label
@@ -85,14 +86,18 @@ class MenuLayout(StackLayout):
                 mysqlc.execute("INSERT INTO matchdata VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", row) # make a new row
         sqlitec.execute("SELECT * FROM pitscoutingdata")
         for row in sqlitec.fetchall(): # see robotclass PitRobot.dumpData() for order of row
-            row[7] = Image.open(row[7]) # TODO: fix this, make it work, so that it functions properly and doesn't break, throwing an error in the program and making people mad
+            try:
+                row[7] = Image.open(row[7]) # TODO: fix this, make it work, so that it functions properly and doesn't break, throwing an error in the program and making people mad
+            except FileNotFoundError:
+                print("unable to find file %s" % row[7])
+
             mysqlc.execute("SELECT * FROM pitscoutingdata WHERE teamNumber=%s", (row[0],))
             if mysqlc.fetchone(): # if a row similar to the one in the mysql database exists
                 mysqlc.execute("""
                     UPDATE pitscoutingdata SET
-                    drivetrain=%s, groundCapability=%s, scaleCapability=%s, switchCapability=%s, exchangeCapability=%s, image=%s, notes=%s
+                    drivetrain=%s, groundPickup=%s, scaleCapability=%s, switchCapability=%s, exchangeCapability=%s, image=%s, notes=%s
                     WHERE teamNumber=%s
-                """, row[2:] + [row[0]]) # replace instead of insert
+                """, row[2:] + (row[0],)) # replace instead of insert
             else: # if there was no match
                 mysqlc.execute("INSERT INTO pitscoutingdata VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)", row) # insert instead of replace
         mysqldb.commit()
