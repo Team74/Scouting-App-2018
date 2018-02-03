@@ -22,54 +22,68 @@ class TeleopLayout(StackLayout):
             if not widget: displist.append(button)
             else: widget.add_widget(button)
 
-        # displays cubes in switch
-        appendLabel("Cubes put in switch:\n\n" + str(self.switcher.robot.switch), quarterQuarter, seaFoamGreen)
-        # displays team number
-        appendLabel("Team: " + str(self.switcher.robot.teamNumber), quarterQuarter, black)
-        # displays event name
-        appendLabel("Event: " + self.switcher.robot.eventName, quarterQuarter, black)
-        # "climbed" button for climb options
-        climb1Color = darkMagenta if self.switcher.robot.climb == "climbed" else lightMagenta # darkening the currently selected climb option
-        appendButton("Robot\nclimbed\nsuccessfully", eighthQuarter, climb1Color, lambda x: self.changeClimb("climbed"))
-        # "tried but failed" button for climb options
-        climb2Color = darkMagenta if self.switcher.robot.climb == "tried but failed" else lightMagenta # darkening the currently selected climb option
-        appendButton("Robot\nattempted to\nclimb but\nfailed", eighthQuarter, climb2Color, lambda x: self.changeClimb("tried but failed"))
-
-        # decrement switchDisp
-        appendButton("-", eighthQuarter, seaFoamGreen, lambda x: self.changeSwitch(-1))
-            #stop time // dont save
-        # increment switchDisp
-        appendButton("+", eighthQuarter, seaFoamGreen, lambda x: self.changeSwitch(1))
-            #start time
-        # menu button
-        appendButton("Menu", quarterQuarter, grey, self.switchMenu)
-        # displays scouter name
-        appendLabel("Scouter: " + self.switcher.robot.scouter, quarterQuarter, black)
-        # "levitated" button for climb options
-        climb3Color = darkMagenta if self.switcher.robot.climb == "levitated" else lightMagenta # darkening the currently selected climb option
-        appendButton("Robot\nlevitated", eighthQuarter, climb3Color, lambda x: self.changeClimb("levitated"))
-        # "did not climb" button for climb options
-        climb4Color = darkMagenta if self.switcher.robot.climb == "did not climb" else lightMagenta # darkening the currently selected climb option
-        appendButton("Robot did\nnot climb", eighthQuarter, climb4Color, lambda x: self.changeClimb("did not climb"))
-
+        # A layout that holds
+        screenLayout = StackLayout(size_hint=(.75, .5))
+        displist.append(screenLayout)
+        # climb Layout
+        climbLayout = StackLayout(size_hint=quarterHalf)
+        displist.append(climbLayout)
         # scale layout
         scaleLayout = StackLayout(size_hint=quarterHalf) # smaller layout to get around larger widgets in the same line (notesTextInput)
         displist.append(scaleLayout)
-        # displays cubes in scale
-        appendLabel("Cubes put in scale:\n\n" + str(self.switcher.robot.scale), wholeHalf, fairBlue, scaleLayout)
         # input for notes
         self.notesTextInput = TextInput(text=self.switcher.robot.notes, size_hint=halfHalf)
         displist.append(self.notesTextInput)
         # exchange layout
         exchangeLayout = StackLayout(size_hint=(.25, .5))
         displist.append(exchangeLayout)
-        # displays cubes in exchange
-        appendLabel("Cubes put in exchange:\n\n" + str(self.switcher.robot.exchange), wholeHalf, lightOrange, exchangeLayout)
 
+        # --- screenLayout --- #
+        # displays cubes in switch
+        appendLabel("Cubes put in switch:\n\n" + str(self.switcher.robot.switch), (1/3, .5), seaFoamGreen, screenLayout)
+        # displays team number
+        appendLabel("Team: " + str(self.switcher.robot.teamNumber), (1/3, .5), black, screenLayout)
+        # displays event name
+        appendLabel("Event: " + self.switcher.robot.eventName, (1/3, .5), black, screenLayout)
+        # decrement switchDisp
+        appendButton("-", (1/6, .5), seaFoamGreen, lambda x: self.changeSwitch(-1), screenLayout)
+            #stop time // dont save
+        # increment switchDisp
+        appendButton("+", (1/6, .5), seaFoamGreen, lambda x: self.changeSwitch(1), screenLayout)
+            #start time
+        # menu button
+        appendButton("Menu", (1/3, .5), grey, self.switchMenu, screenLayout)
+        # displays scouter name
+        appendLabel("Scouter: " + self.switcher.robot.scouter, (1/3, .5), black, screenLayout)
+
+        # --- climbLayout --- #
+        # "assisted" button for climb options
+        climb1Color = darkMagenta if self.switcher.robot.climb == "assisted" else lightMagenta # darkening the currently selected climb option
+        appendButton("Robot\nwas\nassisted", (.5, .40), climb1Color, lambda x: self.changeClimb("assisted"), climbLayout)
+        # "climbed" button for climb options
+        climb2Color = darkMagenta if self.switcher.robot.climb == "climbed" else lightMagenta # darkening the currently selected climb option
+        appendButton("Robot\nClimbed\nSuccessfully", (.5, .40), climb2Color, lambda x: self.changeClimb("climbed"), climbLayout)
+        # "climbed +1" button for climb options
+        climb3Color = darkMagenta if self.switcher.robot.climb == "assisted +1" else lightMagenta # darkening the currently selected climb option
+        appendButton("assisted\n1", (.5, .40), climb3Color, lambda x: self.changeClimb("assisted 1"), climbLayout)
+        # "climbed +2" button for climb options
+        climb4color = darkMagenta if self.switcher.robot.climb == "assisted +2" else lightMagenta
+        appendButton("assisted\n2", (.5, .40), climb4color, lambda x: self.changeClimb("assisted 2"), climbLayout)
+        # "did not climb" button for climb options
+        climb5Color = darkMagenta if self.switcher.robot.climb == "didn't climbed" else lightMagenta # darkening the currently selected climb option
+        appendButton("Robot didn't\n climb", (1, .20), climb5Color, lambda x: self.changeClimb("didn't climb"), climbLayout)
+
+        # --- scaleLayout --- #
+        # displays cubes in scale
+        appendLabel("Cubes put in scale:\n\n" + str(self.switcher.robot.scale), wholeHalf, fairBlue, scaleLayout)
         # decrement scaleDisp
         appendButton("-", halfHalf, fairBlue, lambda x: self.changeScale(-1), scaleLayout)
         # increment scaleDisp
         appendButton("+", halfHalf, fairBlue, lambda x: self.changeScale(1), scaleLayout)
+
+        # --- exchangeLayout --- #
+        # displays cubes in exchange
+        appendLabel("Cubes put in exchange:\n\n" + str(self.switcher.robot.exchange), wholeHalf, lightOrange, exchangeLayout)
         # decrement exchangeDisp
         appendButton("-", halfHalf, lightOrange, lambda x: self.changeExchange(-1), exchangeLayout)
         # increment exchangeDisp
