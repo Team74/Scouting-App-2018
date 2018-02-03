@@ -16,11 +16,11 @@ class PhotoLayout(StackLayout):
         self.displist = []
         self.ifPhoto = ""
 
-        self.appendButton("back", wholefifth, grey, lambda x: self.switcher.Switch("pitscouting main"))
+        self.appendButton("back", wholeFifth, grey, lambda x: self.switcher.switch("pitscouting main"))
 
-        self.appendButton("Look at\nprevious photo.\n%s" % self.ifPhoto, halfWhole, grey, lambda x: self.seePhoto())
+        self.appendButton("Look at\nprevious photo.\n%s" % self.ifPhoto, halfFourFifth, grey, lambda x: self.seePhoto())
 
-        self.appendButton("Take new\nphhoto.", halfWhole, grey, lambda _: camera.take_picture('/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber), ""))
+        self.appendButton("Take new\nphhoto.", halfFourFifth, grey, lambda _: camera.take_picture('/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber), ""))
 
         self.displayAll()
 
