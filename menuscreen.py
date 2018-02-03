@@ -2,6 +2,7 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.stacklayout import StackLayout
 
 from widgetpresets import *
+from robotclass import *
 
 import mysql.connector #mysql --host=10.111.49.49 --user=jaga663 --password=chaos
 import sqlite3
@@ -39,7 +40,7 @@ class MenuLayout(StackLayout):
         # save button
         appendButton("Save", wholeHalf, grey, self.switcher.robot.localSave, databaseLayout)
         # ip input text
-        ipInput = TextInput(size_hint=quarterHalf, multiline=False, hint_text=self.ipInputTextHint)
+        ipInput = TextInput(text = getIp(),size_hint=quarterHalf, multiline=False, hint_text=self.ipInputTextHint)
         ipInput.bind(on_text_validate=lambda x: self.export(ipInput.text))
         # export button
         appendButton("Export all", halfHalf, grey, lambda x: self.export(ipInput.text), databaseLayout)
@@ -69,7 +70,7 @@ class MenuLayout(StackLayout):
             self.ipInputTextHint = "incorrect IP"
             self.display()
             return
-
+        ipSave(ip)
         mysqlc = mysqldb.cursor() # mysql cursor
         sqlitedb = sqlite3.connect("scoutingdatabase.db") # sqlite database
         sqlitec = sqlitedb.cursor() # sqlite cursor
@@ -86,9 +87,10 @@ class MenuLayout(StackLayout):
             else: # if there was no row found
                 mysqlc.execute("INSERT INTO matchdata VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", row) # make a new row
         sqlitec.execute("SELECT * FROM pitscoutingdata")
-        for row in sqlitec.fetchall(): # see robotclass PitRobot.dumpData() for order of row
+        for pitscoutdata in sqlitec.fetchall(): # see robotclass PitRobot.dumpData() for order of row
+            row = list(pitscoutdata)
             try:
-                row[7] = Image.open(row[7]) # TODO: fix this, make it work, so that it functions properly and doesn't break, throwing an error in the program and making people mad
+                row[7] = open("colors/background.jpg", "rb").read() # TODO: fix this, make it work, so that it functions properly and doesn't break, throwing an error in the program and making people mad
             except FileNotFoundError:
                 print("unable to find file %s" % row[7])
 
@@ -98,7 +100,7 @@ class MenuLayout(StackLayout):
                     UPDATE pitscoutingdata SET
                     drivetrain=%s, groundPickup=%s, scaleCapability=%s, switchCapability=%s, exchangeCapability=%s, image=%s, notes=%s
                     WHERE teamNumber=%s
-                """, row[2:] + (row[0],)) # replace instead of insert
+                """, row[2:] + [row[0]]) # replace instead of insert
             else: # if there was no match
                 mysqlc.execute("INSERT INTO pitscoutingdata VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)", row) # insert instead of replace
         mysqldb.commit()

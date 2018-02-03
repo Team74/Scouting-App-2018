@@ -121,3 +121,15 @@ class PitRobot(object):
         self.climbCapability = robotData[6]
         self.image = robotData[7]
         self.notes = robotData[8]
+
+def ipSave(ip):
+    database = sqlite3.connect("scoutingdatabase.db")
+    database.execute("UPDATE IPAddress SET ip = ?", (ip,))
+    database.commit()
+    database.close()
+def getIp():
+    database = sqlite3.connect("scoutingdatabase.db")
+    cursor = database.cursor()
+    cursor.execute("SELECT ip FROM IPAddress")
+
+    return cursor.fetchone()[0]
