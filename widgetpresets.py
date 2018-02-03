@@ -77,6 +77,9 @@ def eighthLabel(text, color=grey):
 def eighthButton(text, color=grey):
     return ColorButton(text, (.125, .25), color)
 
+halfFourFifth = (.5, .8)
+wholeFifth = (1, .2)
+
 wholeHalf = (1, .5)
 def fullLabel(text, color=grey):
     return ColorLabel(text, (1, .5), color)

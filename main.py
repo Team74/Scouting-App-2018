@@ -10,6 +10,7 @@ from pitmenuscreen import PitMenuLayout
 from dataviewscreen import DataViewLayout
 from pitscoutingscreen import PitScoutingLayout
 from pitscoutingselecterscreen import PitScoutingSelecterLayout
+from photoscreen import PhotoLayout
 from robotclass import *
 import sqlite3
 
@@ -18,7 +19,7 @@ class ScreenSwitcher(BoxLayout):
         super(ScreenSwitcher, self).__init__()
         self.eventName = "Test"
         self.robot = Robot(1, 1, self.eventName, "placeholder")
-        self.screens = {"login": LoginLayout(self), "menu": MenuLayout(self), "teleop": TeleopLayout(self), "pitscouting selecter": PitScoutingSelecterLayout(self), "auton": AutonLayout(self), "pitscouting main": PitScoutingLayout(self), "pitscouting menu": PitMenuLayout(self), "dataview": DataViewLayout(self)}
+        self.screens = {"login": LoginLayout(self), "menu": MenuLayout(self), "teleop": TeleopLayout(self), "pitscouting selecter": PitScoutingSelecterLayout(self), "auton": AutonLayout(self), "pitscouting main": PitScoutingLayout(self), "pitscouting menu": PitMenuLayout(self), "dataview": DataViewLayout(self), "photo": PhotoLayout(self)}
         self.currentScreen = self.screens["login"]
         self.display()
 
@@ -42,8 +43,8 @@ if __name__ == "__main__":
         myapp.run()
     except Exception as error:
         robot = myapp.screenSwitcher.robot
-        robot.localSave("ree")
         if isinstance(robot, PitRobot): raise error
+        robot.localSave("ree")
         database = sqlite3.connect("scoutingdatabase.db")
         database.execute("UPDATE crash SET Team=?, Round=?, Scouter=?, Exited=?", (robot.teamNumber, robot.roundNumber, robot.scouter, 0))
         database.commit()

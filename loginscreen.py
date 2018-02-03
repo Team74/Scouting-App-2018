@@ -9,6 +9,8 @@ class LoginLayout(StackLayout):
     def __init__(self, screenSwitcher):
         self.switcher = screenSwitcher
         super(LoginLayout, self).__init__()
+        self.round = 1
+        self.last = ""
 
 
     def display(self):
@@ -35,8 +37,8 @@ class LoginLayout(StackLayout):
         scouterDisp = bigLabel("scouter", seaFoamGreen)
         displist.append(scouterDisp)
         # scouter input
-        scouterInput = TextInput(text=str(""), multiline=False, size_hint=(.5, .25))
-        displist.append(scouterInput)
+        self.scouterInput = TextInput(text=str(self.last), multiline=False, size_hint=(.5, .25))
+        displist.append(self.scouterInput)
 
         #row 2
         teamDisp = bigLabel("team", seaFoamGreen)
@@ -49,8 +51,16 @@ class LoginLayout(StackLayout):
         roundDisp = bigLabel("round", seaFoamGreen)
         displist.append(roundDisp)
 
-        roundInput = TextInput(text=str(""), multiline=False, size_hint=(.5, .25))
-        displist.append(roundInput)
+        self.roundInput = TextInput(text=str(self.round), multiline=False, size_hint=quarterQuarter)
+        displist.append(self.roundInput)
+
+        roundInc = ColorButton("+", (.125, .25), grey)
+        roundInc.bind(on_release=lambda x: self.changeRound(1))
+        displist.append(roundInc)
+
+        roundDec = ColorButton("-", (.125, .25), grey)
+        roundDec.bind(on_release=lambda x: self.changeRound(-1))
+        displist.append(roundDec)
 
         #row 4
         pitScout = quarterButton("Pit Scouting", fairBlue)
@@ -65,16 +75,18 @@ class LoginLayout(StackLayout):
         def teleopSwitch(_):
             number = "1234567890"
             #checking to see if team number and round number are input correctly so we dont have data type mismatch in sql database
-            if not teamInput.text and not roundInput.text: return
+            if not teamInput.text or not self.roundInput.text or not self.scouterInput.text: return
             for i in teamInput.text:
                 if not i in number:
                     teamInput.text_hint = "invalid team number"
                     return
-            for i in roundInput.text:
+            for i in self.roundInput.text:
                 if not i in number:
-                    roundInput.text_hint = "invalid round number"
+                    self.roundInput.text_hint = "invalid round number"
                     return
-            self.switcher.robot = Robot(int(teamInput.text), int(roundInput.text), self.switcher.eventName, scouterInput.text)
+            self.switcher.robot = Robot(int(teamInput.text), int(self.roundInput.text), self.switcher.eventName, self.scouterInput.text)
+            self.last = self.scouterInput.text
+            self.round += 1
             self.switcher.switch("auton")
         goButton.bind(on_release=teleopSwitch)
         displist.append(goButton)
@@ -82,3 +94,13 @@ class LoginLayout(StackLayout):
         self.clear_widgets()
         for widg in displist:
             self.add_widget(widg)
+
+    def changeRound(self, change):
+        if not self.roundInput.text: return
+        for i in self.roundInput.text:
+            if not i in "12344567890":
+                return
+        self.round = int(self.roundInput.text) + change
+        if self.round <= 0:
+            self.round = 1
+        self.roundInput.text = str(self.round)

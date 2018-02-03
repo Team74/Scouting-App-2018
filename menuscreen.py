@@ -30,8 +30,9 @@ class MenuLayout(StackLayout):
         # teleop switch
         appendButton("Teleop", halfHalf, grey, lambda x: self.switcher.switch("teleop"))
 
-        # login switch
+        # change team button
         appendButton("Change team (data will be lost if not saved)", halfHalf, grey, lambda x: self.switcher.switch("login"))
+
         # layout for save and export buttons
         databaseLayout = StackLayout(size_hint=halfHalf)
         displist.append(databaseLayout)

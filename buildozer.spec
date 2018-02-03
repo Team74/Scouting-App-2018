@@ -32,7 +32,7 @@ version = 73.2.1
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
-# version.filename = %(source.dir)s/PhotoScreen.py
+# version.filename = %(source.dir)s/main.py
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
@@ -229,7 +229,7 @@ warn_on_root = 1
 #build_dir = ./build/PowerUpScouting
 
 # (str) Path to build output (i.e. .apk, .ipa) storage
-# bin_dir = ./bin
+# bin_dir = ~/Scouting-App-2018/bin/
 
 #    -----------------------------------------------------------------------------
 #    List as sections

@@ -90,7 +90,7 @@ class PitRobot(object):
 
     def localSave(self):
         database = sqlite3.connect("scoutingdatabase.db")
-        print("pit scouting - saving %s with %s" % (self.teamNumber, self.dumpData[1:]))
+        print("pit scouting - saving %s with %s" % (self.teamNumber, self.dumpData()[1:]))
         database.execute("UPDATE pitscoutingdata SET drivetrain=?, groundPickup=?, switchCapability=?, scaleCapability=?, exchangeCapability=?, climbCapability=?, image=?, notes=? WHERE teamNumber=?", self.dumpData()[1:] + [self.teamNumber])
         database.commit()
         database.close()
