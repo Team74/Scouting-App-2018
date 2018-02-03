@@ -43,6 +43,9 @@ class TeleopLayout(StackLayout):
         appendLabel("Cubes put in switch:\n\n" + str(self.switcher.robot.switch), (1/3, .5), seaFoamGreen, screenLayout)
         # displays team number
         appendLabel("Team: " + str(self.switcher.robot.teamNumber), (1/3, .5), black, screenLayout)
+        # made to crash the app to test our quick save feature
+        #appendButton("Team: " + str(self.switcher.robot.teamNumber), (1/3, .5), black, lambda x: self.crash() , screenLayout)
+
         # displays event name
         appendLabel("Event: " + self.switcher.robot.eventName, (1/3, .5), black, screenLayout)
         # decrement switchDisp
@@ -54,24 +57,31 @@ class TeleopLayout(StackLayout):
         # menu button
         appendButton("Menu", (1/3, .5), grey, self.switchMenu, screenLayout)
         # displays scouter name
-        appendLabel("Scouter: " + self.switcher.robot.scouter, (1/3, .5), black, screenLayout)
+        scoutLayout = StackLayout(size_hint = (1/3, .5))
+        screenLayout.add_widget(scoutLayout)
+
+        # --- scoutLayout --- #
+        # displays scouter name
+        appendLabel("Scouter: " + self.switcher.robot.scouter, (1, .5), black, scoutLayout)
+        #
+        appendLabel("Rounds scouted: " + str(self.switcher.screens["login"].scoutNumber), (1, .5), black, scoutLayout)
 
         # --- climbLayout --- #
         # "assisted" button for climb options
         climb1Color = darkMagenta if self.switcher.robot.climb == "assisted" else lightMagenta # darkening the currently selected climb option
         appendButton("Robot\nwas\nassisted", (.5, .40), climb1Color, lambda x: self.changeClimb("assisted"), climbLayout)
-        # "climbed" button for climb options
-        climb2Color = darkMagenta if self.switcher.robot.climb == "climbed" else lightMagenta # darkening the currently selected climb option
-        appendButton("Robot\nClimbed\nSuccessfully", (.5, .40), climb2Color, lambda x: self.changeClimb("climbed"), climbLayout)
-        # "climbed +1" button for climb options
-        climb3Color = darkMagenta if self.switcher.robot.climb == "assisted +1" else lightMagenta # darkening the currently selected climb option
-        appendButton("assisted\n1", (.5, .40), climb3Color, lambda x: self.changeClimb("assisted 1"), climbLayout)
-        # "climbed +2" button for climb options
-        climb4color = darkMagenta if self.switcher.robot.climb == "assisted +2" else lightMagenta
-        appendButton("assisted\n2", (.5, .40), climb4color, lambda x: self.changeClimb("assisted 2"), climbLayout)
         # "did not climb" button for climb options
-        climb5Color = darkMagenta if self.switcher.robot.climb == "didn't climbed" else lightMagenta # darkening the currently selected climb option
-        appendButton("Robot didn't\n climb", (1, .20), climb5Color, lambda x: self.changeClimb("didn't climb"), climbLayout)
+        climb2Color = darkMagenta if self.switcher.robot.climb == "didn't climb" else lightMagenta # darkening the currently selected climb option
+        appendButton("Robot\ndidn't\n climb", (.5, .40), climb2Color, lambda x: self.changeClimb("didn't climb"), climbLayout)
+        # "climbed" button for climb options
+        climb3Color = darkMagenta if self.switcher.robot.climb == "climbed" or self.switcher.robot.climb == "assisted +1" or self.switcher.robot.climb == "assisted +2" else lightMagenta # darkening the currently selected climb option
+        appendButton("Robot Climbed\nSuccessfully", (1, .20), climb3Color, lambda x: self.changeClimb("climbed"), climbLayout)
+        # "climbed +1" button for climb options
+        climb4Color = darkMagenta if self.switcher.robot.climb == "assisted +1" else lightMagenta # darkening the currently selected climb option
+        appendButton("assisted\n1", (.5, .40), climb4Color, lambda x: self.changeClimb("assisted +1"), climbLayout)
+        # "climbed +2" button for climb options
+        climb5color = darkMagenta if self.switcher.robot.climb == "assisted +2" else lightMagenta
+        appendButton("assisted\n2", (.5, .40), climb5color, lambda x: self.changeClimb("assisted +2"), climbLayout)
 
         # --- scaleLayout --- #
         # displays cubes in scale
