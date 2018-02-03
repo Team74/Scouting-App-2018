@@ -86,9 +86,10 @@ class MenuLayout(StackLayout):
             else: # if there was no row found
                 mysqlc.execute("INSERT INTO matchdata VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", row) # make a new row
         sqlitec.execute("SELECT * FROM pitscoutingdata")
-        for row in sqlitec.fetchall(): # see robotclass PitRobot.dumpData() for order of row
+        for pitscoutdata in sqlitec.fetchall(): # see robotclass PitRobot.dumpData() for order of row
+            row = list(pitscoutdata)
             try:
-                row[7] = Image.open(row[7]) # TODO: fix this, make it work, so that it functions properly and doesn't break, throwing an error in the program and making people mad
+                row[7] = open("colors/background.jpg", "rb").read() # TODO: fix this, make it work, so that it functions properly and doesn't break, throwing an error in the program and making people mad
             except FileNotFoundError:
                 print("unable to find file %s" % row[7])
 
@@ -98,7 +99,7 @@ class MenuLayout(StackLayout):
                     UPDATE pitscoutingdata SET
                     drivetrain=%s, groundPickup=%s, scaleCapability=%s, switchCapability=%s, exchangeCapability=%s, image=%s, notes=%s
                     WHERE teamNumber=%s
-                """, row[2:] + (row[0],)) # replace instead of insert
+                """, row[2:] + [row[0]]) # replace instead of insert
             else: # if there was no match
                 mysqlc.execute("INSERT INTO pitscoutingdata VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)", row) # insert instead of replace
         mysqldb.commit()
