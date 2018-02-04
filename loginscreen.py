@@ -24,6 +24,13 @@ class LoginLayout(StackLayout):
                 database.execute("UPDATE crash SET Exited=1")
                 database.commit()
                 database.close()
+                self.scoutNumber = 0
+                database = sqlite3.connect("scoutingdatabase.db") # data calling from db
+                cursor = database.cursor()
+                cursor.execute("SELECT scouter FROM matchdata")
+                for scouterData in cursor.fetchall():
+                    if scouterData[0] == result[2]:
+                        self.scoutNumber += 1
                 self.switcher.switch("teleop")
             else:
                 database.commit()
@@ -87,6 +94,13 @@ class LoginLayout(StackLayout):
             self.switcher.robot = Robot(int(teamInput.text), int(self.roundInput.text), self.switcher.eventName, self.scouterInput.text)
             self.last = self.scouterInput.text
             self.round += 1
+            self.scoutNumber = 0
+            database = sqlite3.connect("scoutingdatabase.db") # data calling from db
+            cursor = database.cursor()
+            cursor.execute("SELECT scouter FROM matchdata")
+            for scouterData in cursor.fetchall():
+                if scouterData[0] == self.scouterInput.text:
+                    self.scoutNumber += 1
             self.switcher.switch("auton")
         goButton.bind(on_release=teleopSwitch)
         displist.append(goButton)
