@@ -2,6 +2,7 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.stacklayout import StackLayout
 
 from widgetpresets import *
+from robotclass import *
 
 import mysql.connector #mysql --host=10.111.49.49 --user=jaga663 --password=chaos
 import sqlite3
@@ -39,7 +40,11 @@ class MenuLayout(StackLayout):
         # save button
         appendButton("Save", wholeHalf, grey, self.switcher.robot.localSave, databaseLayout)
         # ip input text
-        ipInput = TextInput(size_hint=quarterHalf, multiline=False, hint_text=self.ipInputTextHint)
+        if self.ipInputTextHint:
+            text = ""
+        else:
+            text = getIp()
+        ipInput = TextInput(text=text, size_hint=quarterHalf, multiline=False, hint_text=self.ipInputTextHint)
         ipInput.bind(on_text_validate=lambda x: self.export(ipInput.text))
         # export button
         appendButton("Export all", halfHalf, grey, lambda x: self.export(ipInput.text), databaseLayout)
@@ -69,7 +74,7 @@ class MenuLayout(StackLayout):
             self.ipInputTextHint = "incorrect IP"
             self.display()
             return
-
+        ipSave(ip)
         mysqlc = mysqldb.cursor() # mysql cursor
         sqlitedb = sqlite3.connect("scoutingdatabase.db") # sqlite database
         sqlitec = sqlitedb.cursor() # sqlite cursor
