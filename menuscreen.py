@@ -7,7 +7,6 @@ from robotclass import *
 import mysql.connector #mysql --host=10.111.49.49 --user=jaga663 --password=chaos
 import sqlite3
 
-from PIL import Image
 
 class MenuLayout(StackLayout):
     def __init__(self, screenSwitcher):
