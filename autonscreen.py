@@ -1,4 +1,5 @@
 from kivy.uix.stacklayout import StackLayout
+from loginscreen import *
 
 from widgetpresets import *
 from robotclass import *
@@ -44,11 +45,18 @@ class AutonLayout(StackLayout):
         appendButton('+', eighthQuarter, lightOrange, lambda x : self.changeSwitch(1))
         # menu button
         appendButton("Menu", quarterQuarter, grey, lambda x: self.switcher.switch("menu"))
-        # displays scouter name
-        appendLabel("Scouter: " + self.switcher.robot.scouter, quarterQuarter, black)
+        #
+        scoutLayout = StackLayout(size_hint = quarterQuarter)
+        displist.append(scoutLayout)
         # "None" for attemptedSwitchSide
         side3Color = darkMagenta if self.switcher.robot.attemptedSwitchSide == "none" else lightMagenta
         appendButton("Robot\ndidn't\nattempt\nthe switch", quarterQuarter, side3Color, lambda x: self.changeSide("none"))
+
+        # --- scoutLayout --- #
+        # displays scouter name
+        appendLabel("Scouter: " + self.switcher.robot.scouter, (1, .5), black, scoutLayout)
+        #
+        appendLabel("Rounds scouted: " + str(self.switcher.screens["login"].scoutNumber), (1, .5), black, scoutLayout)
 
         #row 3
 
