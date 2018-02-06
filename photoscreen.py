@@ -1,7 +1,7 @@
 from kivy.uix.stacklayout import StackLayout
 from kivy.uix.image import Image
 
-from camera import *
+from plyer import camera
 from widgetpresets import *
 from robotclass import *
 import os
@@ -34,8 +34,10 @@ class PhotoLayout(StackLayout):
         if not '/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber):
             os.remove('/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber))
             camera.take_picture('/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber))
+            self.switcher.robot.image = '/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber)
         else:
             camera.take_picture('/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber))
+            self.switcher.robot.image = '/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber)w
 
     def photoDisplay(self):
         self.displist = []
