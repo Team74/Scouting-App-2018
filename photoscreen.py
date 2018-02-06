@@ -37,7 +37,7 @@ class PhotoLayout(StackLayout):
             self.switcher.robot.image = '/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber)
         else:
             camera.take_picture('/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber))
-            self.switcher.robot.image = '/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber)w
+            self.switcher.robot.image = '/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber)
 
     def photoDisplay(self):
         self.displist = []

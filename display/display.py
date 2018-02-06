@@ -6,6 +6,7 @@ from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 from kivy.uix.stacklayout import StackLayout
 
+import sqlite3
 import os
 import io
 import binascii
@@ -30,10 +31,37 @@ class DisplayLayout(StackLayout):
     def displayMain(self, _):
         self.displist = []
 
-        self.appendButton("switch data", (1, 1), self.displaySwitch)
+        self.appendButton("switch data", (.5, 1), self.displaySwitch)
+        self.appendButton("export", (.5, 1), self.exportbutton)
 
         self.addAll()
 
+    def exportbutton(self, _):
+        fh = open("hello.txt","w")
+        sqlitedb = sqlite3.connect("displaydatabase.db") # sqlite database
+        sqlitec = sqlitedb.cursor() # sqlite cursor
+        sqlitec.execute("SELECT * FROM matchdata") # first upload all match data
+        for row in sqlitec.fetchall():
+            print (row)
+            fh.write(\
+            str(row[0])+","+\
+            str(row[1])+","+\
+            str(row[2])+","+\
+            str(row[3])+","+\
+            str(row[4])+","+\
+            str(row[5])+","+\
+            str(row[6])+","+\
+            str(row[7])+","+\
+            str(row[8])+","+\
+            str(row[9])+","+\
+            str(row[10])+","+\
+            str(row[11])+","+\
+            str(row[12])+","+\
+            str(row[13])+","+\
+            "\n"\
+            )
+
+        fh.close()
     def displaySwitch(self, _):
         self.displist = []
 

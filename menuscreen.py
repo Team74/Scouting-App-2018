@@ -7,7 +7,6 @@ from robotclass import *
 import mysql.connector #mysql --host=10.111.49.49 --user=jaga663 --password=chaos
 import sqlite3
 
-
 class MenuLayout(StackLayout):
     def __init__(self, screenSwitcher):
         self.switcher = screenSwitcher
@@ -81,6 +80,7 @@ class MenuLayout(StackLayout):
         for row in sqlitec.fetchall(): # see robotclass Robot.dumpData() for order of row
             mysqlc.execute("SELECT * FROM matchdata WHERE teamNumber=%s AND roundNumber=%s AND eventName=%s", row[:3])
             if mysqlc.fetchone(): # if a row similar to the one in the mysql database exists
+                print(len(row[3:] + row[:3]))
                 mysqlc.execute("""
                     UPDATE matchdata SET
                     scouter=%s, switch=%s, scale=%s, exchange=%s, climb=%s, notes=%s,
@@ -88,15 +88,20 @@ class MenuLayout(StackLayout):
                     WHERE teamNumber=%s AND roundNumber=%s AND eventName=%s
                 """, row[3:] + row[:3]) # overwrite instead of make a new one
             else: # if there was no row found
-                mysqlc.execute("INSERT INTO matchdata VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", row) # make a new row
+                mysqlc.execute("INSERT INTO matchdata VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", row) # make a new row
         sqlitec.execute("SELECT * FROM pitscoutingdata")
         for pitscoutdata in sqlitec.fetchall(): # see robotclass PitRobot.dumpData() for order of row
             row = list(pitscoutdata)
+            print("uploading psdata for team %s" % row[0])
             try:
-                row[7] = open("colors/background.jpg", "rb").read()
+                row[7] = open(row[7], "rb").read()
                 print(len(row[7]))
             except FileNotFoundError:
                 print("unable to find file %s" % row[7])
+                row[7] = "unable to find"
+            except TypeError:
+                print("no picture to upload")
+                row[7] = "unable to find"
 
             mysqlc.execute("SELECT * FROM pitscoutingdata WHERE teamNumber=%s", (row[0],))
             if mysqlc.fetchone(): # if a row similar to the one in the mysql database exists
