@@ -17,8 +17,13 @@ class PitScoutingSelecterLayout(StackLayout):
         scrolllist = []
         displist = []
 
-        searchBar = TextInput(size_hint=(.875,.1), multiline=False)
+        searchBar = TextInput(size_hint=(.75,.1), multiline=False)
+        searchBar.bind(on_text_validate=lambda x: self.processQuery(searchBar.text))
         displist.append(searchBar)
+
+        back = ColorButton("Go", (.125, .1), darkblue)
+        back.bind(on_release=lambda x: self.processQuery(searchBar.text))
+        displist.append(back)
 
         back = ColorButton("Back", (.125, .1), darkblue)
         back.bind(on_release=lambda x: self.switcher.switch("login"))
@@ -59,7 +64,13 @@ class PitScoutingSelecterLayout(StackLayout):
             self.add_widget(widget)
 
     def processQuery(self, search):
-        search = search.split()
+        self.query = ""
+        print("searching with %s" % search)
+        if not search:
+            self.display()
+            return
+        search = search.split(" ")
+        print("params are %s" % [x for x in search])
         if "scouted" in search and not "not" in search:
             self.query = "WHERE NOT drivetrain=NULL"
         if "not" in search and "scouted" in search:
@@ -69,6 +80,7 @@ class PitScoutingSelecterLayout(StackLayout):
                 self.query = "WHERE teamNumber=%s" % search[1]
         if search[0][0] in "1234567890":
             self.query = "WHERE teamNumber=%s" % search[0]
+        self.display()
 
     def pitScouterMainSwitch(self, numberButton):
         self.switcher.robot = PitRobot(numberButton.text)
