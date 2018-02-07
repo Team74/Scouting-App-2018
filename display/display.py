@@ -23,8 +23,11 @@ class DisplayLayout(StackLayout):
         for data in cursor.fetchall():
             teamNumber = data[0]
             image = data[1]
+            print(image)
+            print(len(image))
             imageFile = open("%s/pitimages/%s.jpg" % (currentDir, teamNumber), "wb")
             imageFile.write(image)
+            imageFile.close()
 
         database.close()
 
