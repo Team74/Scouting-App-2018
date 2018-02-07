@@ -11,6 +11,7 @@ class LoginLayout(StackLayout):
         super(LoginLayout, self).__init__()
         self.round = 1
         self.last = ""
+        self.ipInputTextHint = ""
 
 
     def display(self):
@@ -61,22 +62,37 @@ class LoginLayout(StackLayout):
         self.roundInput = TextInput(text=str(self.round), multiline=False, size_hint=quarterQuarter)
         displist.append(self.roundInput)
 
-        roundInc = ColorButton("+", (.125, .25), grey)
+        roundInc = ColorButton("+", (.125, .25), seaFoamGreen)
         roundInc.bind(on_release=lambda x: self.changeRound(1))
         displist.append(roundInc)
 
-        roundDec = ColorButton("-", (.125, .25), grey)
+        roundDec = ColorButton("-", (.125, .25), seaFoamGreen)
         roundDec.bind(on_release=lambda x: self.changeRound(-1))
         displist.append(roundDec)
 
         #row 4
-        pitScout = quarterButton("Pit Scouting", fairBlue)
+        pitScout = ColorButton("Pit Scouting", ((1/6), .25),fairBlue)
         pitScout.bind(on_release=lambda x: self.switcher.switch("pitscouting selecter"))
         displist.append(pitScout)
 
-        dataview = quarterButton('dataview', fairBlue)
+        dataview = ColorButton('dataview', ((1/6), .25), fairBlue)
         dataview.bind(on_release=lambda x: self.switcher.switch("dataview"))
         displist.append(dataview)
+
+        exportLayout = StackLayout(size_hint=(1/6, .25))
+        displist.append(exportLayout)
+
+        exportButton = ColorButton('Export All', (1, .5), fairBlue)
+        exportLayout.add_widget(exportButton)
+
+        if self.ipInputTextHint:
+            text = ""
+        else:
+            text = getIp()
+        IpText = TextInput(text=text, multiline=False, size_hint=(1, .5))
+        exportLayout.add_widget(IpText)
+
+        exportButton.bind(on_release=lambda x: export(IpText.text))
 
         goButton = bigButton("Go", fairBlue)
         def teleopSwitch(_):
@@ -93,7 +109,7 @@ class LoginLayout(StackLayout):
                     return
             self.switcher.robot = Robot(int(teamInput.text), int(self.roundInput.text), self.switcher.eventName, self.scouterInput.text)
             self.last = self.scouterInput.text
-            self.round += 1
+            self.round = int(self.roundInput.text) + 1
             self.scoutNumber = 0
             database = sqlite3.connect("scoutingdatabase.db") # data calling from db
             cursor = database.cursor()

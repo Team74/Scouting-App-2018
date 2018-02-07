@@ -40,31 +40,31 @@ class TeleopLayout(StackLayout):
 
         # --- screenLayout --- #
         # displays cubes in switch
-        appendLabel("Cubes put in switch:\n\n" + str(self.switcher.robot.switch), (1/3, .5), seaFoamGreen, screenLayout)
+        appendLabel("Cubes put in switch:\n\n" + str(self.switcher.robot.switch), (1/3, .5), darkPurple, screenLayout)
         # displays team number
-        appendLabel("Team: " + str(self.switcher.robot.teamNumber), (1/3, .5), black, screenLayout)
+        appendLabel("Team: " + str(self.switcher.robot.teamNumber), (1/3, .5), darkSeaFoamGreen, screenLayout)
         # made to crash the app to test our quick save feature
-        #appendButton("Team: " + str(self.switcher.robot.teamNumber), (1/3, .5), black, lambda x: self.crash() , screenLayout)
+        #appendButton("Team: " + str(self.switcher.robot.teamNumber), (1/3, .5), darkSeaFoamGreen, lambda x: self.crash() , screenLayout)
 
         # displays event name
-        appendLabel("Event: " + self.switcher.robot.eventName, (1/3, .5), black, screenLayout)
+        appendLabel("Event: " + self.switcher.robot.eventName, (1/3, .5), darkSeaFoamGreen, screenLayout)
         # decrement switchDisp
-        appendButton("-", (1/6, .5), seaFoamGreen, lambda x: self.changeSwitch(-1), screenLayout)
+        appendButton("-", (1/6, .5), darkPurple, lambda x: self.changeSwitch(-1), screenLayout)
             #stop time // dont save
         # increment switchDisp
-        appendButton("+", (1/6, .5), seaFoamGreen, lambda x: self.changeSwitch(1), screenLayout)
+        appendButton("+", (1/6, .5), darkPurple, lambda x: self.changeSwitch(1), screenLayout)
             #start time
         # menu button
-        appendButton("Menu", (1/3, .5), grey, self.switchMenu, screenLayout)
+        appendButton("Menu", (1/3, .5), fairBlue, self.switchMenu, screenLayout)
         # displays scouter name
         scoutLayout = StackLayout(size_hint = (1/3, .5))
         screenLayout.add_widget(scoutLayout)
 
         # --- scoutLayout --- #
         # displays scouter name
-        appendLabel("Scouter: " + self.switcher.robot.scouter, (1, .5), black, scoutLayout)
+        appendLabel("Scouter: " + self.switcher.robot.scouter, (1, .5), darkSeaFoamGreen, scoutLayout)
         #
-        appendLabel("Rounds scouted: " + str(self.switcher.screens["login"].scoutNumber), (1, .5), black, scoutLayout)
+        appendLabel("Rounds scouted: " + str(self.switcher.screens["login"].scoutNumber), (1, .5), darkSeaFoamGreen, scoutLayout)
 
         # --- climbLayout --- #
         # "assisted" button for climb options

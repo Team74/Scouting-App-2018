@@ -27,7 +27,7 @@ class PitScoutingLayout(StackLayout):
         appendButton("CAN put cube on switch", quarterQuarter, colorSwitchCan, lambda x: self.changeSwitch(1))
 
         # menu button
-        appendButton("Menu", quarterQuarter, grey, self.switchMenu)
+        appendButton("Menu", quarterQuarter, purple, self.switchMenu)
 
         # team display
         appendLabel("Team: " + str(robot.teamNumber), quarterQuarter, black)

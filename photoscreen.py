@@ -21,7 +21,11 @@ class PhotoLayout(StackLayout):
 
         self.appendButton("Look at\nprevious photo.\n%s" % self.ifPhoto, halfFourFifth, grey, lambda x: self.seePhoto())
 
-        self.appendButton("Take new\nphoto.", halfFourFifth, grey, lambda _: self.newphoto())
+        def takePicture(_):
+            camera.take_picture("/storage/sdcard0/%s.jpg" % str(self.switcher.robot.teamNumber), "")
+            self.switcher.robot.image = "/storage/sdcard0/%s.jpg" % str(self.switcher.robot.teamNumber)
+
+        self.appendButton("Take new\nphhoto.", halfFourFifth, grey, takePicture)
 
         self.displayAll()
 
