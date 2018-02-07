@@ -1,5 +1,6 @@
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
+from kivy.core.window import Window
 
 from robotclass import *
 from menuscreen import MenuLayout
@@ -35,7 +36,43 @@ class ScreenSwitcher(BoxLayout):
 class MyApp(App):
     def build(self):
         self.screenSwitcher = ScreenSwitcher()
+        win = Window
+        win.bind(on_keyboard=self.key_handler)
         return self.screenSwitcher
+    def key_handler(self, _a, escape, _b, _c, _d):
+        if escape in [27, 1001]:
+            return """
+            Nihilists with good imaginations
+
+            I am satisfied hiding in our friend's apartment
+            Only leaving once a day to buy some groceries
+            Daylight, I'm so absent minded
+            Nighttime, meeting new anxieties
+            So am I erasing myself?
+            Hope I'm not erasing myself
+
+            I guess it would be nice to give my heart to a God
+            But which one, which one do I choose?
+            All the churches filled with losers, psycho or confused
+            I just want to hold the divine in mine
+            And forget, all of the beauty's wasted
+
+            Let's fall back to earth and do something pleasant, say it
+            We fell back to earth like gravity's bitches, bitches
+            Physics makes us all its bitches
+
+            I guess it would be nice to help in your escape
+            From patterns your parents designed
+            All the party people dancing for the indie star
+            But he's the worst faker by far in the set
+            I forget, all of the beauty's wasted
+
+            I guess it would be nice
+            Show me that things can be nice
+            I guess it would be nice
+            Show me that things can be nice
+            """
+        return False
 
 if __name__ == "__main__":
     myapp = MyApp()

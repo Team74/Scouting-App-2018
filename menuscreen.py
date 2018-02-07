@@ -72,7 +72,7 @@ class MenuLayout(StackLayout):
             self.ipInputTextHint = "incorrect IP"
             self.display()
             return
-        ipSave(ip)
+        ipSave(ip) # from robotclass
         mysqlc = mysqldb.cursor() # mysql cursor
         sqlitedb = sqlite3.connect("scoutingdatabase.db") # sqlite database
         sqlitec = sqlitedb.cursor() # sqlite cursor
@@ -94,6 +94,7 @@ class MenuLayout(StackLayout):
             row = list(pitscoutdata)
             print("uploading psdata for team %s" % row[0])
             try:
+                print("picture at %s" % row[7])
                 row[7] = open(row[7], "rb").read()
                 print(len(row[7]))
             except FileNotFoundError:
@@ -107,7 +108,7 @@ class MenuLayout(StackLayout):
             if mysqlc.fetchone(): # if a row similar to the one in the mysql database exists
                 mysqlc.execute("""
                     UPDATE pitscoutingdata SET
-                    drivetrain=%s, groundPickup=%s, scaleCapability=%s, switchCapability=%s, exchangeCapability=%s, image=_binary %s, notes=%s
+                    drivetrain=%s, groundPickup=%s, scaleCapability=%s, switchCapability=%s, exchangeCapability=%s, image=%s, notes=%s
                     WHERE teamNumber=%s
                 """, row[2:] + [row[0]]) # replace instead of insert
             else: # if there was no match

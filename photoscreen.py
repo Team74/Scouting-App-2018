@@ -1,7 +1,7 @@
 from kivy.uix.stacklayout import StackLayout
 from kivy.uix.image import Image
 
-from camera import *
+from plyer import camera
 from widgetpresets import *
 from robotclass import *
 import sqlite3
@@ -20,7 +20,11 @@ class PhotoLayout(StackLayout):
 
         self.appendButton("Look at\nprevious photo.\n%s" % self.ifPhoto, halfFourFifth, grey, lambda x: self.seePhoto())
 
-        self.appendButton("Take new\nphhoto.", halfFourFifth, grey, lambda _: camera.take_picture('/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber), ""))
+        def takePicture(_):
+            camera.take_picture("/storage/sdcard0/%s.jpg" % str(self.switcher.robot.teamNumber), "")
+            self.switcher.robot.image = "/storage/sdcard0/%s.jpg" % str(self.switcher.robot.teamNumber)
+
+        self.appendButton("Take new\nphhoto.", halfFourFifth, grey, takePicture)
 
         self.displayAll()
 
