@@ -2,7 +2,7 @@ import sqlite3
 import mysql.connector
 
 class Robot(object):
-    def __init__(self, teamNumber, roundNumber, eventName, scouter, switch=0, scale=0, exchange=0, climb="did not climb", notes="", startingPosition=0, attemptedSwitchSide="left", autonSwitch=0, autonScale=0, autonExchange=0):
+    def __init__(self, teamNumber, roundNumber, eventName, scouter, switch=0, scale=0, exchange=0, climb="did not climb", notes="", startingPosition=0, attemptedSwitchSide="none", autonSwitch=0, autonScale=0, autonExchange=0):
         self.teamNumber = teamNumber
         self.roundNumber = roundNumber
         self.eventName = eventName

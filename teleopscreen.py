@@ -45,9 +45,9 @@ class TeleopLayout(StackLayout):
         appendLabel("Team: " + str(self.switcher.robot.teamNumber), (1/3, .5), darkSeaFoamGreen, screenLayout)
         # made to crash the app to test our quick save feature
         #appendButton("Team: " + str(self.switcher.robot.teamNumber), (1/3, .5), darkSeaFoamGreen, lambda x: self.crash() , screenLayout)
-
-        # displays event name
-        appendLabel("Event: " + self.switcher.robot.eventName, (1/3, .5), darkSeaFoamGreen, screenLayout)
+        #
+        infoLayout = StackLayout(size_hint=(1/3, .5))
+        screenLayout.add_widget(infoLayout)
         # decrement switchDisp
         appendButton("-", (1/6, .5), darkPurple, lambda x: self.changeSwitch(-1), screenLayout)
             #stop time // dont save
@@ -59,6 +59,12 @@ class TeleopLayout(StackLayout):
         # displays scouter name
         scoutLayout = StackLayout(size_hint = (1/3, .5))
         screenLayout.add_widget(scoutLayout)
+
+        # --- infoLayout --- #
+        # displays event name
+        appendLabel("Event: " + self.switcher.robot.eventName, (1, .5), darkSeaFoamGreen, infoLayout)
+        # display round number
+        appendLabel("Round: " + str(self.switcher.robot.roundNumber), (1, .5), darkSeaFoamGreen, infoLayout)
 
         # --- scoutLayout --- #
         # displays scouter name
