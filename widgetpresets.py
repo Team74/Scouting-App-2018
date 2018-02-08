@@ -53,6 +53,7 @@ tameGreen = [0, 200/255, 0]
 darkTameGreen = [0, 140/255, 0]
 black = [0, 0, 0]
 grey = [.5, .5, .5]
+darkGrey = [.4, .4, .4]
 
 class ColorLabel(Label):
     def __init__(self, text, sizehint, color, **kwargs):
