@@ -1,9 +1,10 @@
 from kivy.uix.stacklayout import StackLayout
 from kivy.uix.image import Image
 
-from camera import *
+from plyer import camera
 from widgetpresets import *
 from robotclass import *
+import os
 import sqlite3
 
 class PhotoLayout(StackLayout):
@@ -20,7 +21,11 @@ class PhotoLayout(StackLayout):
 
         self.appendButton("Look at\nprevious photo.\n%s" % self.ifPhoto, halfFourFifth, grey, lambda x: self.seePhoto())
 
-        self.appendButton("Take new\nphhoto.", halfFourFifth, grey, lambda _: camera.take_picture('/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber), ""))
+        def takePicture(_):
+            camera.take_picture("/storage/sdcard0/%s.jpg" % str(self.switcher.robot.teamNumber), "")
+            self.switcher.robot.image = "/storage/sdcard0/%s.jpg" % str(self.switcher.robot.teamNumber)
+
+        self.appendButton("Take new\nphhoto.", halfFourFifth, grey, takePicture)
 
         self.displayAll()
 
@@ -28,6 +33,15 @@ class PhotoLayout(StackLayout):
         self.clear_widgets()
         for widg in self.displist:
             self.add_widget(widg)
+
+    def newphoto(self):
+        if not '/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber):
+            os.remove('/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber))
+            camera.take_picture('/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber))
+            self.switcher.robot.image = '/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber)
+        else:
+            camera.take_picture('/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber))
+            self.switcher.robot.image = '/storage/sdcard0/%s.jpg' % str(self.switcher.robot.teamNumber)
 
     def photoDisplay(self):
         self.displist = []

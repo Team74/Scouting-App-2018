@@ -25,11 +25,11 @@ class AutonLayout(StackLayout):
         # row 1
 
         # displays cubes in switch in auton
-        appendLabel("Cubes put in switch:\n\n" + str(self.switcher.robot.autonSwitch), quarterQuarter, lightOrange)
+        appendLabel("Cubes put in switch:\n\n" + str(self.switcher.robot.autonSwitch), quarterQuarter, darkPurple)
         # displays team number
-        appendLabel("Team: " + str(self.switcher.robot.teamNumber), quarterQuarter, black)
+        appendLabel("Team: " + str(self.switcher.robot.teamNumber), quarterQuarter, darkSeaFoamGreen)
         # displays event name
-        appendLabel("Event: " + self.switcher.robot.eventName, quarterQuarter, black)
+        appendLabel("Event: " + self.switcher.robot.eventName, quarterQuarter, darkSeaFoamGreen)
         # "Left" for attemptedSwitchSide
         side1Color = darkMagenta if self.switcher.robot.attemptedSwitchSide == "left" else lightMagenta
         appendButton("Robot\nattempted\nthe Left\nside", eighthQuarter, side1Color, lambda x: self.changeSide("left"))
@@ -40,11 +40,11 @@ class AutonLayout(StackLayout):
         # row 2
 
         # decrement AutonSwitchDisp
-        appendButton("-", eighthQuarter, lightOrange, lambda x : self.changeSwitch(-1))
+        appendButton("-", eighthQuarter, darkPurple, lambda x : self.changeSwitch(-1))
         # increment AutonSwitchDisp
-        appendButton('+', eighthQuarter, lightOrange, lambda x : self.changeSwitch(1))
+        appendButton('+', eighthQuarter, darkPurple, lambda x : self.changeSwitch(1))
         # menu button
-        appendButton("Menu", quarterQuarter, grey, lambda x: self.switcher.switch("menu"))
+        appendButton("Menu", quarterQuarter, fairBlue, lambda x: self.switcher.switch("menu"))
         #
         scoutLayout = StackLayout(size_hint = quarterQuarter)
         displist.append(scoutLayout)
@@ -54,9 +54,9 @@ class AutonLayout(StackLayout):
 
         # --- scoutLayout --- #
         # displays scouter name
-        appendLabel("Scouter: " + self.switcher.robot.scouter, (1, .5), black, scoutLayout)
+        appendLabel("Scouter: " + self.switcher.robot.scouter, (1, .5), darkSeaFoamGreen, scoutLayout)
         #
-        appendLabel("Rounds scouted: " + str(self.switcher.screens["login"].scoutNumber), (1, .5), black, scoutLayout)
+        appendLabel("Rounds scouted: " + str(self.switcher.screens["login"].scoutNumber), (1, .5), darkSeaFoamGreen, scoutLayout)
 
         #row 3
 
@@ -67,16 +67,16 @@ class AutonLayout(StackLayout):
         # scale disp for auton
         appendLabel("Cubes put in scale\nin auton:\n" + str(self.switcher.robot.autonScale), halfHalf, fairBlue, multiLayout)
         # exchange disp for auton
-        appendLabel("Cubes put in\nExchange\nin auton:\n" + str(self.switcher.robot.autonExchange), halfHalf, grey, multiLayout)
+        appendLabel("Cubes put in\nExchange\nin auton:\n" + str(self.switcher.robot.autonExchange), halfHalf, lightOrange, multiLayout)
         # multi row 2
         # decrement for auton scale
         appendButton("-", quarterHalf, fairBlue, lambda x: self.changeScale(-1), multiLayout)
         # increment for auton scale
         appendButton("+", quarterHalf, fairBlue, lambda x: self.changeScale(1), multiLayout)
         # decrement for auton exchange
-        appendButton("-", quarterHalf, grey, lambda x: self.changeExchange(-1), multiLayout)
+        appendButton("-", quarterHalf, lightOrange, lambda x: self.changeExchange(-1), multiLayout)
         # increment for auton exchange
-        appendButton("+", quarterHalf, grey, lambda x: self.changeExchange(1), multiLayout)
+        appendButton("+", quarterHalf, lightOrange, lambda x: self.changeExchange(1), multiLayout)
         #end of multiLayout
 
         # starting position display
