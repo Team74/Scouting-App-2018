@@ -63,9 +63,18 @@ class DataViewLayout(StackLayout):
         database = sqlite3.connect("scoutingdatabase.db") # data calling from db
         cursor = database.cursor()
         cursor.execute("SELECT teamNumber, roundNumber, eventName, switch, scale, exchange, climb, startingPosition, attemptedSwitchSide, autonSwitch, autonScale, autonExchange FROM matchdata " + self.query)
+
+        hfgd = 1
+
         for teamData in cursor.fetchall():
+            if hfgd % 2:
+                color = grey
+                hfgd += 1
+            else:
+                color = darkGrey
+                hfgd += 1
             for data in teamData:
-                appendLabel(data, grey)
+                appendLabel(data, color)
 
         database.close()
 
