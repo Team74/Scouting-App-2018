@@ -28,8 +28,8 @@ class AutonLayout(StackLayout):
         appendLabel("Cubes put in switch:\n\n" + str(self.switcher.robot.autonSwitch), quarterQuarter, darkPurple)
         # displays team number
         appendLabel("Team: " + str(self.switcher.robot.teamNumber), quarterQuarter, darkSeaFoamGreen)
-        # displays event name
-        appendLabel("Event: " + self.switcher.robot.eventName, quarterQuarter, darkSeaFoamGreen)
+        infoLayout = StackLayout(size_hint=(.25, .25))
+        displist.append(infoLayout)
         # "Left" for attemptedSwitchSide
         side1Color = darkMagenta if self.switcher.robot.attemptedSwitchSide == "left" else lightMagenta
         appendButton("Robot\nattempted\nthe Left\nside", eighthQuarter, side1Color, lambda x: self.changeSide("left"))
@@ -51,6 +51,12 @@ class AutonLayout(StackLayout):
         # "None" for attemptedSwitchSide
         side3Color = darkMagenta if self.switcher.robot.attemptedSwitchSide == "none" else lightMagenta
         appendButton("Robot\ndidn't\nattempt\nthe switch", quarterQuarter, side3Color, lambda x: self.changeSide("none"))
+
+        # --- infoLayout --- #
+        # displays event name
+        appendLabel("Event: " + self.switcher.robot.eventName, (1, .5), darkSeaFoamGreen, infoLayout)
+        # display round number
+        appendLabel("Round: " + str(self.switcher.robot.roundNumber), (1, .5), darkSeaFoamGreen, infoLayout)
 
         # --- scoutLayout --- #
         # displays scouter name
