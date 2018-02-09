@@ -6,13 +6,22 @@ from kivy.core.window import Window
 from widgetpresets import *
 from robotclass import *
 import sqlite3
-import mysql.connector
 
 class DataViewLayout(StackLayout):
     def __init__(self, screenSwitcher):
         self.switcher = screenSwitcher
         super(DataViewLayout, self).__init__()
         self.query = ""
+        self.robots = []
+        database = mysql.connector.connect(connection_timeout=1, user="jaga663", passwd="chaos", host="10.111.49.49", database="Scouting2018")
+        cursor = database.cursor()
+        cursor.execute("SELECT * FROM matchdata")
+        for td in cursor.fetchall():
+            self.robots.append(Robot(td[0], td[1], td[2], td[3], td[4], td[5], td[6], td[7], td[8], td[9], td[10], td[11], td[12], td[13]))
+        database.close()
+        self.queuedRobots = self.robots
+
+        self.display()
 
     def display(self):
         scrolllist = []
@@ -33,7 +42,7 @@ class DataViewLayout(StackLayout):
         displist.append(go)
 
         back = ColorButton("Back", (.125, .1), darkblue)
-        back.bind(on_release=lambda x: self.switcher.switch("login"))
+        back.bind(on_release=lambda x: self.switcher.displayMain())
         displist.append(back)
 
         dataTable = ScrollView(size_hint=(1, None), size = (Window.width, Window.height-searchBar.height)) # make widgets and layouts for this
@@ -60,14 +69,9 @@ class DataViewLayout(StackLayout):
         appendButton("auton\nscale", tameRed, lambda x: self.processQuery("auton scale")) # 12
         appendButton("auton\nexchange", tameRed, lambda x: self.processQuery("auton exchange"), "13sp") # 13
 
-        database = sqlite3.connect("scoutingdatabase.db") # data calling from db
-        cursor = database.cursor()
-        cursor.execute("SELECT teamNumber, roundNumber, eventName, switch, scale, exchange, climb, startingPosition, attemptedSwitchSide, autonSwitch, autonScale, autonExchange FROM matchdata " + self.query)
-        for teamData in cursor.fetchall():
+        for teamData in self.queuedRobots:
             for data in teamData:
                 appendLabel(data, grey)
-
-        database.close()
 
         for widget in scrolllist:
             dataTableLayout.add_widget(widget)
@@ -131,4 +135,6 @@ class DataViewLayout(StackLayout):
             for i in search:
                 if i[0] in "1234567890":
                     self.query = "WHERE autonExchange='%s'" % i
+
+
         self.display()
