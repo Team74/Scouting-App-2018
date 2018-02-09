@@ -8,12 +8,12 @@ from robotclass import *
 import sqlite3
 
 class DataViewLayout(StackLayout):
-    def __init__(self, screenSwitcher):
+    def __init__(self, screenSwitcher, ip):
         self.switcher = screenSwitcher
         super(DataViewLayout, self).__init__()
         self.query = ""
         self.robots = []
-        database = mysql.connector.connect(connection_timeout=1, user="jaga663", passwd="chaos", host="10.111.49.49", database="Scouting2018")
+        database = mysql.connector.connect(connection_timeout=1, user="jaga663", passwd="chaos", host=ip, database="Scouting2018")
         cursor = database.cursor()
         cursor.execute("SELECT * FROM matchdata")
         for td in cursor.fetchall():
@@ -82,59 +82,37 @@ class DataViewLayout(StackLayout):
 
     def processQuery(self, search):
         search = search.split(" ")
-        self.query = ""
-        if "team" in search:
-            self.query = "ORDER BY teamNumber"
-            for i in search:
-                if i[0] in "1234567890":
-                    self.query = "WHERE teamNumber=%s" % i
-        if "round" in search:
-            self.query = "ORDER BY roundNumber"
-            for i in search:
-                if i[0] in "1234567890":
-                    self.query = "WHERE roundNumber=%s" % i
-        if "event" in search:
-            if len(search) >= 2:
-                self.query = "WHERE eventName=%s" % search[1]
-        if "switch" in search and not "auton" in search:
-            self.query = "ORDER BY switch DESC"
-            for i in search:
-                if i[0] in "123457890":
-                    self.query = "WHERE switch=%s" % i
-        if "scale" in search and not "auton" in search:
-            self.query = "ORDER BY scale DESC"
-            for i in search:
-                if i[0] in "1234567890":
-                    self.query = "WHERE scale=%s" % i
-        if "exchange" in search and not "auton" in search:
-            self.query = "ORDER BY exchange DESC"
-            for i in search:
-                if i[0] in "1234567890":
-                    self.query = "WHERE exchange=%s" % i
-        if "climb" in search or "climbed" in search:
-            if len(search) >= 2:
-                self.query = "WHERE climb='%s'" % " ".join(search[1:])
-        if "start" in search and "pos" in search:
-            if len(search) >= 3:
-                self.query = "WHERE startingPosition='%s'" % search[2]
-        if "switch" in search and "side" in search:
-            if len(search) >= 3:
-                self.query = "WHERE attemptedSwitchSide='%s'" % search[2]
-        if "auton" in search and "switch" in search:
-            self.query = "ORDER BY autonSwitch DESC"
-            for i in search:
-                if i[0] in "1234567890":
-                    self.query = "WHERE autonSwitch=%s" % i
-        if "auton" in search and "scale" in search:
-            self.query = "ORDER BY autonScale DESC"
-            for i in search:
-                if i[0] in "1234567890":
-                    self.query = "WHERE autonScale=%s" % i
-        if "auton" in search and "exchange" in search:
-            self.query = "ORDER BY autonExchange DESC"
-            for i in search:
-                if i[0] in "1234567890":
-                    self.query = "WHERE autonExchange='%s'" % i
+        command = search[0]
+        args = search[1:]
+        numbers = "1234567890"
+
+        selectedRobots = self.robots
+
+        # here there be dragons, reckless behavior is ill-advised
+        #############################################################################################
+        # WARNING - JANKY SHIT INBOUND                                                              #
+        selecter = lambda botParam: [bot for bot in self.robots if bot.__dict__[botParam] == args[0]]
+        # WARNING - JANKY SHIT INBOUND                                                              #
+        #############################################################################################
+        # whydoesthisworkwhydoesthisworkwhydoesthisworkwhydoesthisworkwhydoesthisworkwhydoesthiswork
+
+        key = lambda bot: pass
+        if "team" in command:
+            key = lambda bot: bot.teamNumber
+            if args[0] in numbers:
+                selectedRobots = selecter("teamNumber")
+        if "round" in command:
+            key = lambda bot: bot.roundNumber
+            if args[0] in numbers:
+                selectedRobots = selecter("roundNumber")
+        if "switch" in command:
+            key = lambda bot: bot.switch
+            if args[0] in numbers:
+                selectedRobots = selecter("switch")
+        if "scale" in command:
+            key =
+
+        self.queuedRobots = sorted(self.selectedRobots, key=key)
 
 
         self.display()

@@ -60,7 +60,7 @@ class DisplayLayout(StackLayout):
 
     def displayDataTable(self, _):
         self.displist = []
-        self.displist.append(DataViewLayout(self))
+        self.displist.append(DataViewLayout(self, "10.111.49.49"))
         self.addAll()
 
     def exportbutton(self, _):
