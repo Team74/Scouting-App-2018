@@ -1,8 +1,9 @@
 import sqlite3
 import mysql.connector
+import json
 
 class Robot(object):
-    def __init__(self, teamNumber, roundNumber, eventName, scouter, switch=0, scale=0, exchange=0, climb="did not climb", notes="", startingPosition=0, attemptedSwitchSide="none", autonSwitch=0, autonScale=0, autonExchange=0):
+    def __init__(self, teamNumber, roundNumber, eventName, scouter, switch=0, scale=0, exchange=0, climb="did not climb", notes="", startingPosition=0, attemptedSwitchSide="none", autonSwitch=0, autonScale=0, autonExchange=0, cubeCycle = []):
         self.teamNumber = teamNumber
         self.roundNumber = roundNumber
         self.eventName = eventName
@@ -13,17 +14,22 @@ class Robot(object):
         self.exchange = exchange #integer, how many cubes stored in exchange
         self.climb = climb # string - "did not climb", "tried but failed", "levitated", "climbed"
         self.notes = notes # string, notable things on robot
+        self.cubeCycle = []
         # auton #
         self.startingPosition = "left" #string - "left", "middle", "right"
         self.attemptedSwitchSide = "left" #string - "left", "right"
         self.autonSwitch = 0 # integer, how many cubes scored in switch
         self.autonScale = 0 # integer, how many cubes scored in scale
         self.autonExchange = 0 # integer, how many cubes scored in scale
+        print("____________________________")
+        print(cubeCycle)
+        print("____________________________")
+
 
         self.reloadRobot(self.teamNumber, self.roundNumber)
 
     def dumpData(self): #function for putting all values into a list ordered like the sqlite database
-        return (self.teamNumber, self.roundNumber, self.eventName, self.scouter, self.switch, self.scale, self.exchange, self.climb, self.notes, self.startingPosition, self.attemptedSwitchSide, self.autonSwitch, self.autonScale, self.autonExchange) # this order matches that of the database
+        return (self.teamNumber, self.roundNumber, self.eventName, self.scouter, self.switch, self.scale, self.exchange, self.climb, self.notes, self.startingPosition, self.attemptedSwitchSide, self.autonSwitch, self.autonScale, self.autonExchange, json.dumps(self.cubeCycle)) # this order matches that of the database
 
     def localSave(self, _): # _ is there for throwaway on_release argument passed by the button
         print("auton - saving %s" % self.teamNumber)
@@ -35,11 +41,11 @@ class Robot(object):
             database.execute("""
                 UPDATE matchdata SET
                 scouter=?, switch=?, scale=?, exchange=?, climb=?, notes=?,
-                startingPosition=?, attemptedSwitchSide=?, autonSwitch=?, autonScale=?, autonExchange=?
+                startingPosition=?, attemptedSwitchSide=?, autonSwitch=?, autonScale=?, autonExchange=?, cubeCycle=?
                 WHERE teamNumber=? AND roundNumber=? AND eventName=?""", self.dumpData()[3:] + self.dumpData()[:3]) #list splicing - gives all nonmeta (actual game data) values, then gives meta (team number, round, event, scouter) values
         else: #if there was not a match in the database:
             print("no match")
-            database.execute("INSERT INTO matchdata VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", self.dumpData())
+            database.execute("INSERT INTO matchdata VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", self.dumpData())
         database.commit()
         database.close()
 
@@ -69,7 +75,16 @@ class Robot(object):
         self.autonSwitch = robotData[11]
         self.autonScale = robotData[12]
         self.autonExchange = robotData[13]
+        try:
+            self.cubeCycle = json.loads(robotData[14])
+        except Exception as error:
+            self.cubeCycle = []
+        if not type(self.cubeCycle) == list:
+            self.cubeCycle = []
 
+    def updateCycle(self, time):
+        self.cubeCycle.append(time)
+        print(self.cubeCycle)
 
 class PitRobot(object):
     def __init__(self, teamNumber, drivetrain="tank variants", groundPickup=0, switchCapability=0, scaleCapability=0, exchangeCapability=0, climbCapability=0, image=None, notes=""):
@@ -146,8 +161,6 @@ def export(ip):
     try: #TIMEOUT IS IN SECONDS, NOT MILLISECONDS
         mysqldb = mysql.connector.connect(connection_timeout=1, user="jaga663", passwd="chaos", host=ip, database="Scouting2018")
     except mysql.connector.errors.InterfaceError: # thrown when timeout hits or if the ip is incorrect
-        self.ipInputTextHint = "incorrect IP"
-        self.display()
         return
     ipSave(ip) # from robotclass
     mysqlc = mysqldb.cursor() # mysql cursor
@@ -161,11 +174,11 @@ def export(ip):
             mysqlc.execute("""
                 UPDATE matchdata SET
                 scouter=%s, switch=%s, scale=%s, exchange=%s, climb=%s, notes=%s,
-                startingPosition=%s, attemptedSwitchSide=%s, autonSwitch=%s, autonScale=%s, autonExchange=%s
+                startingPosition=%s, attemptedSwitchSide=%s, autonSwitch=%s, autonScale=%s, autonExchange=%s, cubeCycle=%s
                 WHERE teamNumber=%s AND roundNumber=%s AND eventName=%s
             """, row[3:] + row[:3]) # overwrite instead of make a new one
         else: # if there was no row found
-            mysqlc.execute("INSERT INTO matchdata VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", row) # make a new row
+            mysqlc.execute("INSERT INTO matchdata VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", row) # make a new row
     sqlitec.execute("SELECT * FROM pitscoutingdata")
     for pitscoutdata in sqlitec.fetchall(): # see robotclass PitRobot.dumpData() for order of row
         row = list(pitscoutdata)

@@ -1,14 +1,19 @@
 from kivy.uix.textinput import TextInput
 from kivy.uix.stacklayout import StackLayout
+from kivy.uix.floatlayout import FloatLayout
 
+from kivy.clock import Clock
 from widgetpresets import *
 from robotclass import *
 import sqlite3
+import time
 
 class TeleopLayout(StackLayout):
     def __init__(self, screenSwitcher):
         self.switcher = screenSwitcher
         super(TeleopLayout, self).__init__()
+        self.start = 0
+        self.didStart = 0
 
     def display(self):
         displist = []
@@ -21,6 +26,7 @@ class TeleopLayout(StackLayout):
             button.bind(on_release=bind)
             if not widget: displist.append(button)
             else: widget.add_widget(button)
+
 
         # A layout that holds
         screenLayout = StackLayout(size_hint=(.75, .5))
@@ -42,9 +48,9 @@ class TeleopLayout(StackLayout):
         # displays cubes in switch
         appendLabel("Cubes put in switch:\n\n" + str(self.switcher.robot.switch), (1/3, .5), darkPurple, screenLayout)
         # displays team number
-        appendLabel("Team: " + str(self.switcher.robot.teamNumber), (1/3, .5), darkSeaFoamGreen, screenLayout)
+        #appendLabel("Team: " + str(self.switcher.robot.teamNumber), (1/3, .5), darkSeaFoamGreen, screenLayout)
         # made to crash the app to test our quick save feature
-        #appendButton("Team: " + str(self.switcher.robot.teamNumber), (1/3, .5), darkSeaFoamGreen, lambda x: self.crash() , screenLayout)
+        appendButton("Team: " + str(self.switcher.robot.teamNumber), (1/3, .5), darkSeaFoamGreen, lambda x: self.crash() , screenLayout)
         #
         infoLayout = StackLayout(size_hint=(1/3, .5))
         screenLayout.add_widget(infoLayout)
@@ -117,16 +123,58 @@ class TeleopLayout(StackLayout):
         self.switcher.robot.switch += change
         if self.switcher.robot.switch < 0:
             self.switcher.robot.switch = 0
+        if self.didStart == 0 and change == 1:
+            print("if")
+            self.didStart = 1
+            self.start = time.time()
+            print(self.start)
+        elif change == 1:
+            print("else")
+            self.didStart = 0
+            end = time.time()
+            print(end)
+            cycleDiff = str( round((end - self.start), 2) )
+            print("------ " + cycleDiff)
+            print(self.switcher.robot)
+            self.switcher.robot.updateCycle(cycleDiff)
         self.display()
     def changeScale(self, change):
         self.switcher.robot.scale += change
         if self.switcher.robot.scale < 0:
             self.switcher.robot.scale = 0
+        if self.didStart == 0 and change == 1:
+            print("if")
+            self.didStart = 1
+            self.start = time.time()
+            print(self.start)
+        elif change == 1:
+            print("else")
+            self.didStart = 0
+            end = time.time()
+            print(end)
+            cycleDiff = str( round((end - self.start), 2) )
+            print("------ " + cycleDiff)
+            print(self.switcher.robot)
+            self.switcher.robot.updateCycle(cycleDiff)
         self.display()
     def changeExchange(self, change):
         self.switcher.robot.exchange += change
         if self.switcher.robot.exchange < 0:
             self.switcher.robot.exchange = 0
+        if self.didStart == 0 and change == 1:
+            print("if")
+            self.didStart = 1
+            self.start = time.time()
+            print(self.start)
+        elif change == 1:
+            print("else")
+            self.didStart = 0
+            end = time.time()
+            print(end)
+            cycleDiff = str( round((end - self.start), 2) )
+            print("------ " + cycleDiff)
+            print(self.switcher.robot)
+            self.switcher.robot.updateCycle(cycleDiff)
         self.display()
     def changeClimb(self, change):
         self.switcher.robot.climb = change

@@ -9,6 +9,7 @@ class AutonLayout(StackLayout):
     def __init__(self, ScreenSwitcher):
         self.switcher = ScreenSwitcher
         super(AutonLayout, self).__init__()
+        self.changer = 1
 
     def display(self):
         displist = []
@@ -44,7 +45,7 @@ class AutonLayout(StackLayout):
         # increment AutonSwitchDisp
         appendButton('+', eighthQuarter, darkPurple, lambda x : self.changeSwitch(1))
         # menu button
-        appendButton("Menu", quarterQuarter, fairBlue, lambda x: self.switcher.switch("menu"))
+        appendButton("Menu", quarterQuarter, fairBlue, lambda x: self.changeScreen())
         #
         scoutLayout = StackLayout(size_hint = quarterQuarter)
         displist.append(scoutLayout)
@@ -106,6 +107,13 @@ class AutonLayout(StackLayout):
         self.switcher.robot.autonSwitch += change
         if self.switcher.robot.autonSwitch < 0:
             self.switcher.robot.autonSwitch = 0
+        self.display()
+    def changeScreen(self):
+        if self.changer == 1:
+            self.changer = 0
+            self.switcher.switch("teleop")
+        else:
+            self.switcher.switch("menu")
         self.display()
     def changeSide(self, change):
         self.switcher.robot.attemptedSwitchSide = change

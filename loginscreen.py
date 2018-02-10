@@ -62,13 +62,13 @@ class LoginLayout(StackLayout):
         self.roundInput = TextInput(text=str(self.round), multiline=False, size_hint=quarterQuarter)
         displist.append(self.roundInput)
 
-        roundInc = ColorButton("+", (.125, .25), seaFoamGreen)
-        roundInc.bind(on_release=lambda x: self.changeRound(1))
-        displist.append(roundInc)
-
         roundDec = ColorButton("-", (.125, .25), seaFoamGreen)
         roundDec.bind(on_release=lambda x: self.changeRound(-1))
         displist.append(roundDec)
+
+        roundInc = ColorButton("+", (.125, .25), seaFoamGreen)
+        roundInc.bind(on_release=lambda x: self.changeRound(1))
+        displist.append(roundInc)
 
         #row 4
         pitScout = ColorButton("Pit Scouting", ((1/6), .25),fairBlue)
@@ -89,10 +89,10 @@ class LoginLayout(StackLayout):
             text = ""
         else:
             text = getIp()
-        IpText = TextInput(text=text, multiline=False, size_hint=(1, .5))
-        exportLayout.add_widget(IpText)
+        ipInput = TextInput(text=text, multiline=False, size_hint=(1, .5))
+        exportLayout.add_widget(ipInput)
 
-        exportButton.bind(on_release=lambda x: export(IpText.text))
+        exportButton.bind(on_release=lambda x: export(ipInput.text))
 
         goButton = bigButton("Go", fairBlue)
         def teleopSwitch(_):
