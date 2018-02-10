@@ -20,18 +20,19 @@ class DataViewLayout(StackLayout):
             self.robots.append(Robot(td[0], td[1], td[2], td[3], td[4], td[5], td[6], td[7], td[8], td[9], td[10], td[11], td[12], td[13]))
         database.close()
         self.queuedRobots = self.robots
+        self.index = 0
 
         self.display()
 
     def display(self):
         scrolllist = []
-        def appendLabel(text, color, font_size="15sp"):
-            scrolllist.append(ColorLabel(text, (1/12, None), color, height=40, font_size=font_size))
-        def appendButton(text, color, bind, font_size="15sp"):
+        displist = []
+        def appendLabel(text, color, font_size="15sp", parent=displist):
+            parent.append(ColorLabel(text, (1/12, None), color, height=40, font_size=font_size))
+        def appendButton(text, color, bind, font_size="15sp", parent=displist):
             button = ColorButton(text, (1/12, None), [x + (30/255) for x in color], height=40, font_size=font_size)
             button.bind(on_release=bind)
-            scrolllist.append(button)
-        displist = []
+            parent.append(button)
 
         searchBar = TextInput(size_hint=(.75,.1), multiline=False)
         searchBar.bind(on_text_validate=lambda x: self.processQuery(searchBar.text))
@@ -42,7 +43,7 @@ class DataViewLayout(StackLayout):
         displist.append(go)
 
         back = ColorButton("Back", (.125, .1), darkblue)
-        back.bind(on_release=lambda x: self.switcher.displayMain())
+        back.bind(on_release=lambda x: self.switcher.displayMain("_"))
         displist.append(back)
 
         dataTable = ScrollView(size_hint=(1, None), size = (Window.width, Window.height-searchBar.height)) # make widgets and layouts for this
@@ -69,9 +70,14 @@ class DataViewLayout(StackLayout):
         appendButton("auton\nscale", tameRed, lambda x: self.processQuery("auton scale")) # 12
         appendButton("auton\nexchange", tameRed, lambda x: self.processQuery("auton exchange"), "13sp") # 13
 
-        for teamData in self.queuedRobots:
+        for robot in self.queuedRobots:
+            teamData = [
+                robot.teamNumber, robot.roundNumber, robot.eventName,
+                robot.switch, robot.scale, robot.exchange, robot.climb,
+                robot.startingPosition, robot.attemptedSwitchSide, robot.autonSwitch, robot.autonScale, robot.autonExchange
+            ]
             for data in teamData:
-                appendLabel(data, grey)
+                appendLabel(data, grey, parent=scrolllist)
 
         for widget in scrolllist:
             dataTableLayout.add_widget(widget)
@@ -80,39 +86,86 @@ class DataViewLayout(StackLayout):
         for widget in displist:
             self.add_widget(widget)
 
+    def displayPage(self):
+        lo = self.index * 7
+        hi = (self.index + 1) * 7
+        queue = self.queuedRobots[self.index*7:(self.index+1)*7]
+
     def processQuery(self, search):
         search = search.split(" ")
         command = search[0]
         args = search[1:]
+        targets = [num for num in args if num[0] in "1234567890"]
+        modifiers = [mod for mod in args if not mod in targets]
+
+        editedTargets = []
+        for target in targets:
+            editedTargets.append(int(target))
+        targets = editedTargets
+        editedMods = []
+        for mod in modifiers:
+            if mod in ["=", "equals", "=="]:
+                mod = "equal"
+            elif mod in ["<", "lesser", "under"]:
+                mod = "less"
+            elif mod in [">", "greater", "over"]:
+                mod = "more"
+            elif mod == "<=":
+                editedMods.append("equal")
+                mod = "less"
+            elif mod == ">=":
+                editedMods.append("equal")
+                mod = "more"
+
+            editedMods.append(mod)
+        modifiers = editedMods
+        print(command)
+        print(targets)
+        print(modifiers)
         numbers = "1234567890"
 
-        selectedRobots = self.robots
-
         # here there be dragons, reckless behavior is ill-advised
-        #############################################################################################
-        # WARNING - JANKY SHIT INBOUND                                                              #
-        selecter = lambda botParam: [bot for bot in self.robots if bot.__dict__[botParam] == args[0]]
-        # WARNING - JANKY SHIT INBOUND                                                              #
-        #############################################################################################
+        ###########################################################################################################################################
+        # WARNING - JANKY SHIT INBOUND                                                                                                            #
+        selRange = lambda botParam, lo, hi: [bot for bot in self.robots if bot.__dict__[botParam] > lo and bot.__dict__[botParam] < hi]
+        # WARNING - JANKY SHIT INBOUND                                                                                                            #
+        ###########################################################################################################################################
         # whydoesthisworkwhydoesthisworkwhydoesthisworkwhydoesthisworkwhydoesthisworkwhydoesthiswork
 
-        key = lambda bot: pass
-        if "team" in command:
+        key = lambda bot: bot.teamNumber
+        if "team" == command:
             key = lambda bot: bot.teamNumber
-            if args[0] in numbers:
-                selectedRobots = selecter("teamNumber")
-        if "round" in command:
+            selecter = "teamNumber"
+        if "round" == command:
             key = lambda bot: bot.roundNumber
-            if args[0] in numbers:
-                selectedRobots = selecter("roundNumber")
-        if "switch" in command:
+            selecter = "roundNumber"
+        if "switch" == command:
             key = lambda bot: bot.switch
-            if args[0] in numbers:
-                selectedRobots = selecter("switch")
+            selecter = "switch"
         if "scale" in command:
-            key =
+            key = lambda bot: bot.scale
+            selecter = "scale"
 
-        self.queuedRobots = sorted(self.selectedRobots, key=key)
+        lo = 0 # no value will subsede 0
+        hi = 10000 # a value guaranteed higher than any values that will realistically be recorded
+        if len(targets) == 2:
+            lo = targets[0]
+            hi = targets[1]
+        if len(targets) == 1 and "more" in modifiers:
+            print("I FOUND MORE")
+            lo = targets[0]
+        if len(targets) == 1 and "less" in modifiers:
+            print("I FOUND LESS")
+            hi = targets[0]
 
+        selectedRobots = []
+        if targets and ("equal" in modifiers or not modifiers):
+            selectedRobots += selRange(selecter, targets[0]-1, targets[0]+1)
+        if targets and ("less" in modifiers or "more" in modifiers):
+            selectedRobots += selRange(selecter, lo, hi)
+        if not selectedRobots:
+            selectedRobots = self.robots
+
+        self.queuedRobots = sorted(selectedRobots, key=key)
 
         self.display()
