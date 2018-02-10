@@ -9,7 +9,6 @@ class AutonLayout(StackLayout):
     def __init__(self, ScreenSwitcher):
         self.switcher = ScreenSwitcher
         super(AutonLayout, self).__init__()
-        self.changer = 1
 
     def display(self):
         displist = []
@@ -109,8 +108,8 @@ class AutonLayout(StackLayout):
             self.switcher.robot.autonSwitch = 0
         self.display()
     def changeScreen(self):
-        if self.changer == 1:
-            self.changer = 0
+        if self.switcher.screens["login"].changer == 1:
+            self.switcher.screens["login"].changer = 0
             self.switcher.switch("teleop")
         else:
             self.switcher.switch("menu")

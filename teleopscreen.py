@@ -48,9 +48,9 @@ class TeleopLayout(StackLayout):
         # displays cubes in switch
         appendLabel("Cubes put in switch:\n\n" + str(self.switcher.robot.switch), (1/3, .5), darkPurple, screenLayout)
         # displays team number
-        #appendLabel("Team: " + str(self.switcher.robot.teamNumber), (1/3, .5), darkSeaFoamGreen, screenLayout)
+        appendLabel("Team: " + str(self.switcher.robot.teamNumber), (1/3, .5), darkSeaFoamGreen, screenLayout)
         # made to crash the app to test our quick save feature
-        appendButton("Team: " + str(self.switcher.robot.teamNumber), (1/3, .5), darkSeaFoamGreen, lambda x: self.crash() , screenLayout)
+        #appendButton("Team: " + str(self.switcher.robot.teamNumber), (1/3, .5), darkSeaFoamGreen, lambda x: self.crash() , screenLayout)
         #
         infoLayout = StackLayout(size_hint=(1/3, .5))
         screenLayout.add_widget(infoLayout)

@@ -26,6 +26,7 @@ class LoginLayout(StackLayout):
                 database.commit()
                 database.close()
                 self.scoutNumber = 0
+                self.changer = 0
                 database = sqlite3.connect("scoutingdatabase.db") # data calling from db
                 cursor = database.cursor()
                 cursor.execute("SELECT scouter FROM matchdata")
@@ -111,6 +112,7 @@ class LoginLayout(StackLayout):
             self.last = self.scouterInput.text
             self.round = int(self.roundInput.text) + 1
             self.scoutNumber = 0
+            self.changer = 1
             database = sqlite3.connect("scoutingdatabase.db") # data calling from db
             cursor = database.cursor()
             cursor.execute("SELECT scouter FROM matchdata")
