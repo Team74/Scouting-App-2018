@@ -6,6 +6,7 @@ from kivy.core.window import Window
 from widgetpresets import *
 from robotclass import *
 import sqlite3
+import mysql.connector
 
 class DataViewLayout(StackLayout):
     def __init__(self, screenSwitcher):
@@ -140,6 +141,4 @@ class DataViewLayout(StackLayout):
             for i in search:
                 if i[0] in numbers:
                     self.query = "WHERE autonExchange='%s'" % i
-
-
         self.display()

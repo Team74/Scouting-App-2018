@@ -4,12 +4,16 @@ from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.widget import Widget
+from kivy.uix.textinput import TextInput
+from kivy.uix.scrollview import ScrollView
 from kivy.uix.stacklayout import StackLayout
+from kivy.core.window import Window
 
+from widgetpresets import *
+from robotclass import *
+from datatable import DataViewLayout
 import sqlite3
 import os
-import io
-import binascii
 import mysql.connector
 
 class DisplayLayout(StackLayout):
@@ -20,23 +24,43 @@ class DisplayLayout(StackLayout):
         cursor = database.cursor()
         cursor.execute("SELECT teamNumber, image FROM pitscoutingdata")
         currentDir = os.path.dirname(os.path.realpath(__file__))
+        os.system("Rscript %s/boxplots.r" % currentDir)
         for data in cursor.fetchall():
             teamNumber = data[0]
             image = data[1]
-            print(image)
-            print(len(image))
             imageFile = open("%s/pitimages/%s.jpg" % (currentDir, teamNumber), "wb")
             imageFile.write(image)
             imageFile.close()
-
         database.close()
+
+    def appendButton(self, text, size_hint, bind):
+        button = Button(text=text, size_hint=size_hint)
+        button.bind(on_release=bind)
+        self.displist.append(button)
+    def appendPicture(self, source, size_hint):
+        photo = Image(source=source, size_hint=size_hint, allow_stretch=True, keep_ratio=False)
+        self.displist.append(photo)
+    def addAll(self):
+        self.clear_widgets()
+        for widget in self.displist:
+            self.add_widget(widget)
 
     def displayMain(self, _):
         self.displist = []
+        self.appendButton("switch data", halfHalf, self.displaySwitch)
+        self.appendButton("data table", halfHalf, self.displayDataTable)
+        self.appendButton("export", halfHalf, self.exportbutton)
+        self.addAll()
 
-        self.appendButton("switch data", (.5, 1), self.displaySwitch)
-        self.appendButton("export", (.5, 1), self.exportbutton)
+    def displaySwitch(self, _):
+        self.displist = []
+        self.appendButton("back", (1, .05), self.displayMain)
+        self.appendPicture("plots/switch.png", (1, .95))
+        self.addAll()
 
+    def displayDataTable(self, _):
+        self.displist = []
+        self.displist.append(DataViewLayout(self, "10.111.49.49"))
         self.addAll()
 
     def exportbutton(self, _):
@@ -65,26 +89,7 @@ class DisplayLayout(StackLayout):
             )
 
         fh.close()
-    def displaySwitch(self, _):
-        self.displist = []
 
-        self.appendButton("back", (1, .05), self.displayMain)
-        self.appendPicture("plots/switch.png", (1, .95))
-
-        self.addAll()
-
-    def appendButton(self, text, size_hint, bind):
-        button = Button(text=text, size_hint=size_hint)
-        button.bind(on_release=bind)
-        self.displist.append(button)
-    def appendPicture(self, source, size_hint):
-        photo = Image(source=source, size_hint=size_hint, allow_stretch=True, keep_ratio=False)
-        self.displist.append(photo)
-
-    def addAll(self):
-        self.clear_widgets()
-        for widget in self.displist:
-            self.add_widget(widget)
 
 class MyApp(App):
     def build(self):
