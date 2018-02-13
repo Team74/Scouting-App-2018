@@ -88,15 +88,16 @@ class DataViewLayout(StackLayout):
     def processQuery(self, search):
         search = search.split(" ")
         self.query = ""
+        numbers = "1234567890"
         if "team" in search:
             self.query = "ORDER BY teamNumber"
             for i in search:
-                if i[0] in "1234567890":
+                if i[0] in numbers:
                     self.query = "WHERE teamNumber=%s" % i
         if "round" in search:
             self.query = "ORDER BY roundNumber"
             for i in search:
-                if i[0] in "1234567890":
+                if i[0] in numbers:
                     self.query = "WHERE roundNumber=%s" % i
         if "event" in search:
             if len(search) >= 2:
@@ -104,17 +105,17 @@ class DataViewLayout(StackLayout):
         if "switch" in search and not "auton" in search:
             self.query = "ORDER BY switch DESC"
             for i in search:
-                if i[0] in "123457890":
+                if i[0] in numbers:
                     self.query = "WHERE switch=%s" % i
         if "scale" in search and not "auton" in search:
             self.query = "ORDER BY scale DESC"
             for i in search:
-                if i[0] in "1234567890":
+                if i[0] in numbers:
                     self.query = "WHERE scale=%s" % i
         if "exchange" in search and not "auton" in search:
             self.query = "ORDER BY exchange DESC"
             for i in search:
-                if i[0] in "1234567890":
+                if i[0] in numbers:
                     self.query = "WHERE exchange=%s" % i
         if "climb" in search or "climbed" in search:
             if len(search) >= 2:
@@ -128,16 +129,16 @@ class DataViewLayout(StackLayout):
         if "auton" in search and "switch" in search:
             self.query = "ORDER BY autonSwitch DESC"
             for i in search:
-                if i[0] in "1234567890":
+                if i[0] in numbers:
                     self.query = "WHERE autonSwitch=%s" % i
         if "auton" in search and "scale" in search:
             self.query = "ORDER BY autonScale DESC"
             for i in search:
-                if i[0] in "1234567890":
+                if i[0] in numbers:
                     self.query = "WHERE autonScale=%s" % i
         if "auton" in search and "exchange" in search:
             self.query = "ORDER BY autonExchange DESC"
             for i in search:
-                if i[0] in "1234567890":
+                if i[0] in numbers:
                     self.query = "WHERE autonExchange='%s'" % i
         self.display()

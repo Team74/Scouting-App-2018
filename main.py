@@ -77,8 +77,10 @@ class MyApp(App):
 if __name__ == "__main__":
     myapp = MyApp()
     try:
+        print("try")
         myapp.run()
     except Exception as error:
+        print("except")
         robot = myapp.screenSwitcher.robot
         if isinstance(robot, PitRobot): raise error
         robot.localSave("ree")
