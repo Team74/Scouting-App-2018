@@ -1,5 +1,6 @@
 from kivy.uix.textinput import TextInput
 from kivy.uix.stacklayout import StackLayout
+from kivy.uix.popup import Popup
 
 from widgetpresets import *
 from robotclass import *
@@ -13,8 +14,10 @@ class LoginLayout(StackLayout):
         self.last = ""
         self.ipInputTextHint = ""
 
-
     def display(self):
+        if not self.round % 15:
+            popup = Popup(title='Time to switch.', content = Label(text='Switch with your scouting partner.\n\n\n\n\n\n\n       Tap outside to close.'), size_hint = (.75, .75))
+            popup.open()
         database = sqlite3.connect("scoutingdatabase.db")
         cursor = database.cursor()
         cursor.execute("SELECT * FROM crash WHERE Exited=0")
@@ -99,7 +102,7 @@ class LoginLayout(StackLayout):
         def teleopSwitch(_):
             number = "1234567890"
             #checking to see if team number and round number are input correctly so we dont have data type mismatch in sql database
-            if not teamInput.text or not self.roundInput.text or not self.scouterInput.text: return
+            if not teamInput.text or not self.roundInput.text or not self.scouterInput.text or self.roundInput.text == "0": return
             for i in teamInput.text:
                 if not i in number:
                     teamInput.text_hint = "invalid team number"
@@ -113,6 +116,7 @@ class LoginLayout(StackLayout):
             self.round = int(self.roundInput.text) + 1
             self.scoutNumber = 0
             self.changer = 1
+            self.menuText = 'Teleop'
             database = sqlite3.connect("scoutingdatabase.db") # data calling from db
             cursor = database.cursor()
             cursor.execute("SELECT scouter FROM matchdata")

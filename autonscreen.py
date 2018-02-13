@@ -10,6 +10,7 @@ class AutonLayout(StackLayout):
         self.switcher = ScreenSwitcher
         super(AutonLayout, self).__init__()
 
+
     def display(self):
         displist = []
         def appendLabel(text, sizeHint, color, widget=None, **kwargs):
@@ -44,7 +45,7 @@ class AutonLayout(StackLayout):
         # increment AutonSwitchDisp
         appendButton('+', eighthQuarter, darkPurple, lambda x : self.changeSwitch(1))
         # menu button
-        appendButton("Menu", quarterQuarter, fairBlue, lambda x: self.changeScreen())
+        appendButton(self.switcher.screens['login'].menuText, quarterQuarter, fairBlue, lambda x: self.changeScreen())
         #
         scoutLayout = StackLayout(size_hint = quarterQuarter)
         displist.append(scoutLayout)
@@ -110,6 +111,7 @@ class AutonLayout(StackLayout):
     def changeScreen(self):
         if self.switcher.screens["login"].changer == 1:
             self.switcher.screens["login"].changer = 0
+            self.switcher.screens['login'].menuText = 'Menu'
             self.switcher.switch("teleop")
         else:
             self.switcher.switch("menu")
