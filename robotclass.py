@@ -21,10 +21,6 @@ class Robot(object):
         self.autonSwitch = 0 # integer, how many cubes scored in switch
         self.autonScale = 0 # integer, how many cubes scored in scale
         self.autonExchange = 0 # integer, how many cubes scored in scale
-        print("____________________________")
-        print(cubeCycle)
-        print("____________________________")
-
 
         self.reloadRobot(self.teamNumber, self.roundNumber)
 

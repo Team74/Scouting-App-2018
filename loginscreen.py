@@ -13,10 +13,13 @@ class LoginLayout(StackLayout):
         self.round = 1
         self.last = ""
         self.ipInputTextHint = ""
+        self.menuText = 'Teleop'
 
     def display(self):
-        if not self.round % 15:
-            popup = Popup(title='Time to switch.', content = Label(text='Switch with your scouting partner.\n\n\n\n\n\n\n       Tap outside to close.'), size_hint = (.75, .75))
+        if not (self.round-1) % 15 and self.round > 1:
+            content = Button(text='Switch with your scouting partner.\n\n\n\n\n\n\n                 Tap to close.')
+            popup = Popup(title='Time to switch.', content=content, auto_dismiss=False)
+            content.bind(on_press=popup.dismiss)
             popup.open()
         database = sqlite3.connect("scoutingdatabase.db")
         cursor = database.cursor()
@@ -30,6 +33,7 @@ class LoginLayout(StackLayout):
                 database.close()
                 self.scoutNumber = 0
                 self.changer = 0
+                self.menuText = 'Menu'
                 database = sqlite3.connect("scoutingdatabase.db") # data calling from db
                 cursor = database.cursor()
                 cursor.execute("SELECT scouter FROM matchdata")
