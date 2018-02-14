@@ -6,7 +6,7 @@ con <- dbConnect(RSQLite::SQLite(), "display/r/graphdata.db")
 con
 
 print(dbListTables(con))
-query <- dbSendQuery(con, "SELECT * FROM switch")
+query <- dbSendQuery(con, "SELECT * FROM exchange")
 data <- dbFetch(query, n=-1)
 dbClearResult(query)
 
@@ -19,4 +19,4 @@ switchBoxplot <-
   geom_text(aes(label=mean), vjust=1.6, color="white", size=3.5) +
   geom_errorbar(aes(ymin=(mean-standev), ymax=(mean+standev)), width=.1)
 
-ggsave("display/r/graphs/switch.png", switchBoxplot)
+ggsave("display/r/graphs/exchange.png", switchBoxplot)

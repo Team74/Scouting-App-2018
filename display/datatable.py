@@ -10,6 +10,13 @@ import sqlite3
 import numpy as np
 import os
 
+def truncate(f, n): # stolen from stackexchange
+    s = '{}'.format(f)
+    if 'e' in s or 'E' in s:
+        return '{0:.{1}f}'.format(f, n)
+    i, p, d = s.partition('.')
+    return '.'.join([i, (d+'0'*n)[:n]])
+
 class DataViewLayout(StackLayout):
     def __init__(self, parentScreen, ip):
         self.switcher = parentScreen
@@ -20,6 +27,8 @@ class DataViewLayout(StackLayout):
         cursor = database.cursor()
         cursor.execute("SELECT * FROM matchdata")
         for td in cursor.fetchall():
+            if None in td:
+                continue
             self.robots.append(Robot(td[0], td[1], td[2], td[3], td[4], td[5], td[6], td[7], td[8], td[9], td[10], td[11], td[12], td[13]))
         database.close()
         self.queuedRobots = self.robots
@@ -33,6 +42,7 @@ class DataViewLayout(StackLayout):
         self.displist.append(button)
     def appendPicture(self, source, size_hint):
         photo = Image(source=source, size_hint=size_hint, allow_stretch=True, keep_ratio=False)
+        photo.reload()
         self.displist.append(photo)
     def addAll(self):
         self.clear_widgets()
@@ -76,8 +86,8 @@ class DataViewLayout(StackLayout):
 
         # nonmeta teleop
         appendButton("switch", labelSize, fairBlue, self.graphSwitch) # 4
-        appendButton("scale", labelSize, fairBlue, lambda _: self.processQuery("scale")) # 5
-        appendButton("exchange", labelSize, fairBlue, lambda _: self.processQuery("exchange"), text_size="13sp") # 6
+        appendButton("scale", labelSize, fairBlue, self.graphScale) # 5
+        appendButton("exchange", labelSize, fairBlue, self.graphExchange, text_size="13sp") # 6
         appendLabel("climb", labelSize, fairBlue) # 7
 
         # nonmeta auton
@@ -165,53 +175,56 @@ class DataViewLayout(StackLayout):
         nonNum = False # if the selecter is a numerical value
         key = lambda bot: bot.teamNumber
         # meta
-        if "team" == command:
+        if   "team" == command:
             key = lambda bot: bot.teamNumber
             selecter = "teamNumber"
-        if "round" == command:
+        elif "round" == command:
             key = lambda bot: bot.roundNumber
             selecter = "roundNumber"
-        if "event" == command:
+        elif "event" == command:
             key = lambda bot: bot.event
             selecter = "event"
             nonNum = True
         # non-meta teleop
-        if "switch" == command:
+        elif "switch" == command:
             key = lambda bot: bot.switch
             selecter = "switch"
-        if "scale" == command:
+        elif "scale" == command:
             key = lambda bot: bot.scale
             selecter = "scale"
-        if "exchange" == command:
+        elif "exchange" == command:
             key = lambda bot: bot.exchange
             selecter = "exchange"
-        if "climb" == command:
+        elif "climb" == command:
             key = lambda bot: bot.climb
             selecter = "climb"
             nonNum = True
         # non-meta auton
-        if "start" == command and modifiers[0] in ["side", "pos", "position"]:
+        elif "start" == command and modifiers[0] in ["side", "pos", "position"]:
             key = lambda bot: bot.startingPosition
             selecter = "startingPosition"
             nonNum = True
             modifiers.pop(0) # since modifiers[0] is part of the command, it can't be used as the search value
-        if "switch" == command and modifiers[0] in ["side", "pos", "position"]:
+        elif "switch" == command and modifiers[0] in ["side", "pos", "position"]:
             key = lambda bot: bot.attemptedSwitchSide
             selecter = "attemptedSwitchSide"
             nonNum = True
             modifiers.pop(0) # ^^
-        if "auton" == command and modifiers[0] == "switch":
+        elif "auton" == command and modifiers[0] == "switch":
             key = lambda bot: bot.autonSwitch
             selecter = "autonSwitch"
             modifiers.pop(0)
-        if "auton" == command and modifiers[0] == "scale":
+        elif "auton" == command and modifiers[0] == "scale":
             key = lambda bot: bot.autonScale
             selecter = "autonScale"
             modifiers.pop(0)
-        if "auton" == command and modifiers[0] == "exchange":
+        elif "auton" == command and modifiers[0] == "exchange":
             key = lambda bot: bot.autonExchange
             selecter = "autonExchange"
             modifiers.pop(0)
+
+        print(targets)
+        print(modifiers)
 
         lo = 0 # no value will subsede 0
         hi = 8000 # a value guaranteed higher than any values that will realistically be recorded, team numbers are all under 8000 this year
@@ -223,6 +236,7 @@ class DataViewLayout(StackLayout):
         if len(targets) == 1 and "more" in modifiers:
             print("I FOUND MORE")
             lo = targets[0]
+            print(lo)
         if len(targets) == 1 and "less" in modifiers:
             print("I FOUND LESS")
             hi = targets[0]
@@ -234,18 +248,20 @@ class DataViewLayout(StackLayout):
             search = " ".join(modifiers)
             selectedRobots += selEqual(selecter, search)
 
-        #
         if targets and ("equal" in modifiers or not modifiers):
             selectedRobots += selEqual(selecter, targets[0])
         if targets and ("less" in modifiers or "more" in modifiers):
             selectedRobots += selRange(selecter, lo, hi)
         if not selectedRobots and not targets and not modifiers: # if there was no query (except for command)
+            print("no command")
             selectedRobots = self.robots
 
+        print(selectedRobots)
+
+        self.queuedRobots = []
         self.queuedRobots = sorted(selectedRobots, key=key)
 
         self.changePage(0) # updates the queue to only include self.queuedRobots
-        self.displayByPage()
 
     def switchBack(self, _):
         self.switcher.displayMain("_")
@@ -253,17 +269,21 @@ class DataViewLayout(StackLayout):
 
     def graphSwitch(self, _):
         teamValues = {}
+        print(self.queuedRobots)
         for robot in self.queuedRobots:
-            if robot.teamNumber in teamValues:
+            if not robot.teamNumber in teamValues:
+                teamValues[robot.teamNumber] = [robot.switch]
+            else:
                 teamValues[robot.teamNumber].append(robot.switch)
 
+        print(teamValues)
         currentDir = os.path.dirname(os.path.realpath(__file__))
         database = sqlite3.connect("%s/r/graphdata.db" % currentDir)
         database.execute("DELETE FROM switch")
         for team in teamValues:
             teamNumber = team
-            mean = np.mean(teamValues[team])
-            standev = np.std(teamValues[team])
+            mean = truncate(np.mean(teamValues[team]), 2)
+            standev = truncate(np.std(teamValues[team]), 2)
             database.execute("INSERT INTO switch VALUES (?, ?, ?)", (team, mean, standev))
         database.commit()
         database.close()
@@ -274,3 +294,57 @@ class DataViewLayout(StackLayout):
         self.appendButton("Back", (1, .05), lambda _: self.processQuery("")) # clears the queued robots and goes back to display
         self.appendPicture("%s/r/graphs/switch.png" % currentDir, (1, .95))
         self.addAll()
+    def graphScale(self, _):
+        teamValues = {}
+        print(self.queuedRobots)
+        for robot in self.queuedRobots:
+            if not robot.teamNumber in teamValues:
+                teamValues[robot.teamNumber] = [robot.scale]
+            else:
+                teamValues[robot.teamNumber].append(robot.scale)
+
+        print(teamValues)
+        currentDir = os.path.dirname(os.path.realpath(__file__))
+        database = sqlite3.connect("%s/r/graphdata.db" % currentDir)
+        database.execute("DELETE FROM scale")
+        for team in teamValues:
+            teamNumber = team
+            mean = truncate(np.mean(teamValues[team]), 2)
+            standev = truncate(np.std(teamValues[team]), 2)
+            database.execute("INSERT INTO scale VALUES (?, ?, ?)", (team, mean, standev))
+        database.commit()
+        database.close()
+
+        os.system("Rscript %s/r/scale.r" % currentDir) # will create a png in /r/graphs/switch.png
+
+        self.displist = []
+        self.appendButton("Back", (1, .05), lambda _: self.processQuery("")) # clears the queued robots and goes back to display
+        self.appendPicture("%s/r/graphs/scale.png" % currentDir, (1, .95))
+        self.addAll()
+    def graphExchange(self, _):
+         teamValues = {}
+         print(self.queuedRobots)
+         for robot in self.queuedRobots:
+             if not robot.teamNumber in teamValues:
+                 teamValues[robot.teamNumber] = [robot.exchange]
+             else:
+                 teamValues[robot.teamNumber].append(robot.exchange)
+
+         print(teamValues)
+         currentDir = os.path.dirname(os.path.realpath(__file__))
+         database = sqlite3.connect("%s/r/graphdata.db" % currentDir)
+         database.execute("DELETE FROM exchange")
+         for team in teamValues:
+             teamNumber = team
+             mean = truncate(np.mean(teamValues[team]), 2)
+             standev = truncate(np.std(teamValues[team]), 2)
+             database.execute("INSERT INTO exchange VALUES (?, ?, ?)", (team, mean, standev))
+         database.commit()
+         database.close()
+
+         os.system("Rscript %s/r/exchange.r" % currentDir) # will create a png in /r/graphs/switch.png
+
+         self.displist = []
+         self.appendButton("Back", (1, .05), lambda _: self.processQuery("")) # clears the queued robots and goes back to display
+         self.appendPicture("%s/r/graphs/exchange.png" % currentDir, (1, .95))
+         self.addAll()
