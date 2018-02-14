@@ -88,6 +88,7 @@ class PitScoutingSelecterLayout(StackLayout):
 
     def addPitRobot(self, teamNumber):
         number = "1234567890"
+        if not teamNumber: return
         for i in teamNumber:
             if not i in number:
                 return
