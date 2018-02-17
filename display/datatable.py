@@ -88,7 +88,7 @@ class DataViewLayout(StackLayout):
         appendButton("switch", labelSize, fairBlue, self.graphSwitch) # 4
         appendButton("scale", labelSize, fairBlue, self.graphScale) # 5
         appendButton("exchange", labelSize, fairBlue, self.graphExchange, text_size="13sp") # 6
-        appendLabel("climb", labelSize, fairBlue) # 7
+        appendButton("climb", labelSize, fairBlue, self.graphClimb) # 7
 
         # nonmeta auton
         appendLabel("start\npos", labelSize, tameRed) # 9
@@ -256,8 +256,6 @@ class DataViewLayout(StackLayout):
             print("no command")
             selectedRobots = self.robots
 
-        print(selectedRobots)
-
         self.queuedRobots = []
         self.queuedRobots = sorted(selectedRobots, key=key)
 
@@ -269,7 +267,6 @@ class DataViewLayout(StackLayout):
 
     def graphSwitch(self, _):
         teamValues = {}
-        print(self.queuedRobots)
         for robot in self.queuedRobots:
             if not robot.teamNumber in teamValues:
                 teamValues[robot.teamNumber] = [robot.switch]
@@ -296,7 +293,6 @@ class DataViewLayout(StackLayout):
         self.addAll()
     def graphScale(self, _):
         teamValues = {}
-        print(self.queuedRobots)
         for robot in self.queuedRobots:
             if not robot.teamNumber in teamValues:
                 teamValues[robot.teamNumber] = [robot.scale]
@@ -322,29 +318,57 @@ class DataViewLayout(StackLayout):
         self.appendPicture("%s/r/graphs/scale.png" % currentDir, (1, .95))
         self.addAll()
     def graphExchange(self, _):
-         teamValues = {}
-         print(self.queuedRobots)
-         for robot in self.queuedRobots:
-             if not robot.teamNumber in teamValues:
-                 teamValues[robot.teamNumber] = [robot.exchange]
-             else:
-                 teamValues[robot.teamNumber].append(robot.exchange)
+        teamValues = {}
+        for robot in self.queuedRobots:
+            if not robot.teamNumber in teamValues:
+                teamValues[robot.teamNumber] = [robot.exchange]
+            else:
+                teamValues[robot.teamNumber].append(robot.exchange)
+        print(teamValues)
+        currentDir = os.path.dirname(os.path.realpath(__file__))
+        database = sqlite3.connect("%s/r/graphdata.db" % currentDir)
+        database.execute("DELETE FROM exchange")
+        for team in teamValues:
+            teamNumber = team
+            mean = truncate(np.mean(teamValues[team]), 2)
+            standev = truncate(np.std(teamValues[team]), 2)
+            database.execute("INSERT INTO exchange VALUES (?, ?, ?)", (team, mean, standev))
+        database.commit()
+        database.close()
 
-         print(teamValues)
-         currentDir = os.path.dirname(os.path.realpath(__file__))
-         database = sqlite3.connect("%s/r/graphdata.db" % currentDir)
-         database.execute("DELETE FROM exchange")
-         for team in teamValues:
-             teamNumber = team
-             mean = truncate(np.mean(teamValues[team]), 2)
-             standev = truncate(np.std(teamValues[team]), 2)
-             database.execute("INSERT INTO exchange VALUES (?, ?, ?)", (team, mean, standev))
-         database.commit()
-         database.close()
+        os.system("Rscript %s/r/exchange.r" % currentDir) # will create a png in /r/graphs/switch.png
 
-         os.system("Rscript %s/r/exchange.r" % currentDir) # will create a png in /r/graphs/switch.png
+        self.displist = []
+        self.appendButton("Back", (1, .05), lambda _: self.processQuery("")) # clears the queued robots and goes back to display
+        self.appendPicture("%s/r/graphs/exchange.png" % currentDir, (1, .95))
+        self.addAll()
 
-         self.displist = []
-         self.appendButton("Back", (1, .05), lambda _: self.processQuery("")) # clears the queued robots and goes back to display
-         self.appendPicture("%s/r/graphs/exchange.png" % currentDir, (1, .95))
-         self.addAll()
+    def graphClimb(self, _):
+        teamValues = {}
+        for robot in self.queuedRobots:
+            if not robot.teamNumber in teamValues:
+                teamValues[robot.teamNumber] = {
+                    "climbed": 0,
+                    "didn't climb": 0,
+                    "assisted": 0,
+                    "assisted +1": 0,
+                    "assisted +2": 0,
+                }
+            teamValues[robot.teamNumber][robot.climb] += 1
+        print(teamValues)
+        currentDir = os.path.dirname(os.path.realpath(__file__))
+        database = sqlite3.connect("%s/r/graphdata.db" % currentDir)
+        database.execute("DELETE FROM climb")
+        for team in teamValues:
+            database.execute("INSERT INTO climb VALUES (?, ?, ?)", (team, None, None))
+            for climbType in team:
+                database.execute("UPDATE climb SET climbType=?, count=?", (climbType, team[climbType]))
+        database.commit()
+        database.close()
+
+        os.system("Rscript %s/r/climb.r" % currentDir) # will create a png in /r/graphs/switch.png
+
+        self.displist = []
+        self.appendButton("Back", (1, .05), lambda _: self.processQuery("")) # clears the queued robots and goes back to display
+        self.appendPicture("%s/r/graphs/climb.png" % currentDir, (1, .95))
+        self.addAll()

@@ -11,7 +11,7 @@ class Robot(object):
         self.switch = switch # integer, how many cubes scored in switch
         self.scale = scale # integer, how many cubes scored in scale
         self.exchange = exchange #integer, how many cubes scored in exchange
-        self.climb = climb # string - "did not climb", "tried but failed", "levitated", "climbed"
+        self.climb = climb # string - "climbed", "didn't climb", "assisted", "assisted +1", "assisted +2"
         self.notes = notes # string, notable things on robot
         # auton #
         self.startingPosition = "left" #string - "left", "middle", "right"
