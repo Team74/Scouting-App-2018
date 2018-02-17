@@ -171,53 +171,56 @@ class DataViewLayout(StackLayout):
         nonNum = False # if the selecter is a numerical value
         key = lambda bot: bot.teamNumber
         # meta
-        if "team" == command:
+        if   "team" == command:
             key = lambda bot: bot.teamNumber
             selecter = "teamNumber"
-        if "round" == command:
+        elif "round" == command:
             key = lambda bot: bot.roundNumber
             selecter = "roundNumber"
-        if "event" == command:
+        elif "event" == command:
             key = lambda bot: bot.event
             selecter = "event"
             nonNum = True
         # non-meta teleop
-        if "switch" == command:
+        elif "switch" == command:
             key = lambda bot: bot.switch
             selecter = "switch"
-        if "scale" == command:
+        elif "scale" == command:
             key = lambda bot: bot.scale
             selecter = "scale"
-        if "exchange" == command:
+        elif "exchange" == command:
             key = lambda bot: bot.exchange
             selecter = "exchange"
-        if "climb" == command:
+        elif "climb" == command:
             key = lambda bot: bot.climb
             selecter = "climb"
             nonNum = True
         # non-meta auton
-        if "start" == command and modifiers[0] in ["side", "pos", "position"]:
+        elif "start" == command and modifiers[0] in ["side", "pos", "position"]:
             key = lambda bot: bot.startingPosition
             selecter = "startingPosition"
             nonNum = True
             modifiers.pop(0) # since modifiers[0] is part of the command, it can't be used as the search value
-        if "switch" == command and modifiers[0] in ["side", "pos", "position"]:
+        elif "switch" == command and modifiers[0] in ["side", "pos", "position"]:
             key = lambda bot: bot.attemptedSwitchSide
             selecter = "attemptedSwitchSide"
             nonNum = True
             modifiers.pop(0) # ^^
-        if "auton" == command and modifiers[0] == "switch":
+        elif "auton" == command and modifiers[0] == "switch":
             key = lambda bot: bot.autonSwitch
             selecter = "autonSwitch"
             modifiers.pop(0)
-        if "auton" == command and modifiers[0] == "scale":
+        elif "auton" == command and modifiers[0] == "scale":
             key = lambda bot: bot.autonScale
             selecter = "autonScale"
             modifiers.pop(0)
-        if "auton" == command and modifiers[0] == "exchange":
+        elif "auton" == command and modifiers[0] == "exchange":
             key = lambda bot: bot.autonExchange
             selecter = "autonExchange"
             modifiers.pop(0)
+
+        print(targets)
+        print(modifiers)
 
         lo = 0 # no value will subsede 0
         hi = 8000 # a value guaranteed higher than any values that will realistically be recorded, team numbers are all under 8000 this year
@@ -229,6 +232,7 @@ class DataViewLayout(StackLayout):
         if len(targets) == 1 and "more" in modifiers:
             print("I FOUND MORE")
             lo = targets[0]
+            print(lo)
         if len(targets) == 1 and "less" in modifiers:
             print("I FOUND LESS")
             hi = targets[0]
@@ -240,18 +244,20 @@ class DataViewLayout(StackLayout):
             search = " ".join(modifiers)
             selectedRobots += selEqual(selecter, search)
 
-        #
         if targets and ("equal" in modifiers or not modifiers):
             selectedRobots += selEqual(selecter, targets[0])
         if targets and ("less" in modifiers or "more" in modifiers):
             selectedRobots += selRange(selecter, lo, hi)
         if not selectedRobots and not targets and not modifiers: # if there was no query (except for command)
+            print("no command")
             selectedRobots = self.robots
 
+        print(selectedRobots)
+
+        self.queuedRobots = []
         self.queuedRobots = sorted(selectedRobots, key=key)
 
         self.changePage(0) # updates the queue to only include self.queuedRobots
-        self.display()
 
     def switchBack(self, _):
         self.switcher.displayMain("_")
