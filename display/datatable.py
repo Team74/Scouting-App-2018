@@ -361,8 +361,10 @@ class DataViewLayout(StackLayout):
         database.execute("DELETE FROM climb")
         for team in teamValues:
             database.execute("INSERT INTO climb VALUES (?, ?, ?)", (team, None, None))
-            for climbType in team:
-                database.execute("UPDATE climb SET climbType=?, count=?", (climbType, team[climbType]))
+            for climbType in teamValues[team]:
+                freq = teamValues[team][climbType]
+                print(freq)
+                database.execute("UPDATE climb SET climbType=?, frequency=?", (climbType, freq))
         database.commit()
         database.close()
 

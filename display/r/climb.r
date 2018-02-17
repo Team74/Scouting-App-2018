@@ -12,7 +12,7 @@ data$teamNumber <- as.factor(data$teamNumber) # who tf knows
 head(data)
 print(data)
 
-ggplot(data = data, aes(x=teamNumber, y=count, fill=climbType)) +
-    geom_bar()
+ggplot(data=data, aes(x=teamNumber, y=frequency, fill=climbType)) +
+    geom_bar(stat="identity")
 
-ggsave("display/r/graphs/graph.png", switchBoxplot)
+ggsave("display/r/graphs/climb.png")
