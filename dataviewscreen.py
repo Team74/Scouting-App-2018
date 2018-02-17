@@ -32,6 +32,7 @@ class DataViewLayout(StackLayout):
         self.queue = []
         self.index = -1
         self.changePage(1)
+        self.fromDataView = 0
 
     def appendButton(self, text, size_hint, bind):
         button = Button(text=text, size_hint=size_hint)
@@ -73,7 +74,7 @@ class DataViewLayout(StackLayout):
 
         # go button, back button
         appendButton("Go", inputSize, darkblue, lambda _: self.processQuery(searchBar.text))
-        appendButton("Back", inputSize, darkblue, lambda x: self.switcher.switch("login"))
+        appendButton("Back", inputSize, darkblue, lambda x: self.changeScreens())
 
         # meta
         appendButton("team", labelSize, tameGreen, lambda _: self.processQuery("team")) # 0
@@ -108,6 +109,10 @@ class DataViewLayout(StackLayout):
         self.clear_widgets()
         for widget in displist:
             self.add_widget(widget)
+
+    def changeScreens(self):
+        self.fromDataView = 1
+        self.switcher.switch("login")
 
     def changePage(self, change):
         print(self.index + change)

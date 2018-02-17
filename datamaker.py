@@ -17,7 +17,7 @@ for team in [421, 6635, 1003]:
             random.randint(0, 9),
             random.randint(0, 12),
             random.randint(0, 9),
-            random.choice(["climbed +1", "climbed +2", "climbed", "did not climb", "attempted to climb"]),
+            random.choice(["climbed", "didn't climb", "assisted", "assisted +1", "assisted +2"]),
             "datamaker",
             random.choice(["left", "middle", "right"]),
             random.choice(["left", "right"]),
