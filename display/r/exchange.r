@@ -14,9 +14,10 @@ data$teamNumber <- as.factor(data$teamNumber) # who tf knows
 head(data)
 print(data)
 
-switchBoxplot <-
-  ggplot(data, aes(x=teamNumber, y=mean)) + geom_col(fill="steelblue", color="black") +
+ggplot(data, aes(x=teamNumber, y=mean)) +
+  geom_col(fill="steelblue", color="black") +
   geom_text(aes(label=mean), vjust=1.6, color="white", size=3.5) +
-  geom_errorbar(aes(ymin=(mean-standev), ymax=(mean+standev)), width=.1)
+  geom_errorbar(aes(ymin=(mean-standev), ymax=(mean+standev)), width=.1) +
+  ggtitle("exchange")
 
-ggsave("display/r/graphs/exchange.png", switchBoxplot)
+ggsave("display/r/graphs/exchange.png")

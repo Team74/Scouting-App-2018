@@ -26,32 +26,32 @@ class AutonLayout(StackLayout):
         # row 1
 
         # displays cubes in switch in auton
-        appendLabel("Cubes put in switch:\n\n" + str(self.switcher.robot.autonSwitch), quarterQuarter, darkPurple)
+        appendLabel("Cubes put in switch:\n\n" + str(self.switcher.robot.autonSwitch), (.25, .25), darkPurple)
         # displays team number
-        appendLabel("Team: " + str(self.switcher.robot.teamNumber), quarterQuarter, darkSeaFoamGreen)
+        appendLabel("Team: " + str(self.switcher.robot.teamNumber), (.25, .25), darkSeaFoamGreen)
         infoLayout = StackLayout(size_hint=(.25, .25))
         displist.append(infoLayout)
         # "Left" for attemptedSwitchSide
         side1Color = darkMagenta if self.switcher.robot.attemptedSwitchSide == "left" else lightMagenta
-        appendButton("Robot\nattempted\nthe Left\nside", eighthQuarter, side1Color, lambda x: self.changeSide("left"))
+        appendButton("Robot\nattempted\nthe Left\nside", (.125, .25), side1Color, lambda x: self.changeSide("left"))
         # "Right" for attemptedSwitchSide
         side2Color = darkMagenta if self.switcher.robot.attemptedSwitchSide == "right" else lightMagenta
-        appendButton("Robot\nattempted\nthe Right\nside", eighthQuarter, side2Color, lambda x: self.changeSide("right"))
+        appendButton("Robot\nattempted\nthe Right\nside", (.125, .25), side2Color, lambda x: self.changeSide("right"))
 
         # row 2
 
         # decrement AutonSwitchDisp
-        appendButton("-", eighthQuarter, darkPurple, lambda x : self.changeSwitch(-1))
+        appendButton("-", (.125, .25), darkPurple, lambda x : self.changeSwitch(-1))
         # increment AutonSwitchDisp
-        appendButton('+', eighthQuarter, darkPurple, lambda x : self.changeSwitch(1))
+        appendButton('+', (.125, .25), darkPurple, lambda x : self.changeSwitch(1))
         # menu button
-        appendButton(self.switcher.screens['login'].menuText, quarterQuarter, fairBlue, lambda x: self.changeScreen())
+        appendButton(self.switcher.screens['login'].menuText, (.25, .25), fairBlue, lambda x: self.changeScreen())
         #
-        scoutLayout = StackLayout(size_hint = quarterQuarter)
+        scoutLayout = StackLayout(size_hint = (.25, .25))
         displist.append(scoutLayout)
         # "None" for attemptedSwitchSide
         side3Color = darkMagenta if self.switcher.robot.attemptedSwitchSide == "none" else lightMagenta
-        appendButton("Robot\ndidn't\nattempt\nthe switch", quarterQuarter, side3Color, lambda x: self.changeSide("none"))
+        appendButton("Robot\ndidn't\nattempt\nthe switch", (.25, .25), side3Color, lambda x: self.changeSide("none"))
 
         # --- infoLayout --- #
         # displays event name
@@ -69,35 +69,38 @@ class AutonLayout(StackLayout):
 
         # scale & exchange display
         # multi row 1
-        multiLayout = StackLayout(size_hint=halfHalf)
+        multiLayout = StackLayout(size_hint=(.25, .5))
         displist.append(multiLayout)
+        startLayout = StackLayout(size_hint=(.5, .5))
+        displist.append(startLayout)
+        exchangeLayout =StackLayout(size_hint=(.25, .5))
+        displist.append(exchangeLayout)
         # scale disp for auton
-        appendLabel("Cubes put in scale\nin auton:\n" + str(self.switcher.robot.autonScale), halfHalf, fairBlue, multiLayout)
+        appendLabel("Cubes put in scale\nin auton:\n" + str(self.switcher.robot.autonScale), (1, .5), fairBlue, multiLayout)
         # exchange disp for auton
-        appendLabel("Cubes put in\nExchange\nin auton:\n" + str(self.switcher.robot.autonExchange), halfHalf, lightOrange, multiLayout)
+        appendLabel("Cubes put in\nExchange\nin auton:\n" + str(self.switcher.robot.autonExchange), (1, .5), lightOrange, exchangeLayout)
         # multi row 2
         # decrement for auton scale
-        appendButton("-", quarterHalf, fairBlue, lambda x: self.changeScale(-1), multiLayout)
+        appendButton("-", (.5, .5), fairBlue, lambda x: self.changeScale(-1), multiLayout)
         # increment for auton scale
-        appendButton("+", quarterHalf, fairBlue, lambda x: self.changeScale(1), multiLayout)
+        appendButton("+", (.5, .5), fairBlue, lambda x: self.changeScale(1), multiLayout)
         # decrement for auton exchange
-        appendButton("-", quarterHalf, lightOrange, lambda x: self.changeExchange(-1), multiLayout)
+        appendButton("-", (.5, .5), lightOrange, lambda x: self.changeExchange(-1), exchangeLayout)
         # increment for auton exchange
-        appendButton("+", quarterHalf, lightOrange, lambda x: self.changeExchange(1), multiLayout)
+        appendButton("+", (.5, .5), lightOrange, lambda x: self.changeExchange(1), exchangeLayout)
         #end of multiLayout
 
         # starting position display
-        startLayout = StackLayout(size_hint=halfHalf)
-        displist.append(startLayout)
+
         # left for starting position
         startColor1 = darkRed if self.switcher.robot.startingPosition == "left" else red
-        appendButton("Started in the\nLeft position", thirdWhole, startColor1, lambda x: self.changeStart("left"), startLayout)
+        appendButton("Started in the\nLeft position", (1/3, 1), startColor1, lambda x: self.changeStart("left"), startLayout)
         # middle for starting position
         startColor2 = darkRed if self.switcher.robot.startingPosition == "middle" else red
-        appendButton("Started in the\nMiddle position", thirdWhole, startColor2, lambda x: self.changeStart("middle"), startLayout)
+        appendButton("Started in the\nMiddle position", (1/3, 1), startColor2, lambda x: self.changeStart("middle"), startLayout)
         # right for starting position
         startColor3 = darkRed if self.switcher.robot.startingPosition == "right" else red
-        appendButton("Started in the\nRight position", thirdWhole, startColor3, lambda x: self.changeStart("right"), startLayout)
+        appendButton("Started in the\nRight position", (1/3, 1), startColor3, lambda x: self.changeStart("right"), startLayout)
 
         self.clear_widgets()
         for widg in displist:

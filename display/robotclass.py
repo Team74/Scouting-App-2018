@@ -2,7 +2,7 @@ import sqlite3
 import mysql.connector
 
 class Robot(object):
-    def __init__(self, teamNumber, roundNumber, eventName, scouter, switch=0, scale=0, exchange=0, climb="did not climb", notes="", startingPosition=0, attemptedSwitchSide="left", autonSwitch=0, autonScale=0, autonExchange=0):
+    def __init__(self, teamNumber, roundNumber, eventName, scouter, switch=0, scale=0, exchange=0, climb="did not climb", notes="", startingPosition="left", attemptedSwitchSide="left", autonSwitch=0, autonScale=0, autonExchange=0):
         self.teamNumber = teamNumber
         self.roundNumber = roundNumber
         self.eventName = eventName
@@ -11,14 +11,14 @@ class Robot(object):
         self.switch = switch # integer, how many cubes scored in switch
         self.scale = scale # integer, how many cubes scored in scale
         self.exchange = exchange #integer, how many cubes scored in exchange
-        self.climb = climb # string - "climbed", "didn't climb", "assisted", "assisted +1", "assisted +2"
+        self.climb = climb # string - "climbed", "didn't climb", "were assisted", "assisted +1", "assisted +2"
         self.notes = notes # string, notable things on robot
         # auton #
-        self.startingPosition = "left" #string - "left", "middle", "right"
-        self.attemptedSwitchSide = "left" #string - "left", "right"
-        self.autonSwitch = 0 # integer, how many cubes scored in switch
-        self.autonScale = 0 # integer, how many cubes scored in scale
-        self.autonExchange = 0 # integer, how many cubes scored in scale
+        self.startingPosition = startingPosition #string - "left", "middle", "right"
+        self.attemptedSwitchSide = attemptedSwitchSide #string - "left", "right"
+        self.autonSwitch = autonSwitch # integer, how many cubes scored in switch
+        self.autonScale = autonScale # integer, how many cubes scored in scale
+        self.autonExchange = autonExchange # integer, how many cubes scored in scale
 
         self.reloadRobot(self.teamNumber, self.roundNumber)
 

@@ -17,12 +17,12 @@ for team in [421, 6635, 1003]:
             random.randint(0, 9),
             random.randint(0, 12),
             random.randint(0, 9),
-            random.choice(["climbed", "didn't climb", "assisted", "assisted +1", "assisted +2"]),
+            random.choice(["climbed", "didn't climb", "were assisted", "assisted +1", "assisted +2"]),
             "datamaker",
             random.choice(["left", "middle", "right"]),
-            random.choice(["left", "right"]),
+            random.choice(["right", "left"]),
             random.randint(0, 3),
             random.randint(0, 2),
             random.randint(0, 2)
         )
-        robot.localSave("throwaway")
+        robot.localSave("_")
