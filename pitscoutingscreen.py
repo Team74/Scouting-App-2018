@@ -1,7 +1,7 @@
 from kivy.uix.stacklayout import StackLayout
 from kivy.uix.textinput import TextInput
 
-from widgetpresets import *
+from widgetpresets import ColorButton, ColorLabel, darkened
 
 class PitScoutingLayout(StackLayout):
     def __init__(self, screenSwitcher):
@@ -20,83 +20,92 @@ class PitScoutingLayout(StackLayout):
             if not widget: displist.append(button)
             else: widget.add_widget(button)
 
-        robot = self.switcher.robot
+        robot = self.switcher.robot # i got tired of having to type the full self.switcher.robot out
+
+        purple = [114/255, 0, 1]
+        green = [14/255, 201/255, 170/255]
+        darkGreen = [0, 200/255, 0]
+        magenta = [231/255, 58/255, 177/255]
+        lightBlue = [28/255, 129/255, 201/255]
+        orange = [255/255, 150/255, 75/255]
+        black = [0, 0, 0]
+        red = [200/255, 0, 0]
 
         # switch capability
-        colorSwitchCan = darkSeaFoamGreen if robot.switchCapability else seaFoamGreen
-        appendButton("CAN put cube on switch", quarterQuarter, colorSwitchCan, lambda x: self.changeSwitch(1))
+        colorSwitchCan = darkened(green) if robot.switchCapability else green
+        appendButton("CAN put cube on switch", (.25, .25), colorSwitchCan, lambda x: self.changeSwitch(1))
 
         # menu button
-        appendButton("Menu", quarterQuarter, purple, self.switchMenu)
+        appendButton("Menu", (.25, .25), purple, self.switchMenu)
 
         # team display
-        appendLabel("Team: " + str(robot.teamNumber), quarterQuarter, black)
+        appendLabel("Team: " + str(robot.teamNumber), (.25, .25), black)
 
         # climb capability
-        colorClimbCan = darkMagenta if robot.climbCapability else lightMagenta
-        appendButton("CAN climb", quarterQuarter, colorClimbCan, lambda x: self.changeClimb(1))
+        colorClimbCan = darkened(magenta) if robot.climbCapability else magenta
+        appendButton("CAN climb", (.25, .25), colorClimbCan, lambda x: self.changeClimb(1))
 
 
         # switch capability
-        colorSwitchCant = darkSeaFoamGreen if not robot.switchCapability else seaFoamGreen
-        appendButton("CAN'T put cube on switch", quarterQuarter, colorSwitchCant, lambda x: self.changeSwitch(0))
+        colorSwitchCant = darkened(green) if not robot.switchCapability else green
+        appendButton("CAN'T put cube on switch", (.25, .25), colorSwitchCant, lambda x: self.changeSwitch(0))
 
         # drivetrain layout
         drivetrainLayout = StackLayout(size_hint=(.5,.25))
         displist.append(drivetrainLayout)
 
         # tank drive
-        colorTankDrive = darkFairBlue if robot.drivetrain == "tank" else fairBlue
-        appendButton("Tank drive / tank variants", halfHalf, colorTankDrive, lambda x: self.changeDrivetrain("tank"), drivetrainLayout)
+        colorTankDrive = darkened(lightBlue) if robot.drivetrain == "tank" else lightBlue
+        appendButton("Tank drive / tank variants", (.5, .5), colorTankDrive, lambda x: self.changeDrivetrain("tank"), drivetrainLayout)
 
         # swerve drive
-        colorSwerveDrive = darkFairBlue if robot.drivetrain == "swerve" else fairBlue
-        appendButton("Swerve drive", halfHalf, colorSwerveDrive, lambda x: self.changeDrivetrain("swerve"), drivetrainLayout)
+        colorSwerveDrive = darkened(lightBlue) if robot.drivetrain == "swerve" else lightBlue
+        appendButton("Swerve drive", (.5, .5), colorSwerveDrive, lambda x: self.changeDrivetrain("swerve"), drivetrainLayout)
 
         # mecanum drive
-        colorMecanumDrive = darkFairBlue if robot.drivetrain == "mecanum" else fairBlue
-        appendButton("Mecanum drive", halfHalf, colorMecanumDrive, lambda x: self.changeDrivetrain("mecanum"), drivetrainLayout)
+        colorMecanumDrive = darkened(lightBlue) if robot.drivetrain == "mecanum" else lightBlue
+        appendButton("Mecanum drive", (.5, .5), colorMecanumDrive, lambda x: self.changeDrivetrain("mecanum"), drivetrainLayout)
 
         # holographic drive
-        colorHoloDrive = darkFairBlue if robot.drivetrain == "holonomic" else fairBlue
-        appendButton("Holonomic drive", halfHalf, colorHoloDrive, lambda x: self.changeDrivetrain("holonomic"), drivetrainLayout)
+        colorHoloDrive = darkened(lightBlue) if robot.drivetrain == "holonomic" else lightBlue
+        appendButton("Holonomic drive", (.5, .5), colorHoloDrive, lambda x: self.changeDrivetrain("holonomic"), drivetrainLayout)
 
         # climb capability
-        colorClimbCant = darkMagenta if not robot.climbCapability else lightMagenta
-        appendButton("CAN'T climb", quarterQuarter, colorClimbCant, lambda x: self.changeClimb(0))
+        colorClimbCant = darkened(magenta) if not robot.climbCapability else magenta
+        appendButton("CAN'T climb", (.25, .25), colorClimbCant, lambda x: self.changeClimb(0))
 
 
         # scale capability
-        colorScaleCan = darkTameRed if robot.scaleCapability else tameRed
-        appendButton("CAN put cube on scale", quarterQuarter, colorScaleCan, lambda x: self.changeScale(1))
+        colorScaleCan = darkened(red) if robot.scaleCapability else red
+        appendButton("CAN put cube on scale", (.25, .25), colorScaleCan, lambda x: self.changeScale(1))
 
         # ground capability
-        colorGroundCan = darkTameGreen if robot.groundPickup else tameGreen
-        appendButton("CAN pick up cubes off ground", quarterQuarter, colorGroundCan, lambda x: self.changeGround(1))
+        colorGroundCan = darkened(darkGreen) if robot.groundPickup else darkGreen
+        appendButton("CAN pick up cubes off ground", (.25, .25), colorGroundCan, lambda x: self.changeGround(1))
 
         # photo button
-        appendButton("Photo", quarterQuarter, lightMagenta, lambda x: self.switcher.switch("photo"))
+        appendButton("Photo", (.25, .25), magenta, lambda x: self.switcher.switch("photo"))
 
         # exchange capability
-        colorExchangeCan = darkOrange if robot.exchangeCapability else lightOrange
-        appendButton("CAN put cube in exchange", quarterQuarter, colorExchangeCan, lambda x: self.changeExchange(1))
+        colorExchangeCan = darkened(orange) if robot.exchangeCapability else orange
+        appendButton("CAN put cube in exchange", (.25, .25), colorExchangeCan, lambda x: self.changeExchange(1))
 
 
         # scale capability
-        colorScaleCant = darkTameRed if not robot.scaleCapability else tameRed
-        appendButton("CAN'T put cube in scale", quarterQuarter, colorScaleCant, lambda x: self.changeScale(0))
+        colorScaleCant = darkened(red) if not robot.scaleCapability else red
+        appendButton("CAN'T put cube in scale", (.25, .25), colorScaleCant, lambda x: self.changeScale(0))
 
         # ground capability
-        colorGroundCant = darkTameGreen if not robot.groundPickup else tameGreen
-        appendButton("CAN'T pick up cubes off ground", quarterQuarter, colorGroundCant, lambda x: self.changeGround(0))
+        colorGroundCant = darkened(darkGreen) if not robot.groundPickup else darkGreen
+        appendButton("CAN'T pick up cubes off ground", (.25, .25), colorGroundCant, lambda x: self.changeGround(0))
 
         # notes
-        self.notesInput = TextInput(size_hint=quarterQuarter)
+        self.notesInput = TextInput(size_hint=(.25, .25))
         displist.append(self.notesInput)
 
         # exchange capability
-        colorExchangeCant = darkOrange if not robot.exchangeCapability else lightOrange
-        appendButton("CAN'T put cube in exchange", quarterQuarter, colorExchangeCant, lambda x: self.changeExchange(0))
+        colorExchangeCant = darkened(orange) if not robot.exchangeCapability else orange
+        appendButton("CAN'T put cube in exchange", (.25, .25), colorExchangeCant, lambda x: self.changeExchange(0))
 
         self.clear_widgets()
         for widget in displist:

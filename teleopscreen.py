@@ -3,7 +3,7 @@ from kivy.uix.stacklayout import StackLayout
 from kivy.uix.floatlayout import FloatLayout
 
 from kivy.clock import Clock
-from widgetpresets import *
+from widgetpresets import ColorLabel, ColorButton, darkened
 from robotclass import *
 import sqlite3
 import time
@@ -27,8 +27,7 @@ class TeleopLayout(StackLayout):
             if not widget: displist.append(button)
             else: widget.add_widget(button)
 
-        def darkened(color):
-            return [hue-(60/255) if hue > (60/255) else 0 for hue in color]
+
         green = [14/255, 201/255, 170/255]
         purple = [114/255, 0, 1]
         magenta = [231/255, 58/255, 177/255]
@@ -40,13 +39,13 @@ class TeleopLayout(StackLayout):
         screenLayout = StackLayout(size_hint=(.75, .5))
         displist.append(screenLayout)
         # climb Layout
-        climbLayout = StackLayout(size_hint=quarterHalf)
+        climbLayout = StackLayout(size_hint=(.25, .5))
         displist.append(climbLayout)
         # scale layout
-        scaleLayout = StackLayout(size_hint=quarterHalf) # smaller layout to get around larger widgets in the same line (notesTextInput)
+        scaleLayout = StackLayout(size_hint=(.25, .5)) # smaller layout to get around larger widgets in the same line (notesTextInput)
         displist.append(scaleLayout)
         # input for notes
-        self.notesTextInput = TextInput(text=self.switcher.robot.notes, size_hint=halfHalf)
+        self.notesTextInput = TextInput(text=self.switcher.robot.notes, size_hint=(.5, .5))
         displist.append(self.notesTextInput)
         # exchange layout
         exchangeLayout = StackLayout(size_hint=(.25, .5))
@@ -105,19 +104,19 @@ class TeleopLayout(StackLayout):
 
         # --- scaleLayout --- #
         # displays cubes in scale
-        appendLabel("Cubes put in scale:\n\n" + str(self.switcher.robot.scale), wholeHalf, lightBlue, scaleLayout)
+        appendLabel("Cubes put in scale:\n\n" + str(self.switcher.robot.scale), (1, .5), lightBlue, scaleLayout)
         # decrement scaleDisp
-        appendButton("-", halfHalf, lightBlue, lambda x: self.changeScale(-1), scaleLayout)
+        appendButton("-", (.5, .5), lightBlue, lambda x: self.changeScale(-1), scaleLayout)
         # increment scaleDisp
-        appendButton("+", halfHalf, lightBlue, lambda x: self.changeScale(1), scaleLayout)
+        appendButton("+", (.5, .5), lightBlue, lambda x: self.changeScale(1), scaleLayout)
 
         # --- exchangeLayout --- #
         # displays cubes in exchange
-        appendLabel("Cubes put in exchange:\n\n" + str(self.switcher.robot.exchange), wholeHalf, orange, exchangeLayout)
+        appendLabel("Cubes put in exchange:\n\n" + str(self.switcher.robot.exchange), (1, .5), orange, exchangeLayout)
         # decrement exchangeDisp
-        appendButton("-", halfHalf, orange, lambda x: self.changeExchange(-1), exchangeLayout)
+        appendButton("-", (.5, .5), orange, lambda x: self.changeExchange(-1), exchangeLayout)
         # increment exchangeDisp
-        appendButton("+", halfHalf, orange, lambda x: self.changeExchange(1), exchangeLayout)
+        appendButton("+", (.5, .5), orange, lambda x: self.changeExchange(1), exchangeLayout)
 
         self.clear_widgets()
         for widg in displist:

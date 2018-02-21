@@ -45,8 +45,8 @@ darkOrange = [195/255, 90/255, 15/255]
 purple = [114/255, 0, 1]
 darkPurple = [86/255, 0, 193/255]
 red = [1, 0, 0]
-tameRed = [200/255, 0, 0]
 darkRed = [115/255, 0, 0]
+tameRed = [200/255, 0, 0]
 darkTameRed = [140/255, 0, 0]
 green = [0, 1, 0]
 tameGreen = [0, 200/255, 0]
@@ -67,6 +67,9 @@ class ColorButton(Button):
             mutedColor.append(colorValue-(30/255))
         self.rgb = mutedColor+[1]
         super(ColorButton, self).__init__(text=str(text), size_hint=sizehint, **kwargs)
+
+def darkened(color, dark=(60/255)):
+    return [hue-dark if hue > dark else 0 for hue in color]
 
 quarterQuarter = (.25, .25)
 def quarterLabel(text, color=grey):
