@@ -51,7 +51,7 @@ class PitScoutingLayout(StackLayout):
         appendButton("CAN'T put cube on switch", (.25, .25), colorSwitchCant, lambda x: self.changeSwitch(0))
 
         # drivetrain layout
-        drivetrainLayout = StackLayout(size_hint=(.5,.25))
+        drivetrainLayout = StackLayout(size_hint=(.5, .25))
         displist.append(drivetrainLayout)
 
         # tank drive

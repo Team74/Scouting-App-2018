@@ -3,7 +3,7 @@ import mysql.connector
 import json
 
 class Robot(object):
-    def __init__(self, teamNumber, roundNumber, eventName, scouter, switch=0, scale=0, exchange=0, climb="did not climb", notes="", startingPosition="left", attemptedSwitchSide="left", autonSwitch=0, autonScale=0, autonExchange=0, cubeCycle=[]):
+    def __init__(self, teamNumber, roundNumber, eventName, scouter, switch=0, scale=0, exchange=0, climb="did not climb", notes="", startingPosition="left", attemptedSwitchSide="left", autonSwitch=0, autonScale=0, autonExchange=0):
         self.teamNumber = teamNumber
         self.roundNumber = roundNumber
         self.eventName = eventName
@@ -14,7 +14,6 @@ class Robot(object):
         self.exchange = exchange #integer, how many cubes scored in exchange
         self.climb = climb # string - "climbed", "didn't climb", "were assisted", "assisted +1", "assisted +2"
         self.notes = notes # string, notable things on robot
-        self.cubeCycle = cubeCycle
         # auton #
         self.startingPosition = startingPosition #string - "left", "middle", "right"
         self.attemptedSwitchSide = attemptedSwitchSide #string - "left", "right"
@@ -23,11 +22,6 @@ class Robot(object):
         self.autonExchange = autonExchange # integer, how many cubes scored in scale
 
         self.reloadRobot(self.teamNumber, self.roundNumber)
-        print("____________________________")
-        print(cubeCycle)
-        print("____________________________")
-
-
         self.reloadRobot(self.teamNumber, self.roundNumber)
 
     def dumpData(self): #function for putting all values into a list ordered like the sqlite database
@@ -43,11 +37,11 @@ class Robot(object):
             database.execute("""
                 UPDATE matchdata SET
                 scouter=?, switch=?, scale=?, exchange=?, climb=?, notes=?,
-                startingPosition=?, attemptedSwitchSide=?, autonSwitch=?, autonScale=?, autonExchange=?, cubeCycle=?
+                startingPosition=?, attemptedSwitchSide=?, autonSwitch=?, autonScale=?, autonExchange=?
                 WHERE teamNumber=? AND roundNumber=? AND eventName=?""", self.dumpData()[3:] + self.dumpData()[:3]) #list splicing - gives all nonmeta (actual game data) values, then gives meta (team number, round, event, scouter) values
         else: #if there was not a match in the database:
             print("no match")
-            database.execute("INSERT INTO matchdata VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", self.dumpData())
+            database.execute("INSERT INTO matchdata VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", self.dumpData())
         database.commit()
         database.close()
 

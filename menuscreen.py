@@ -7,6 +7,8 @@ from robotclass import *
 import mysql.connector #mysql --host=10.111.49.49 --user=jaga663 --password=chaos
 import sqlite3
 
+fairBlue = [28/255, 129/255, 201/255]
+
 class MenuLayout(StackLayout):
     def __init__(self, screenSwitcher):
         self.switcher = screenSwitcher
@@ -30,24 +32,24 @@ class MenuLayout(StackLayout):
         appendButton("Teleop", halfHalf, fairBlue, lambda x: self.switcher.switch("teleop"))
 
         # change team button
-        appendButton("Change team (data will be lost if not saved)", halfHalf, fairBlue, lambda x: self.switcher.switch("login"))
+        appendButton("Change team (data will be lost if not saved)", (.5, .5), fairBlue, lambda x: self.switcher.switch("login"))
 
         # layout for save and export buttons
-        databaseLayout = StackLayout(size_hint=halfHalf)
+        databaseLayout = StackLayout(size_hint=(.5, .5))
         displist.append(databaseLayout)
         # save button
-        appendButton("Save", wholeHalf, fairBlue, self.switcher.robot.localSave, databaseLayout)
+        appendButton("Save", (1 ,.5), fairBlue, self.switcher.robot.localSave, databaseLayout)
         # ip input text
         if self.ipInputTextHint:
             text = ""
         else:
             text = getIp()
-        ipInput = TextInput(text=text, size_hint=quarterHalf, multiline=False, hint_text=self.ipInputTextHint)
+        ipInput = TextInput(text=text, size_hint=(.25, .5), multiline=False, hint_text=self.ipInputTextHint)
         ipInput.bind(on_text_validate=lambda x: export(ipInput.text))
         # export button
-        appendButton("Export all", halfHalf, fairBlue, lambda x: export(ipInput.text), databaseLayout)
+        appendButton("Export all", (.5, .5), fairBlue, lambda x: export(ipInput.text), databaseLayout)
         # mysql ip label
-        appendLabel("mysql IP", quarterHalf, fairBlue, databaseLayout)
+        appendLabel("mysql IP", (.25, .5), fairBlue, databaseLayout)
         databaseLayout.add_widget(ipInput)
 
 

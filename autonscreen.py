@@ -77,26 +77,29 @@ class AutonLayout(StackLayout):
 
         # scale & exchange display
         # multi row 1
-        multiLayout = StackLayout(size_hint=(.5, .5))
+        multiLayout = StackLayout(size_hint=(.25, .5))
         displist.append(multiLayout)
-        # scale disp for auton
-        appendLabel("Cubes put in scale\nin auton:\n" + str(self.switcher.robot.autonScale), (.5, .5), lightBlue, multiLayout)
-        # exchange disp for auton
-        appendLabel("Cubes put in\nExchange\nin auton:\n" + str(self.switcher.robot.autonExchange), (.5, .5), orange, multiLayout)
-        # multi row 2
-        # decrement for auton scale
-        appendButton("-", (.25, .5), lightBlue, lambda x: self.changeScale(-1), multiLayout)
-        # increment for auton scale
-        appendButton("+", (.25, .5), lightBlue, lambda x: self.changeScale(1), multiLayout)
-        # decrement for auton exchange
-        appendButton("-", (.25, .5), orange, lambda x: self.changeExchange(-1), multiLayout)
-        # increment for auton exchange
-        appendButton("+", (.25, .5), orange, lambda x: self.changeExchange(1), multiLayout)
-        #end of multiLayout
-
-        # starting position display
         startLayout = StackLayout(size_hint=(.5, .5))
         displist.append(startLayout)
+        exchangeLayout = StackLayout(size_hint=(.25, .5))
+        displist.append(exchangeLayout)
+        # scale disp for auton
+        appendLabel("Cubes put in scale\nin auton:\n" + str(self.switcher.robot.autonScale), (1, .5), lightBlue, multiLayout)
+        # exchange disp for auton
+        appendLabel("Cubes put in\nExchange\nin auton:\n" + str(self.switcher.robot.autonExchange), (1, .5), orange, exchangeLayout)
+        # multi row 2
+        # decrement for auton scale
+        appendButton("-", (.5, .5), lightBlue, lambda x: self.changeScale(-1), multiLayout)
+        # increment for auton scale
+        appendButton("+", (.5, .5), lightBlue, lambda x: self.changeScale(1), multiLayout)
+        # decrement for auton exchange
+        appendButton("-", (.5, .5), orange, lambda x: self.changeExchange(-1), exchangeLayout)
+        # increment for auton exchange
+        appendButton("+", (.5, .5), orange, lambda x: self.changeExchange(1), exchangeLayout)
+        #end of multiLayout
+
+
+        # starting position display
         # left for starting position
         startColor1 = darkened(red, (110/255)) if self.switcher.robot.startingPosition == "left" else red
         appendButton("Started in the\nLeft position", (1/3, 1), startColor1, lambda x: self.changeStart("left"), startLayout)

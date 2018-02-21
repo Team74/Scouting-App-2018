@@ -13,11 +13,15 @@ class LoginLayout(StackLayout):
         self.round = 1
         self.last = ""
         self.ipInputTextHint = ""
+        self.menuText = 'Teleop'
 
     def display(self):
-        if not self.round % 15:
-            popup = Popup(title='Time to switch.', content = Label(text='Switch with your scouting partner.\n\n\n\n\n\n\n       Tap outside to close.'), size_hint = (.75, .75))
-            popup.open()
+        if not self.switcher.screens["dataview"].fromDataView == 1:
+            if not (self.round-1) % 15 and self.round > 1:
+                content = Button(text='Switch with your scouting partner.\n\n\n\n\n\n\n                 Tap to close.')
+                popup = Popup(title='Time to switch.', content=content, auto_dismiss=False)
+                content.bind(on_press=popup.dismiss)
+                popup.open()
         database = sqlite3.connect("scoutingdatabase.db")
         cursor = database.cursor()
         cursor.execute("SELECT * FROM crash WHERE Exited=0")
@@ -30,6 +34,7 @@ class LoginLayout(StackLayout):
                 database.close()
                 self.scoutNumber = 0
                 self.changer = 0
+                self.menuText = 'Menu'
                 database = sqlite3.connect("scoutingdatabase.db") # data calling from db
                 cursor = database.cursor()
                 cursor.execute("SELECT scouter FROM matchdata")
@@ -75,8 +80,11 @@ class LoginLayout(StackLayout):
         displist.append(roundInc)
 
         #row 4
+        def pitScoutingSwitch(_):
+            self.switcher.screens["pitscouting selecter"].query = ""
+            self.switcher.switch("pitscouting selecter")
         pitScout = ColorButton("Pit Scouting", ((1/6), .25),fairBlue)
-        pitScout.bind(on_release=lambda x: self.switcher.switch("pitscouting selecter"))
+        pitScout.bind(on_release=pitScoutingSwitch)
         displist.append(pitScout)
 
         dataview = ColorButton('dataview', ((1/6), .25), fairBlue)
