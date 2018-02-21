@@ -10,7 +10,7 @@ import sqlite3
 import numpy as np
 import os
 
-def truncate(f, n): # stolen from stackexchange
+def truncate(f, n): # stolen from stackexchange :)
     s = '{}'.format(f)
     if 'e' in s or 'E' in s:
         return '{0:.{1}f}'.format(f, n)
@@ -91,11 +91,11 @@ class DataViewLayout(StackLayout):
         appendButton("climb", labelSize, fairBlue, self.graphClimb) # 7
 
         # nonmeta auton
-        appendLabel("start\npos", labelSize, tameRed) # 9
-        appendLabel("switch\nside", labelSize, tameRed) # 10
-        appendButton("auton\nswitch", labelSize, tameRed, lambda _: self.processQuery("auton switch")) # 11
-        appendButton("auton\nscale", labelSize, tameRed, lambda _: self.processQuery("auton scale")) # 12
-        appendButton("auton\nexchange", labelSize, tameRed, lambda _: self.processQuery("auton exchange"), text_size="13sp") # 13
+        appendButton("start\npos", labelSize, tameRed, self.graphAuton) # 9
+        appendButton("switch\nside", labelSize, tameRed, self.graphAuton) # 10
+        appendButton("auton\nswitch", labelSize, tameRed, self.graphAutonSwitch) # 11
+        appendButton("auton\nscale", labelSize, tameRed, self.graphAutonScale) # 12
+        appendButton("auton\nexchange", labelSize, tameRed, self.graphAutonExchange, text_size="13sp") # 13
 
         for robot in self.queue:
             teamData = [
@@ -122,7 +122,7 @@ class DataViewLayout(StackLayout):
             if i < 0: break
             try: newQueue.append(self.queuedRobots[i])
             except IndexError: break
-        if newQueue: # making sure there is data in the page we're trying to switch to
+        if newQueue: # makes sure there is data in the page we're trying to switch to
             self.queue = newQueue
             self.index += change
         self.displayByPage()
@@ -350,7 +350,7 @@ class DataViewLayout(StackLayout):
                 teamValues[robot.teamNumber] = {
                     "climbed": 0,
                     "didn't climb": 0,
-                    "assisted": 0,
+                    "were assisted": 0,
                     "assisted +1": 0,
                     "assisted +2": 0,
                 }
@@ -360,11 +360,10 @@ class DataViewLayout(StackLayout):
         database = sqlite3.connect("%s/r/graphdata.db" % currentDir)
         database.execute("DELETE FROM climb")
         for team in teamValues:
-            database.execute("INSERT INTO climb VALUES (?, ?, ?)", (team, None, None))
             for climbType in teamValues[team]:
                 freq = teamValues[team][climbType]
                 print(freq)
-                database.execute("UPDATE climb SET climbType=?, frequency=?", (climbType, freq))
+                database.execute("INSERT INTO climb VALUES (?, ?, ?)", (team, freq, climbType))
         database.commit()
         database.close()
 
@@ -373,4 +372,123 @@ class DataViewLayout(StackLayout):
         self.displist = []
         self.appendButton("Back", (1, .05), lambda _: self.processQuery("")) # clears the queued robots and goes back to display
         self.appendPicture("%s/r/graphs/climb.png" % currentDir, (1, .95))
+        self.addAll()
+    def graphAuton(self, _):
+        teamValues = {}
+        for robot in self.queuedRobots:
+            if not robot.teamNumber in teamValues:
+                teamValues[robot.teamNumber] = {
+                    "completed same side": 0,
+                    "completed opposite side": 0,
+                    "completed in middle": 0,
+                    "did not complete": 0,
+                }
+            if not robot.switch:
+                teamValues[robot.teamNumber]["did not complete"] += 1
+            elif robot.attemptedSwitchSide == robot.startingPosition:
+                teamValues[robot.teamNumber]["completed same side"] += 1
+            elif (robot.attemptedSwitchSide == "left" and robot.startingPosition == "right") or (robot.attemptedSwitchSide == "right" and robot.startingPosition == "left"):
+                teamValues[robot.teamNumber]["completed opposite side"] += 1
+            elif robot.startingPosition == "middle":
+                teamValues[robot.teamNumber]["completed in middle"] += 1
+            else:
+                print("something went wrong")
+        print(teamValues)
+        currentDir = os.path.dirname(os.path.realpath(__file__))
+        database = sqlite3.connect("%s/r/graphdata.db" % currentDir)
+        database.execute("DELETE FROM auton")
+        for team in teamValues:
+            for successType in teamValues[team]:
+                freq = teamValues[team][successType]
+                print(freq)
+                database.execute("INSERT INTO auton VALUES (?, ?, ?)", (team, freq, successType))
+        database.commit()
+        database.close()
+
+        os.system("Rscript %s/r/auton.r" % currentDir) # will create a png in /r/graphs/switch.png
+
+        self.displist = []
+        self.appendButton("Back", (1, .05), lambda _: self.processQuery("")) # clears the queued robots and goes back to display
+        self.appendPicture("%s/r/graphs/auton.png" % currentDir, (1, .95))
+        self.addAll()
+
+    def graphAutonSwitch(self, _):
+        teamValues = {}
+        for robot in self.queuedRobots:
+            if not robot.teamNumber in teamValues:
+                teamValues[robot.teamNumber] = [robot.autonSwitch]
+            else:
+                teamValues[robot.teamNumber].append(robot.autonSwitch)
+
+        print(teamValues)
+        currentDir = os.path.dirname(os.path.realpath(__file__))
+        database = sqlite3.connect("%s/r/graphdata.db" % currentDir)
+        database.execute("DELETE FROM switch")
+        for team in teamValues:
+            teamNumber = team
+            mean = truncate(np.mean(teamValues[team]), 2)
+            standev = truncate(np.std(teamValues[team]), 2)
+            database.execute("INSERT INTO switch VALUES (?, ?, ?)", (team, mean, standev))
+        database.commit()
+        database.close()
+
+        os.system("Rscript %s/r/switch.r" % currentDir) # will create a png in /r/graphs/switch.png
+
+        self.displist = []
+        self.appendButton("Back", (1, .05), lambda _: self.processQuery("")) # clears the queued robots and goes back to display
+        self.appendPicture("%s/r/graphs/switch.png" % currentDir, (1, .95))
+        self.addAll()
+
+    def graphAutonScale(self, _):
+        teamValues = {}
+        for robot in self.queuedRobots:
+            if not robot.teamNumber in teamValues:
+                teamValues[robot.teamNumber] = [robot.autonScale]
+            else:
+                teamValues[robot.teamNumber].append(robot.autonScale)
+
+        print(teamValues)
+        currentDir = os.path.dirname(os.path.realpath(__file__))
+        database = sqlite3.connect("%s/r/graphdata.db" % currentDir)
+        database.execute("DELETE FROM scale")
+        for team in teamValues:
+            teamNumber = team
+            mean = truncate(np.mean(teamValues[team]), 2)
+            standev = truncate(np.std(teamValues[team]), 2)
+            database.execute("INSERT INTO scale VALUES (?, ?, ?)", (team, mean, standev))
+        database.commit()
+        database.close()
+
+        os.system("Rscript %s/r/scale.r" % currentDir) # will create a png in /r/graphs/switch.png
+
+        self.displist = []
+        self.appendButton("Back", (1, .05), lambda _: self.processQuery("")) # clears the queued robots and goes back to display
+        self.appendPicture("%s/r/graphs/scale.png" % currentDir, (1, .95))
+        self.addAll()
+
+    def graphAutonExchange(self, _):
+        teamValues = {}
+        for robot in self.queuedRobots:
+            if not robot.teamNumber in teamValues:
+                teamValues[robot.teamNumber] = [robot.autonExchange]
+            else:
+                teamValues[robot.teamNumber].append(robot.autonExchange)
+
+        print(teamValues)
+        currentDir = os.path.dirname(os.path.realpath(__file__))
+        database = sqlite3.connect("%s/r/graphdata.db" % currentDir)
+        database.execute("DELETE FROM exchange")
+        for team in teamValues:
+            teamNumber = team
+            mean = truncate(np.mean(teamValues[team]), 2)
+            standev = truncate(np.std(teamValues[team]), 2)
+            database.execute("INSERT INTO exchange VALUES (?, ?, ?)", (team, mean, standev))
+        database.commit()
+        database.close()
+
+        os.system("Rscript %s/r/exchange.r" % currentDir) # will create a png in /r/graphs/switch.png
+
+        self.displist = []
+        self.appendButton("Back", (1, .05), lambda _: self.processQuery("")) # clears the queued robots and goes back to display
+        self.appendPicture("%s/r/graphs/exchange.png" % currentDir, (1, .95))
         self.addAll()
