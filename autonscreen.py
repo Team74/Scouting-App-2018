@@ -30,7 +30,6 @@ class AutonLayout(StackLayout):
         orange = [255/255, 150/255, 75/255]
         red = [1, 0, 0]
 
-
         # row 1
 
         # displays cubes in switch in auton
