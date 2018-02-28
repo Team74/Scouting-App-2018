@@ -124,6 +124,7 @@ class LoginLayout(StackLayout):
             self.round = int(self.roundInput.text) + 1
             self.scoutNumber = 0
             self.changer = 1
+            self.switcher.screens["dataview"].fromDataView = 0
             self.menuText = 'Teleop'
             database = sqlite3.connect("scoutingdatabase.db") # data calling from db
             cursor = database.cursor()
