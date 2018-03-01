@@ -14,6 +14,14 @@ class PhotoLayout(StackLayout):
         super(PhotoLayout, self).__init__()
         self.displist = []
 
+    def picture(self):
+        if os.path.exists(self.pic):
+            try:
+                os.remove(self.switcher.robot.image)
+            except Exception as error:
+                pass
+            self.switcher.robot.image = self.pic
+
     def display(self):
         self.displist = []
         self.ifPhoto = ""
@@ -24,13 +32,12 @@ class PhotoLayout(StackLayout):
 
         def takePicture(_):
             try:
-                os.remove(self.switcher.robot.image)
+                self.pic = "/storage/sdcard0/%s.jpg" % (str(self.switcher.robot.teamNumber) + "_" + str(time.time()))
+                camera.take_picture(self.pic, lambda x: self.picture())
             except Exception as error:
+                print(error)
+                print("can't")
                 pass
-            pic = "/storage/sdcard0/%s.jpg" % (str(self.switcher.robot.teamNumber) + "_" + str(time.time()))
-            camera.take_picture(pic, "")
-            self.switcher.robot.image = pic
-
 
         self.appendButton("Take new\nphoto.", halfFourFifth, grey, takePicture)
 
@@ -42,6 +49,14 @@ class PhotoLayout(StackLayout):
             self.add_widget(widg)
 
     def photoDisplay(self):
+        try:
+            print("------------------------------------------------------------------------------------------------------------------------------------------------------------")
+            print(os.stat(self.switcher.robot.image).st_size)
+            print("------------------------------------------------------------------------------------------------------------------------------------------------------------")
+        except Exception as error:
+            print(error)
+            print("can't")
+            print("------------------------------------------------------------------------------------------------------------------------------------------------------------")
         self.displist = []
 
         self.appendButton("back", (1, .05), grey, self.back)
