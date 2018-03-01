@@ -25,7 +25,7 @@ class Robot(object):
         self.reloadRobot(self.teamNumber, self.roundNumber)
 
     def dumpData(self): #function for putting all values into a list ordered like the sqlite database
-        return (self.teamNumber, self.roundNumber, self.eventName, self.scouter, self.switch, self.scale, self.exchange, self.climb, self.notes, self.startingPosition, self.attemptedSwitchSide, self.autonSwitch, self.autonScale, self.autonExchange, json.dumps(self.cubeCycle)) # this order matches that of the database
+        return (self.teamNumber, self.roundNumber, self.eventName, self.scouter, self.switch, self.scale, self.exchange, self.climb, self.notes, self.startingPosition, self.attemptedSwitchSide, self.autonSwitch, self.autonScale, self.autonExchange) # this order matches that of the database
 
     def localSave(self, _): # _ is there for throwaway on_release argument passed by the button
         print("auton - saving %s" % self.teamNumber)
@@ -41,7 +41,7 @@ class Robot(object):
                 WHERE teamNumber=? AND roundNumber=? AND eventName=?""", self.dumpData()[3:] + self.dumpData()[:3]) #list splicing - gives all nonmeta (actual game data) values, then gives meta (team number, round, event, scouter) values
         else: #if there was not a match in the database:
             print("no match")
-            database.execute("INSERT INTO matchdata VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", self.dumpData())
+            database.execute("INSERT INTO matchdata VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", self.dumpData())
         database.commit()
         database.close()
 
