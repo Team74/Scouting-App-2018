@@ -230,7 +230,7 @@ class DataViewLayout(StackLayout):
         hi = 9001 # a value guaranteed higher than any values that will realistically be recorded, team numbers are all under 8000 this year
 
         if hi > 9000:
-            print("2014 meem !!!! NORMIESS GIT OuT")
+            print("2014 meem !!!! NORMIESS GIT OuT ahREEEE")
 
         # for numerical values, set a high and a low value
         if len(targets) == 2:

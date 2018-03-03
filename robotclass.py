@@ -41,7 +41,7 @@ class Robot(object):
                 WHERE teamNumber=? AND roundNumber=? AND eventName=?""", self.dumpData()[3:] + self.dumpData()[:3]) #list splicing - gives all nonmeta (actual game data) values, then gives meta (team number, round, event, scouter) values
         else: #if there was not a match in the database:
             print("no match")
-            database.execute("INSERT INTO matchdata VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", self.dumpData())
+            database.execute("INSERT INTO matchdata VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", self.dumpData())
         database.commit()
         database.close()
 
@@ -71,12 +71,6 @@ class Robot(object):
         self.autonSwitch = robotData[11]
         self.autonScale = robotData[12]
         self.autonExchange = robotData[13]
-        try:
-            self.cubeCycle = json.loads(robotData[14])
-        except Exception as error:
-            self.cubeCycle = []
-        if not type(self.cubeCycle) == list:
-            self.cubeCycle = []
 
     def updateCycle(self, time):
         self.cubeCycle.append(time)
@@ -147,17 +141,13 @@ def getIp():
 def export(ip):
     for char in ip: # testing if the ip is an actual ip and not a word
         if not char in "1234567890.":
-            self.ipInputTextHint = "wait a minute\n\nthat's not an ip???///???!?"
-            self.display()
-            return
+            return "wait a minute\n\nthat's not an\nip???///???!?"
     if not ip: # testing if the ip actually exists
-        self.ipInputTextHint = "enter IP here"
-        self.display()
-        return
+        return "enter IP here"
     try: #TIMEOUT IS IN SECONDS, NOT MILLISECONDS
         mysqldb = mysql.connector.connect(connection_timeout=1, user="jaga663", passwd="chaos", host=ip, database="Scouting2018")
     except mysql.connector.errors.InterfaceError: # thrown when timeout hits or if the ip is incorrect
-        return
+        return "incorrect IP"
     ipSave(ip) # from robotclass
     mysqlc = mysqldb.cursor() # mysql cursor
     sqlitedb = sqlite3.connect("scoutingdatabase.db") # sqlite database
@@ -170,11 +160,11 @@ def export(ip):
             mysqlc.execute("""
                 UPDATE matchdata SET
                 scouter=%s, switch=%s, scale=%s, exchange=%s, climb=%s, notes=%s,
-                startingPosition=%s, attemptedSwitchSide=%s, autonSwitch=%s, autonScale=%s, autonExchange=%s, cubeCycle=%s
+                startingPosition=%s, attemptedSwitchSide=%s, autonSwitch=%s, autonScale=%s, autonExchange=%s
                 WHERE teamNumber=%s AND roundNumber=%s AND eventName=%s
             """, row[3:] + row[:3]) # overwrite instead of make a new one
         else: # if there was no row found
-            mysqlc.execute("INSERT INTO matchdata VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", row) # make a new row
+            mysqlc.execute("INSERT INTO matchdata VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", row) # make a new row
     sqlitec.execute("SELECT * FROM pitscoutingdata")
     for pitscoutdata in sqlitec.fetchall(): # see robotclass PitRobot.dumpData() for order of row
         row = list(pitscoutdata)
@@ -190,15 +180,28 @@ def export(ip):
             print("no picture to upload")
             row[7] = "unable to find"
 
-        mysqlc.execute("SELECT * FROM pitscoutingdata WHERE teamNumber=%s", (row[0],))
-        if mysqlc.fetchone(): # if a row similar to the one in the mysql database exists
-            mysqlc.execute("""
-                UPDATE pitscoutingdata SET
-                drivetrain=%s, groundPickup=%s, scaleCapability=%s, switchCapability=%s, exchangeCapability=%s, image=%s, notes=%s
-                WHERE teamNumber=%s
-            """, row[2:] + [row[0]]) # replace instead of insert
-        else: # if there was no match
-            mysqlc.execute("INSERT INTO pitscoutingdata VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)", row) # insert instead of replace
+        try:
+            mysqlc.execute("SELECT * FROM pitscoutingdata WHERE teamNumber=%s", (row[0],))
+            if mysqlc.fetchone(): # if a row similar to the one in the mysql database exists
+                mysqlc.execute("""
+                    UPDATE pitscoutingdata SET
+                    drivetrain=%s, groundPickup=%s, scaleCapability=%s, switchCapability=%s, exchangeCapability=%s, image=%s, notes=%s
+                    WHERE teamNumber=%s
+                """, row[2:] + [row[0]]) # replace instead of insert
+            else: # if there was no match
+                mysqlc.execute("INSERT INTO pitscoutingdata VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)", row) # insert instead of replace
+        except:
+            row[7] = "image too large"
+            mysqlc.execute("SELECT * FROM pitscoutingdata WHERE teamNumber=%s", (row[0],))
+            if mysqlc.fetchone(): # if a row similar to the one in the mysql database exists
+                mysqlc.execute("""
+                    UPDATE pitscoutingdata SET
+                    drivetrain=%s, groundPickup=%s, scaleCapability=%s, switchCapability=%s, exchangeCapability=%s, image=%s, notes=%s
+                    WHERE teamNumber=%s
+                """, row[2:] + [row[0]]) # replace instead of insert
+            else: # if there was no match
+                mysqlc.execute("INSERT INTO pitscoutingdata VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)", row) # insert instead of replace
     mysqldb.commit()
     mysqldb.close()
     sqlitedb.close()
+    return "successfully\nuploaded\ndata"

@@ -40,7 +40,7 @@ class MyApp(App):
         win = Window
         win.bind(on_keyboard=self.key_handler)
         return self.screenSwitcher
-    def key_handler(self, _a, escape, _b, _c, _d):
+    def key_handler(self, _a, escape, _b, _c, _d): #sam v's work to fix the back button crashing the app
         if escape in [27, 1001]:
             return """
             Nihilists with good imaginations
@@ -72,6 +72,11 @@ class MyApp(App):
             Show me that things can be nice
             I guess it would be nice
             Show me that things can be nice
+
+            You've got my back in the city
+            You've got my back 'cause I don't want to panic
+            You've got my back in the city
+            You've got my back 'cause I don't want to panic
             """
         return False
 

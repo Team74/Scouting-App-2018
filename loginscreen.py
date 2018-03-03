@@ -102,9 +102,12 @@ class LoginLayout(StackLayout):
         else:
             text = getIp()
         ipInput = TextInput(text=text, multiline=False, size_hint=(1, .5))
+        def exportBind(_):
+            ipInput.hint_text = export(ipInput.text)
+            ipInput.text = ""
         exportLayout.add_widget(ipInput)
 
-        exportButton.bind(on_release=lambda x: export(ipInput.text))
+        exportButton.bind(on_release=exportBind)
 
         goButton = bigButton("Go", fairBlue)
         def teleopSwitch(_):
@@ -124,6 +127,7 @@ class LoginLayout(StackLayout):
             self.round = int(self.roundInput.text) + 1
             self.scoutNumber = 0
             self.changer = 1
+            self.switcher.screens["dataview"].fromDataView = 0
             self.menuText = 'Teleop'
             database = sqlite3.connect("scoutingdatabase.db") # data calling from db
             cursor = database.cursor()

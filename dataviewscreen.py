@@ -7,7 +7,7 @@ from kivy.core.window import Window
 from widgetpresets import *
 from robotclass import *
 import sqlite3
-import numpy as np
+#import numpy as np
 import os
 
 class DataViewLayout(StackLayout):
@@ -279,8 +279,8 @@ class DataViewLayout(StackLayout):
         database.execute("DELETE FROM switch")
         for team in teamValues:
             teamNumber = team
-            mean = np.mean(teamValues[team])
-            standev = np.std(teamValues[team])
+            mean = 0#np.mean(teamValues[team])
+            standev = 0#np.std(teamValues[team])
             database.execute("INSERT INTO switch VALUES (?, ?, ?)", (team, mean, standev))
         database.commit()
         database.close()

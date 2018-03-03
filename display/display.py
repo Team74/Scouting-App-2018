@@ -20,7 +20,7 @@ class DisplayLayout(StackLayout):
     def __init__(self):
         super(DisplayLayout, self).__init__()
         self.displayMain("_")
-        database = mysql.connector.connect(connection_timeout=1, user="jaga663", passwd="chaos", host="10.111.49.49", database="Scouting2018")
+        database = mysql.connector.connect(connection_timeout=1, user="jaga663", passwd="chaos", host="204.8.232.45", database="Scouting2018")
         cursor = database.cursor()
         cursor.execute("SELECT teamNumber, image FROM pitscoutingdata")
         currentDir = os.path.dirname(os.path.realpath(__file__))

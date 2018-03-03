@@ -45,9 +45,12 @@ class MenuLayout(StackLayout):
         else:
             text = getIp()
         ipInput = TextInput(text=text, size_hint=(.25, .5), multiline=False, hint_text=self.ipInputTextHint)
-        ipInput.bind(on_text_validate=lambda x: export(ipInput.text))
+        def exportBind(_):
+            ipInput.hint_text = export(ipInput.text)
+            ipInput.text = ""
+        ipInput.bind(on_text_validate=exportBind)
         # export button
-        appendButton("Export all", (.5, .5), fairBlue, lambda x: export(ipInput.text), databaseLayout)
+        appendButton("Export all", (.5, .5), fairBlue, exportBind, databaseLayout)
         # mysql ip label
         appendLabel("mysql IP", (.25, .5), fairBlue, databaseLayout)
         databaseLayout.add_widget(ipInput)
