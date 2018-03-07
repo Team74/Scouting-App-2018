@@ -114,15 +114,7 @@ class LoginLayout(StackLayout):
             number = "1234567890"
             #checking to see if team number and round number are input correctly so we dont have data type mismatch in sql database
             if not teamInput.text or not self.roundInput.text or not self.scouterInput.text or self.roundInput.text == "0": return
-            for i in teamInput.text:
-                if not i in number:
-                    teamInput.text_hint = "invalid team number"
-                    return
-            for i in self.roundInput.text:
-                if not i in number:
-                    self.roundInput.text_hint = "invalid round number"
-                    return
-            self.switcher.robot = Robot(int(teamInput.text), int(self.roundInput.text), self.switcher.eventName, self.scouterInput.text)
+            self.switcher.robot = Robot(int(teamInput.text), int(self.roundInput.text), self.switcher.eventName, int("".join(char for char in self.scouterInput.text if char in number))
             self.last = self.scouterInput.text
             self.round = int(self.roundInput.text) + 1
             self.scoutNumber = 0
