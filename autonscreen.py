@@ -33,17 +33,17 @@ class AutonLayout(StackLayout):
         # row 1
 
         # displays cubes in switch in auton
-        appendLabel("Cubes put in switch:\n\n" + str(self.switcher.robot.autonSwitch), (.25, .25), darkened(purple))
+        appendLabel("Cubes put in switch in auton:\n" + str(self.switcher.robot.autonSwitch), (.25, .25), darkened(purple))
         # displays team number
-        appendLabel("Team: " + str(self.switcher.robot.teamNumber), (.25, .25), darkened(green))
+        appendLabel("Team: " + self.switcher.robot.teamNumber, (.25, .25), darkened(green))
         infoLayout = StackLayout(size_hint=(.25, .25))
         displist.append(infoLayout)
         # "Left" for attemptedSwitchSide
         side1Color = darkened(magenta) if self.switcher.robot.attemptedSwitchSide == "left" else magenta
-        appendButton("Robot\nattempted\nthe Left\nside", (.125, .25), side1Color, lambda x: self.changeSide("left"))
+        appendButton("Robot attempted the left side of the switch", (.125, .25), side1Color, lambda x: self.changeSide("left"))
         # "Right" for attemptedSwitchSide
         side2Color = darkened(magenta) if self.switcher.robot.attemptedSwitchSide == "right" else magenta
-        appendButton("Robot\nattempted\nthe Right\nside", (.125, .25), side2Color, lambda x: self.changeSide("right"))
+        appendButton("Robot attempted the right side of the switch", (.125, .25), side2Color, lambda x: self.changeSide("right"))
 
         # row 2
 
@@ -58,7 +58,7 @@ class AutonLayout(StackLayout):
         displist.append(scoutLayout)
         # "None" for attemptedSwitchSide
         side3Color = darkened(magenta) if self.switcher.robot.attemptedSwitchSide == "none" else magenta
-        appendButton("Robot\ndidn't\nattempt\nthe switch", (.25, .25), side3Color, lambda x: self.changeSide("none"))
+        appendButton("Robot didn't attempt the switch", (.25, .25), side3Color, lambda x: self.changeSide("none"))
 
         # --- infoLayout --- #
         # displays event name
@@ -83,9 +83,9 @@ class AutonLayout(StackLayout):
         exchangeLayout = StackLayout(size_hint=(.25, .5))
         displist.append(exchangeLayout)
         # scale disp for auton
-        appendLabel("Cubes put in scale\nin auton:\n" + str(self.switcher.robot.autonScale), (1, .5), lightBlue, multiLayout)
+        appendLabel("Cubes put in scale in auton:\n" + str(self.switcher.robot.autonScale), (1, .5), lightBlue, multiLayout)
         # exchange disp for auton
-        appendLabel("Cubes put in\nExchange\nin auton:\n" + str(self.switcher.robot.autonExchange), (1, .5), orange, exchangeLayout)
+        appendLabel("Cubes put in exchange in auton:\n" + str(self.switcher.robot.autonExchange), (1, .5), orange, exchangeLayout)
         # multi row 2
         # decrement for auton scale
         appendButton("-", (.5, .5), lightBlue, lambda x: self.changeScale(-1), multiLayout)
@@ -101,13 +101,13 @@ class AutonLayout(StackLayout):
         # starting position display
         # left for starting position
         startColor1 = darkened(red, (110/255)) if self.switcher.robot.startingPosition == "left" else red
-        appendButton("Started in the\nLeft position", (1/3, 1), startColor1, lambda x: self.changeStart("left"), startLayout)
+        appendButton("Started in the Left position", (1/3, 1), startColor1, lambda x: self.changeStart("left"), startLayout)
         # middle for starting position
         startColor2 = darkened(red, (110/255)) if self.switcher.robot.startingPosition == "middle" else red
-        appendButton("Started in the\nMiddle position", (1/3, 1), startColor2, lambda x: self.changeStart("middle"), startLayout)
+        appendButton("Started in the Middle position", (1/3, 1), startColor2, lambda x: self.changeStart("middle"), startLayout)
         # right for starting position
         startColor3 = darkened(red, (110/255)) if self.switcher.robot.startingPosition == "right" else red
-        appendButton("Started in the\nRight position", (1/3, 1), startColor3, lambda x: self.changeStart("right"), startLayout)
+        appendButton("Started in the Right position", (1/3, 1), startColor3, lambda x: self.changeStart("right"), startLayout)
 
         self.clear_widgets()
         for widg in displist:
