@@ -35,7 +35,7 @@ class AutonLayout(StackLayout):
         # displays cubes in switch in auton
         appendLabel("Cubes put in switch in auton:\n" + str(self.switcher.robot.autonSwitch), (.25, .25), darkened(purple))
         # displays team number
-        appendLabel("Team: " + self.switcher.robot.teamNumber, (.25, .25), darkened(green))
+        appendLabel("Team: " + str(self.switcher.robot.teamNumber), (.25, .25), darkened(green))
         infoLayout = StackLayout(size_hint=(.25, .25))
         displist.append(infoLayout)
         # "Left" for attemptedSwitchSide
@@ -68,6 +68,7 @@ class AutonLayout(StackLayout):
 
         # --- scoutLayout --- #
         # displays scouter name
+        print(self.switcher.robot.scouter)
         appendLabel("Scouter: " + self.switcher.robot.scouter, (1, .5), darkened(green), scoutLayout)
         #
         appendLabel("Rounds scouted: " + str(self.switcher.screens["login"].scoutNumber), (1, .5), darkened(green), scoutLayout)
