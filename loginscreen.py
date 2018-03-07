@@ -17,7 +17,7 @@ class LoginLayout(StackLayout):
 
     def display(self):
         if not self.switcher.screens["dataview"].fromDataView == 1:
-            if not (self.round-1) % 15 and self.round > 1:
+            if not (self.round-1) % 10 and self.round > 1:
                 content = Button(text='Switch with your scouting partner.\n\n\n\n\n\n\n                 Tap to close.')
                 popup = Popup(title='Time to switch.', content=content, auto_dismiss=False)
                 content.bind(on_press=popup.dismiss)
