@@ -17,7 +17,7 @@ class LoginLayout(StackLayout):
 
     def display(self):
         if not self.switcher.screens["dataview"].fromDataView == 1:
-            if not (self.round-1) % 10 and self.round > 1:
+            if not (self.round-1) % 15 and self.round > 1:
                 content = Button(text='Switch with your scouting partner.\n\n\n\n\n\n\n                 Tap to close.')
                 popup = Popup(title='Time to switch.', content=content, auto_dismiss=False)
                 content.bind(on_press=popup.dismiss)
@@ -114,7 +114,7 @@ class LoginLayout(StackLayout):
             number = "1234567890"
             #checking to see if team number and round number are input correctly so we dont have data type mismatch in sql database
             if not teamInput.text or not self.roundInput.text or not self.scouterInput.text or self.roundInput.text == "0": return
-            self.switcher.robot = Robot(int(teamInput.text), int(self.roundInput.text), self.switcher.eventName, "".join(char for char in self.scouterInput.text if char in number))
+            self.switcher.robot = Robot(int("".join(char for char in teamInput.text if char in number)), int(self.roundInput.text), self.switcher.eventName, self.scouterInput.text)
             self.last = self.scouterInput.text
             self.round = int(self.roundInput.text) + 1
             self.scoutNumber = 0
