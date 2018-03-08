@@ -113,7 +113,12 @@ class LoginLayout(StackLayout):
         def teleopSwitch(_):
             number = "1234567890"
             #checking to see if team number and round number are input correctly so we dont have data type mismatch in sql database
-            if not teamInput.text or not self.roundInput.text or not self.scouterInput.text or self.roundInput.text == "0": return
+            tiCheck = False
+            for char in teamInput.text:
+                if char in number:
+                    tiCheck = True
+                    print("ticheck is true")
+            if not tiCheck or not self.roundInput.text or not self.scouterInput.text or self.roundInput.text == "0": return
             self.switcher.robot = Robot(int("".join(char for char in teamInput.text if char in number)), int(self.roundInput.text), self.switcher.eventName, self.scouterInput.text)
             self.last = self.scouterInput.text
             self.round = int(self.roundInput.text) + 1
