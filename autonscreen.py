@@ -17,11 +17,13 @@ class AutonLayout(StackLayout):
             label = ColorLabel(text, sizeHint, color, **kwargs)
             if not widget: displist.append(label)
             else: widget.add_widget(label)
+            return label
         def appendButton(text, sizeHint, color, bind, widget=None, **kwargs):
             button = ColorButton(text, sizeHint, color, **kwargs)
             button.bind(on_release=bind)
             if not widget: displist.append(button)
             else: widget.add_widget(button)
+            return button
 
         purple = [114/255, 0, 1]
         green = [14/255, 201/255, 170/255]
@@ -33,7 +35,7 @@ class AutonLayout(StackLayout):
         # row 1
 
         # displays cubes in switch in auton
-        appendLabel("Cubes put in switch in auton:\n" + str(self.switcher.robot.autonSwitch), (.25, .25), darkened(purple))
+        swtLbl = appendLabel("Cubes put in switch in auton:\n\n" + str(self.switcher.robot.autonSwitch), (.25, .25), darkened(purple))
         # displays team number
         appendLabel("Team: " + str(self.switcher.robot.teamNumber), (.25, .25), darkened(green))
         infoLayout = StackLayout(size_hint=(.25, .25))
@@ -48,9 +50,9 @@ class AutonLayout(StackLayout):
         # row 2
 
         # decrement AutonSwitchDisp
-        appendButton("-", (.125, .25), darkened(purple), lambda x : self.changeSwitch(-1))
+        appendButton("-", (.125, .25), darkened(purple), lambda x : self.changeSwitch(-1, swtLbl))
         # increment AutonSwitchDisp
-        appendButton('+', (.125, .25), darkened(purple), lambda x : self.changeSwitch(1))
+        appendButton('+', (.125, .25), darkened(purple), lambda x : self.changeSwitch(1, swtLbl))
         # menu button
         appendButton(self.switcher.screens['login'].menuText, (.25, .25), lightBlue, lambda x: self.changeScreen())
         #
@@ -68,7 +70,6 @@ class AutonLayout(StackLayout):
 
         # --- scoutLayout --- #
         # displays scouter name
-        print(self.switcher.robot.scouter)
         appendLabel("Scouter: " + self.switcher.robot.scouter, (1, .5), darkened(green), scoutLayout)
         #
         appendLabel("Rounds scouted: " + str(self.switcher.screens["login"].scoutNumber), (1, .5), darkened(green), scoutLayout)
@@ -84,18 +85,18 @@ class AutonLayout(StackLayout):
         exchangeLayout = StackLayout(size_hint=(.25, .5))
         displist.append(exchangeLayout)
         # scale disp for auton
-        appendLabel("Cubes put in scale in auton:\n" + str(self.switcher.robot.autonScale), (1, .5), lightBlue, multiLayout)
+        sclLbl = appendLabel("Cubes put in scale in auton:\n\n" + str(self.switcher.robot.autonScale), (1, .5), lightBlue, multiLayout)
         # exchange disp for auton
-        appendLabel("Cubes put in exchange in auton:\n" + str(self.switcher.robot.autonExchange), (1, .5), orange, exchangeLayout)
+        exchLbl = appendLabel("Cubes put in exchange in auton:\n\n" + str(self.switcher.robot.autonExchange), (1, .5), orange, exchangeLayout)
         # multi row 2
         # decrement for auton scale
-        appendButton("-", (.5, .5), lightBlue, lambda x: self.changeScale(-1), multiLayout)
+        appendButton("-", (.5, .5), lightBlue, lambda x: self.changeScale(-1, sclLbl), multiLayout)
         # increment for auton scale
-        appendButton("+", (.5, .5), lightBlue, lambda x: self.changeScale(1), multiLayout)
+        appendButton("+", (.5, .5), lightBlue, lambda x: self.changeScale(1, sclLbl), multiLayout)
         # decrement for auton exchange
-        appendButton("-", (.5, .5), orange, lambda x: self.changeExchange(-1), exchangeLayout)
+        appendButton("-", (.5, .5), orange, lambda x: self.changeExchange(-1, exchLbl), exchangeLayout)
         # increment for auton exchange
-        appendButton("+", (.5, .5), orange, lambda x: self.changeExchange(1), exchangeLayout)
+        appendButton("+", (.5, .5), orange, lambda x: self.changeExchange(1, exchLbl), exchangeLayout)
         #end of multiLayout
 
 
@@ -114,15 +115,15 @@ class AutonLayout(StackLayout):
         for widg in displist:
             self.add_widget(widg)
 
-    def changeSwitch(self, change):
+    def changeSwitch(self, change, label):
         self.switcher.robot.autonSwitch += change
         if self.switcher.robot.autonSwitch < 0:
             self.switcher.robot.autonSwitch = 0
-        self.display()
+        label.text = "Cubes put in switch in auton:\n\n" + str(self.switcher.robot.autonSwitch)
     def changeScreen(self):
         if self.switcher.screens["login"].changer == 1:
             self.switcher.screens["login"].changer = 0
-            self.switcher.screens['login'].menuText = 'Menu'
+            self.switcher.screens["login"].menuText = "Menu"
             self.switcher.switch("teleop")
         else:
             self.switcher.switch("menu")
@@ -130,16 +131,16 @@ class AutonLayout(StackLayout):
     def changeSide(self, change):
         self.switcher.robot.attemptedSwitchSide = change
         self.display()
-    def changeScale(self, change):
+    def changeScale(self, change, label):
         self.switcher.robot.autonScale += change
         if self.switcher.robot.autonScale < 0:
             self.switcher.robot.autonScale = 0
-        self.display()
-    def changeExchange(self, change):
+        label.text = "Cubes put in scale in auton:\n\n" + str(self.switcher.robot.autonScale)
+    def changeExchange(self, change, label):
         self.switcher.robot.autonExchange += change
         if self.switcher.robot.autonExchange < 0:
             self.switcher.robot.autonExchange = 0
-        self.display()
+        label.text = "Cubes put in exchange in auton:\n\n" + str(self.switcher.robot.autonExchange)
     def changeStart(self, change):
         self.switcher.robot.startingPosition = change
         self.display()
