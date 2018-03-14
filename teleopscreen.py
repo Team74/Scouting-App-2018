@@ -21,11 +21,13 @@ class TeleopLayout(StackLayout):
             label = ColorLabel(text, sizeHint, color, **kwargs)
             if not widget: displist.append(label)
             else: widget.add_widget(label)
+            return label
         def appendButton(text, sizeHint, color, bind, widget=None, **kwargs):
             button = ColorButton(text, sizeHint, color, **kwargs)
             button.bind(on_release=bind)
             if not widget: displist.append(button)
             else: widget.add_widget(button)
+            return button
 
 
         green = [14/255, 201/255, 170/255]
@@ -56,12 +58,11 @@ class TeleopLayout(StackLayout):
 
         # ---switchLayout--- #
         # displays cubes in switch
-        appendLabel("Cubes put in switch:\n\n" + str(self.switcher.robot.switch), (1, .5), darkened(purple), switchLayout)
+        swtLbl = appendLabel("Cubes put in switch:\n\n" + str(self.switcher.robot.switch), (1, .5), darkened(purple), switchLayout)
         # decrement switchDisp
-        appendButton("-", (.5, .5), darkened(purple), lambda x: self.changeSwitch(-1), switchLayout)
-            #stop time // dont save
+        appendButton("-", (.5, .5), darkened(purple), lambda x: self.changeSwitch(-1, swtLbl), switchLayout)
         # increment switchDisp
-        appendButton("+", (.5, .5), darkened(purple), lambda x: self.changeSwitch(1), switchLayout)
+        appendButton("+", (.5, .5), darkened(purple), lambda x: self.changeSwitch(1, swtLbl), switchLayout)
         # --- screenLayout --- #
         # displays team number
         appendLabel("Team: " + str(self.switcher.robot.teamNumber), (.5, .5), darkened(green), screenLayout)
@@ -107,19 +108,19 @@ class TeleopLayout(StackLayout):
 
         # --- scaleLayout --- #
         # displays cubes in scale
-        appendLabel("Cubes put in scale:\n\n" + str(self.switcher.robot.scale), (1, .5), lightBlue, scaleLayout)
+        sclLbl = appendLabel("Cubes put in scale:\n\n" + str(self.switcher.robot.scale), (1, .5), lightBlue, scaleLayout)
         # decrement scaleDisp
-        appendButton("-", (.5, .5), lightBlue, lambda x: self.changeScale(-1), scaleLayout)
+        appendButton("-", (.5, .5), lightBlue, lambda x: self.changeScale(-1, sclLbl), scaleLayout)
         # increment scaleDisp
-        appendButton("+", (.5, .5), lightBlue, lambda x: self.changeScale(1), scaleLayout)
+        appendButton("+", (.5, .5), lightBlue, lambda x: self.changeScale(1, sclLbl), scaleLayout)
 
         # --- exchangeLayout --- #
         # displays cubes in exchange
-        appendLabel("Cubes put in exchange:\n\n" + str(self.switcher.robot.exchange), (1, .5), orange, exchangeLayout)
+        exchLbl = appendLabel("Cubes put in exchange:\n\n" + str(self.switcher.robot.exchange), (1, .5), orange, exchangeLayout)
         # decrement exchangeDisp
-        appendButton("-", (.5, .5), orange, lambda x: self.changeExchange(-1), exchangeLayout)
+        appendButton("-", (.5, .5), orange, lambda x: self.changeExchange(-1, exchLbl), exchangeLayout)
         # increment exchangeDisp
-        appendButton("+", (.5, .5), orange, lambda x: self.changeExchange(1), exchangeLayout)
+        appendButton("+", (.5, .5), orange, lambda x: self.changeExchange(1, exchLbl), exchangeLayout)
 
         self.clear_widgets()
         for widg in displist:
@@ -129,22 +130,23 @@ class TeleopLayout(StackLayout):
         self.switcher.robot.notes = self.notesTextInput.text
         self.switcher.switch("menu")
 
-    def changeSwitch(self, change):
+    def changeSwitch(self, change, label):
         self.switcher.robot.switch += change
         if self.switcher.robot.switch < 0:
             self.switcher.robot.switch = 0
-        self.display()
-    def changeScale(self, change):
+        label.text = "Cubes put in switch:\n\n" + str(self.switcher.robot.switch)
+    def changeScale(self, change, label):
         self.switcher.robot.scale += change
         if self.switcher.robot.scale < 0:
             self.switcher.robot.scale = 0
-        self.display()
-    def changeExchange(self, change):
+        label.text = "Cubes put in scale:\n\n" + str(self.switcher.robot.scale)
+    def changeExchange(self, change, label):
         self.switcher.robot.exchange += change
         if self.switcher.robot.exchange < 0:
             self.switcher.robot.exchange = 0
-        self.display()
+        label.text = "Cubes put in exchange:\n\n" + str(self.switcher.robot.exchange)
     def changeClimb(self, change):
+        self.switcher.robot.notes = self.notesTextInput.text
         if change == "climbed":
             if self.switcher.robot.climb == "assisted +1":
                 change = "climbed and assisted +1"

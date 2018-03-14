@@ -17,11 +17,13 @@ class AutonLayout(StackLayout):
             label = ColorLabel(text, sizeHint, color, **kwargs)
             if not widget: displist.append(label)
             else: widget.add_widget(label)
+            return label
         def appendButton(text, sizeHint, color, bind, widget=None, **kwargs):
             button = ColorButton(text, sizeHint, color, **kwargs)
             button.bind(on_release=bind)
             if not widget: displist.append(button)
             else: widget.add_widget(button)
+            return button
 
         purple = [114/255, 0, 1]
         green = [14/255, 201/255, 170/255]
@@ -30,6 +32,14 @@ class AutonLayout(StackLayout):
         orange = [255/255, 150/255, 75/255]
         red = [1, 0, 0]
 
+        metaInfo = StackLayout(size_hint=(.5, .5))
+        displist.append(metaInfo)
+        startLayout = StackLayout(size_hint=(.5, .5))
+        displist.append(startLayout)
+
+        #row 3
+
+        # scale & exchange display
         switchLayout = StackLayout(size_hint=(.25, .5))
         displist.append(switchLayout)
         # displays cubes in switch in auton
@@ -38,30 +48,9 @@ class AutonLayout(StackLayout):
         appendButton("-", (.5, .5), darkened(purple), lambda x : self.changeSwitch(-1), switchLayout)
         # increment AutonSwitchDisp
         appendButton('+', (.5, .5), darkened(purple), lambda x : self.changeSwitch(1), switchLayout)
-
-        startLayout = StackLayout(size_hint=(.5, .5))
-        displist.append(startLayout)
-
-        switchSide = StackLayout(size_hint=(.25, .5))
-        displist.append(switchSide)
-        # "Left" for attemptedSwitchSide
-        side1Color = darkened(magenta) if self.switcher.robot.attemptedSwitchSide == "left" else magenta
-        appendButton("Robot attempted the left side of the switch", (.5, .5), side1Color, lambda x: self.changeSide("left"), switchSide)
-        # "Right" for attemptedSwitchSide
-        side2Color = darkened(magenta) if self.switcher.robot.attemptedSwitchSide == "right" else magenta
-        appendButton("Robot attempted the right side of the switch", (.5, .5), side2Color, lambda x: self.changeSide("right"), switchSide)
-        # "None" for attemptedSwitchSide
-        side3Color = darkened(magenta) if self.switcher.robot.attemptedSwitchSide == "none" else magenta
-        appendButton("Robot didn't attempt the switch", (1, .5), side3Color, lambda x: self.changeSide("none"), switchSide)
-
-        #row 3
-
-        # scale & exchange display
         # multi row 1
         multiLayout = StackLayout(size_hint=(.25, .5))
         displist.append(multiLayout)
-        metaInfo = StackLayout(size_hint=(.5, .5))
-        displist.append(metaInfo)
         # displays team number
         appendLabel("Team: " + str(self.switcher.robot.teamNumber), (.5, .5), darkened(green), metaInfo)
         infoLayout = StackLayout(size_hint=(.5, .5))
@@ -74,19 +63,31 @@ class AutonLayout(StackLayout):
         exchangeLayout = StackLayout(size_hint=(.25, .5))
         displist.append(exchangeLayout)
         # scale disp for auton
-        appendLabel("Cubes put in scale in auton:\n" + str(self.switcher.robot.autonScale), (1, .5), lightBlue, multiLayout)
+        sclLbl = appendLabel("Cubes put in scale in auton:\n\n" + str(self.switcher.robot.autonScale), (1, .5), lightBlue, multiLayout)
         # exchange disp for auton
-        appendLabel("Cubes put in exchange in auton:\n" + str(self.switcher.robot.autonExchange), (1, .5), orange, exchangeLayout)
+        exchLbl = appendLabel("Cubes put in exchange in auton:\n\n" + str(self.switcher.robot.autonExchange), (1, .5), orange, exchangeLayout)
         # multi row 2
         # decrement for auton scale
-        appendButton("-", (.5, .5), lightBlue, lambda x: self.changeScale(-1), multiLayout)
+        appendButton("-", (.5, .5), lightBlue, lambda x: self.changeScale(-1, sclLbl), multiLayout)
         # increment for auton scale
-        appendButton("+", (.5, .5), lightBlue, lambda x: self.changeScale(1), multiLayout)
+        appendButton("+", (.5, .5), lightBlue, lambda x: self.changeScale(1, sclLbl), multiLayout)
         # decrement for auton exchange
-        appendButton("-", (.5, .5), orange, lambda x: self.changeExchange(-1), exchangeLayout)
+        appendButton("-", (.5, .5), orange, lambda x: self.changeExchange(-1, exchLbl), exchangeLayout)
         # increment for auton exchange
-        appendButton("+", (.5, .5), orange, lambda x: self.changeExchange(1), exchangeLayout)
+        appendButton("+", (.5, .5), orange, lambda x: self.changeExchange(1, exchLbl), exchangeLayout)
         #end of multiLayout
+
+        switchSide = StackLayout(size_hint=(.25, .5))
+        displist.append(switchSide)
+        # "Left" for attemptedSwitchSide
+        side1Color = darkened(magenta) if self.switcher.robot.attemptedSwitchSide == "left" else magenta
+        appendButton("Robot attempted the left side of the switch", (.5, .5), side1Color, lambda x: self.changeSide("left"), switchSide)
+        # "Right" for attemptedSwitchSide
+        side2Color = darkened(magenta) if self.switcher.robot.attemptedSwitchSide == "right" else magenta
+        appendButton("Robot attempted the right side of the switch", (.5, .5), side2Color, lambda x: self.changeSide("right"), switchSide)
+        # "None" for attemptedSwitchSide
+        side3Color = darkened(magenta) if self.switcher.robot.attemptedSwitchSide == "none" else magenta
+        appendButton("Robot didn't attempt the switch", (1, .5), side3Color, lambda x: self.changeSide("none"), switchSide)
 
         # --- infoLayout --- #
         # displays event name
@@ -117,15 +118,15 @@ class AutonLayout(StackLayout):
         for widg in displist:
             self.add_widget(widg)
 
-    def changeSwitch(self, change):
+    def changeSwitch(self, change, label):
         self.switcher.robot.autonSwitch += change
         if self.switcher.robot.autonSwitch < 0:
             self.switcher.robot.autonSwitch = 0
-        self.display()
+        label.text = "Cubes put in switch in auton:\n\n" + str(self.switcher.robot.autonSwitch)
     def changeScreen(self):
         if self.switcher.screens["login"].changer == 1:
             self.switcher.screens["login"].changer = 0
-            self.switcher.screens['login'].menuText = 'Menu'
+            self.switcher.screens["login"].menuText = "Menu"
             self.switcher.switch("teleop")
         else:
             self.switcher.switch("menu")
@@ -133,16 +134,16 @@ class AutonLayout(StackLayout):
     def changeSide(self, change):
         self.switcher.robot.attemptedSwitchSide = change
         self.display()
-    def changeScale(self, change):
+    def changeScale(self, change, label):
         self.switcher.robot.autonScale += change
         if self.switcher.robot.autonScale < 0:
             self.switcher.robot.autonScale = 0
-        self.display()
-    def changeExchange(self, change):
+        label.text = "Cubes put in scale in auton:\n\n" + str(self.switcher.robot.autonScale)
+    def changeExchange(self, change, label):
         self.switcher.robot.autonExchange += change
         if self.switcher.robot.autonExchange < 0:
             self.switcher.robot.autonExchange = 0
-        self.display()
+        label.text = "Cubes put in exchange in auton:\n\n" + str(self.switcher.robot.autonExchange)
     def changeStart(self, change):
         self.switcher.robot.startingPosition = change
         self.display()
