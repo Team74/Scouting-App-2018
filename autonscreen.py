@@ -30,48 +30,29 @@ class AutonLayout(StackLayout):
         orange = [255/255, 150/255, 75/255]
         red = [1, 0, 0]
 
-        # row 1
-
+        switchLayout = StackLayout(size_hint=(.25, .5))
+        displist.append(switchLayout)
         # displays cubes in switch in auton
-        appendLabel("Cubes put in switch in auton:\n" + str(self.switcher.robot.autonSwitch), (.25, .25), darkened(purple))
-        # displays team number
-        appendLabel("Team: " + str(self.switcher.robot.teamNumber), (.25, .25), darkened(green))
-        infoLayout = StackLayout(size_hint=(.25, .25))
-        displist.append(infoLayout)
+        appendLabel("Cubes put in switch in auton:\n" + str(self.switcher.robot.autonSwitch), (1, .5), darkened(purple), switchLayout)
+        # decrement AutonSwitchDisp
+        appendButton("-", (.5, .5), darkened(purple), lambda x : self.changeSwitch(-1), switchLayout)
+        # increment AutonSwitchDisp
+        appendButton('+', (.5, .5), darkened(purple), lambda x : self.changeSwitch(1), switchLayout)
+
+        startLayout = StackLayout(size_hint=(.5, .5))
+        displist.append(startLayout)
+
+        switchSide = StackLayout(size_hint=(.25, .5))
+        displist.append(switchSide)
         # "Left" for attemptedSwitchSide
         side1Color = darkened(magenta) if self.switcher.robot.attemptedSwitchSide == "left" else magenta
-        appendButton("Robot attempted the left side of the switch", (.125, .25), side1Color, lambda x: self.changeSide("left"))
+        appendButton("Robot attempted the left side of the switch", (.5, .5), side1Color, lambda x: self.changeSide("left"), switchSide)
         # "Right" for attemptedSwitchSide
         side2Color = darkened(magenta) if self.switcher.robot.attemptedSwitchSide == "right" else magenta
-        appendButton("Robot attempted the right side of the switch", (.125, .25), side2Color, lambda x: self.changeSide("right"))
-
-        # row 2
-
-        # decrement AutonSwitchDisp
-        appendButton("-", (.125, .25), darkened(purple), lambda x : self.changeSwitch(-1))
-        # increment AutonSwitchDisp
-        appendButton('+', (.125, .25), darkened(purple), lambda x : self.changeSwitch(1))
-        # menu button
-        appendButton(self.switcher.screens['login'].menuText, (.25, .25), lightBlue, lambda x: self.changeScreen())
-        #
-        scoutLayout = StackLayout(size_hint = (.25, .25))
-        displist.append(scoutLayout)
+        appendButton("Robot attempted the right side of the switch", (.5, .5), side2Color, lambda x: self.changeSide("right"), switchSide)
         # "None" for attemptedSwitchSide
         side3Color = darkened(magenta) if self.switcher.robot.attemptedSwitchSide == "none" else magenta
-        appendButton("Robot didn't attempt the switch", (.25, .25), side3Color, lambda x: self.changeSide("none"))
-
-        # --- infoLayout --- #
-        # displays event name
-        appendLabel("Event: " + self.switcher.robot.eventName, (1, .5), darkened(green), infoLayout)
-        # display round number
-        appendLabel("Round: " + str(self.switcher.robot.roundNumber), (1, .5), darkened(green), infoLayout)
-
-        # --- scoutLayout --- #
-        # displays scouter name
-        print(self.switcher.robot.scouter)
-        appendLabel("Scouter: " + self.switcher.robot.scouter, (1, .5), darkened(green), scoutLayout)
-        #
-        appendLabel("Rounds scouted: " + str(self.switcher.screens["login"].scoutNumber), (1, .5), darkened(green), scoutLayout)
+        appendButton("Robot didn't attempt the switch", (1, .5), side3Color, lambda x: self.changeSide("none"), switchSide)
 
         #row 3
 
@@ -79,8 +60,17 @@ class AutonLayout(StackLayout):
         # multi row 1
         multiLayout = StackLayout(size_hint=(.25, .5))
         displist.append(multiLayout)
-        startLayout = StackLayout(size_hint=(.5, .5))
-        displist.append(startLayout)
+        metaInfo = StackLayout(size_hint=(.5, .5))
+        displist.append(metaInfo)
+        # displays team number
+        appendLabel("Team: " + str(self.switcher.robot.teamNumber), (.5, .5), darkened(green), metaInfo)
+        infoLayout = StackLayout(size_hint=(.5, .5))
+        metaInfo.add_widget(infoLayout)
+        # menu button
+        appendButton(self.switcher.screens['login'].menuText, (.5, .5), lightBlue, lambda x: self.changeScreen(), metaInfo)
+        #
+        scoutLayout = StackLayout(size_hint = (.5, .5))
+        metaInfo.add_widget(scoutLayout)
         exchangeLayout = StackLayout(size_hint=(.25, .5))
         displist.append(exchangeLayout)
         # scale disp for auton
@@ -97,6 +87,19 @@ class AutonLayout(StackLayout):
         # increment for auton exchange
         appendButton("+", (.5, .5), orange, lambda x: self.changeExchange(1), exchangeLayout)
         #end of multiLayout
+
+        # --- infoLayout --- #
+        # displays event name
+        appendLabel("Event: " + self.switcher.robot.eventName, (1, .5), darkened(green), infoLayout)
+        # display round number
+        appendLabel("Round: " + str(self.switcher.robot.roundNumber), (1, .5), darkened(green), infoLayout)
+
+        # --- scoutLayout --- #
+        # displays scouter name
+        print(self.switcher.robot.scouter)
+        appendLabel("Scouter: " + self.switcher.robot.scouter, (1, .5), darkened(green), scoutLayout)
+        #
+        appendLabel("Rounds scouted: " + str(self.switcher.screens["login"].scoutNumber), (1, .5), darkened(green), scoutLayout)
 
 
         # starting position display

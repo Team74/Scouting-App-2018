@@ -36,41 +36,44 @@ class TeleopLayout(StackLayout):
 
         # jacob wtf is this comment vv
         # A layout that holds
-        screenLayout = StackLayout(size_hint=(.75, .5))
+        screenLayout = StackLayout(size_hint=(.5, .5))
         displist.append(screenLayout)
-        # climb Layout
-        climbLayout = StackLayout(size_hint=(.25, .5))
-        displist.append(climbLayout)
-        # scale layout
-        scaleLayout = StackLayout(size_hint=(.25, .5)) # smaller layout to get around larger widgets in the same line (notesTextInput)
-        displist.append(scaleLayout)
         # input for notes
         self.notesTextInput = TextInput(text=self.switcher.robot.notes, size_hint=(.5, .5))
         displist.append(self.notesTextInput)
+        # switch layout
+        switchLayout = StackLayout(size_hint=(.25, .5))
+        displist.append(switchLayout)
+        # scale layout
+        scaleLayout = StackLayout(size_hint=(.25, .5)) # smaller layout to get around larger widgets in the same line (notesTextInput)
+        displist.append(scaleLayout)
         # exchange layout
         exchangeLayout = StackLayout(size_hint=(.25, .5))
         displist.append(exchangeLayout)
+        # climb Layout
+        climbLayout = StackLayout(size_hint=(.25, .5))
+        displist.append(climbLayout)
 
-        # --- screenLayout --- #
+        # ---switchLayout--- #
         # displays cubes in switch
-        appendLabel("Cubes put in switch:\n\n" + str(self.switcher.robot.switch), (1/3, .5), darkened(purple), screenLayout)
+        appendLabel("Cubes put in switch:\n\n" + str(self.switcher.robot.switch), (1, .5), darkened(purple), switchLayout)
+        # decrement switchDisp
+        appendButton("-", (.5, .5), darkened(purple), lambda x: self.changeSwitch(-1), switchLayout)
+            #stop time // dont save
+        # increment switchDisp
+        appendButton("+", (.5, .5), darkened(purple), lambda x: self.changeSwitch(1), switchLayout)
+        # --- screenLayout --- #
         # displays team number
-        appendLabel("Team: " + str(self.switcher.robot.teamNumber), (1/3, .5), darkened(green), screenLayout)
+        appendLabel("Team: " + str(self.switcher.robot.teamNumber), (.5, .5), darkened(green), screenLayout)
         # made to crash the app to test our quick save feature
         #appendButton("Team: " + str(self.switcher.robot.teamNumber), (1/3, .5), darkened(green), lambda x: self.crash() , screenLayout)
         #
-        infoLayout = StackLayout(size_hint=(1/3, .5))
+        infoLayout = StackLayout(size_hint=(.5, .5))
         screenLayout.add_widget(infoLayout)
-        # decrement switchDisp
-        appendButton("-", (1/6, .5), darkened(purple), lambda x: self.changeSwitch(-1), screenLayout)
-            #stop time // dont save
-        # increment switchDisp
-        appendButton("+", (1/6, .5), darkened(purple), lambda x: self.changeSwitch(1), screenLayout)
-            #start time
         # menu button
-        appendButton("Menu", (1/3, .5), lightBlue, self.switchMenu, screenLayout)
+        appendButton("Menu", (.5, .5), lightBlue, self.switchMenu, screenLayout)
         # displays scouter name
-        scoutLayout = StackLayout(size_hint = (1/3, .5))
+        scoutLayout = StackLayout(size_hint = (.5, .5))
         screenLayout.add_widget(scoutLayout)
 
         # --- infoLayout --- #
@@ -93,13 +96,13 @@ class TeleopLayout(StackLayout):
         climb2Color = darkened(magenta) if self.switcher.robot.climb == "didn't climb" else magenta # darkening the currently selected climb option
         appendButton("Robot didn't climb", (.5, .40), climb2Color, lambda x: self.changeClimb("didn't climb"), climbLayout)
         # "climbed" button for climb options
-        climb3Color = darkened(magenta) if self.switcher.robot.climb == "climbed" or self.switcher.robot.climb == "assisted +1" or self.switcher.robot.climb == "assisted +2" else magenta # darkening the currently selected climb option
+        climb3Color = darkened(magenta) if self.switcher.robot.climb == "climbed" or self.switcher.robot.climb == "climbed and assisted +1" or self.switcher.robot.climb == "climbed and assisted +2" else magenta # darkening the currently selected climb option
         appendButton("Robot climbed successfully", (1, .20), climb3Color, lambda x: self.changeClimb("climbed"), climbLayout)
         # "climbed +1" button for climb options
-        climb4Color = darkened(magenta) if self.switcher.robot.climb == "assisted +1" else magenta # darkening the currently selected climb option
+        climb4Color = darkened(magenta) if self.switcher.robot.climb == "assisted +1" or self.switcher.robot.climb == "climbed and assisted +1" else magenta # darkening the currently selected climb option
         appendButton("Assisted 1 other robot", (.5, .40), climb4Color, lambda x: self.changeClimb("assisted +1"), climbLayout)
         # "climbed +2" button for climb options
-        climb5color = darkened(magenta) if self.switcher.robot.climb == "assisted +2" else magenta
+        climb5color = darkened(magenta) if self.switcher.robot.climb == "assisted +2" or self.switcher.robot.climb == "climbed and assisted +2" else magenta
         appendButton("Assisted 2 other robots", (.5, .40), climb5color, lambda x: self.changeClimb("assisted +2"), climbLayout)
 
         # --- scaleLayout --- #
@@ -142,5 +145,17 @@ class TeleopLayout(StackLayout):
             self.switcher.robot.exchange = 0
         self.display()
     def changeClimb(self, change):
+        if change == "climbed":
+            if self.switcher.robot.climb == "assisted +1":
+                change = "climbed and assisted +1"
+            if self.switcher.robot.climb == "assisted +2":
+                change = "climbed and assisted +2"
+        if change == "assisted +1":
+            if self.switcher.robot.climb == "climbed":
+                chage = "climbed and assisted +1"
+        if change == "assisted +2":
+            if self.switcher.robot.climb == "climbed":
+                change = "climbed and assisted +2"
+        print(change)
         self.switcher.robot.climb = change
         self.display()
