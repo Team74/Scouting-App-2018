@@ -100,7 +100,7 @@ class PitScoutingLayout(StackLayout):
         appendButton("CAN'T pick up cubes off ground", (.25, .25), colorGroundCant, lambda x: self.changeGround(0))
 
         # notes
-        self.notesInput = TextInput(size_hint=(.25, .25))
+        self.notesInput = TextInput(text=self.switcher.robot.notes, size_hint=(.25, .25))
         displist.append(self.notesInput)
 
         # exchange capability
@@ -117,26 +117,32 @@ class PitScoutingLayout(StackLayout):
 
     def changeDrivetrain(self, change):
         self.switcher.robot.drivetrain = change
+        self.switcher.robot.notes = self.notesInput.text
         self.display()
 
     def changeGround(self, change):
         self.switcher.robot.groundPickup = change
+        self.switcher.robot.notes = self.notesInput.text
         self.display()
 
     def changeSwitch(self, change):
         self.switcher.robot.switchCapability = change
+        self.switcher.robot.notes = self.notesInput.text
         self.display()
 
     def changeScale(self, change):
         self.switcher.robot.scaleCapability = change
+        self.switcher.robot.notes = self.notesInput.text
         self.display()
 
     def changeExchange(self, change):
         self.switcher.robot.exchangeCapability = change
+        self.switcher.robot.notes = self.notesInput.text
         self.display()
 
     def changeClimb(self, change):
         self.switcher.robot.climbCapability = change
+        self.switcher.robot.notes = self.notesInput.text
         self.display()
 
     def changeImage(self):

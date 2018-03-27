@@ -1,6 +1,9 @@
 import sqlite3
 import mysql.connector
 import json
+import os
+import sys
+import re
 
 class Robot(object):
     def __init__(self, teamNumber, roundNumber, eventName, scouter, switch=0, scale=0, exchange=0, climb="did not climb", notes="", startingPosition="left", attemptedSwitchSide="left", autonSwitch=0, autonScale=0, autonExchange=0):
@@ -75,6 +78,13 @@ class Robot(object):
     def updateCycle(self, time):
         self.cubeCycle.append(time)
         print(self.cubeCycle)
+
+    def getStanding(self):
+        url = "https://www.thebluealliance.com/team/%s" % self.teamNumber
+        kyleishighlyunstraight = os.system("wget -qO- %s" % url)
+        print(str(kyleishighlyunstraight))
+        parsed = re.search("\d(?=Rank )", str(kyleishighlyunstraight))
+        print(parsed.group(0))
 
 class PitRobot(object):
     def __init__(self, teamNumber, drivetrain="tank variants", groundPickup=0, switchCapability=0, scaleCapability=0, exchangeCapability=0, climbCapability=0, image=None, notes=""):
