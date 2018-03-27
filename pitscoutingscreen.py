@@ -31,24 +31,26 @@ class PitScoutingLayout(StackLayout):
         black = [0, 0, 0]
         red = [200/255, 0, 0]
 
-        # switch capability
-        colorSwitchCan = darkened(green) if robot.switchCapability else green
-        appendButton("CAN put cube on switch", (.25, .25), colorSwitchCan, lambda x: self.changeSwitch(1))
-
-        # menu button
-        appendButton("Menu", (.25, .25), purple, self.switchMenu)
+        # row 1
 
         # team display
         appendLabel("Team: " + str(robot.teamNumber), (.25, .25), black)
+
+        # photo button
+        appendButton("Photo", (.25, .25), purple, lambda x: self.switcher.switch("photo"))
+
+        # notes
+        self.notesInput = TextInput(size_hint=(.25, .25))
+        displist.append(self.notesInput)
 
         # climb capability
         colorClimbCan = darkened(magenta) if robot.climbCapability else magenta
         appendButton("CAN climb", (.25, .25), colorClimbCan, lambda x: self.changeClimb(1))
 
+        # row 2
 
-        # switch capability
-        colorSwitchCant = darkened(green) if not robot.switchCapability else green
-        appendButton("CAN'T put cube on switch", (.25, .25), colorSwitchCant, lambda x: self.changeSwitch(0))
+        # menu button
+        appendButton("Menu", (.25, .25), purple, self.switchMenu)
 
         # drivetrain layout
         drivetrainLayout = StackLayout(size_hint=(.5, .25))
@@ -74,34 +76,37 @@ class PitScoutingLayout(StackLayout):
         colorClimbCant = darkened(magenta) if not robot.climbCapability else magenta
         appendButton("CAN'T climb", (.25, .25), colorClimbCant, lambda x: self.changeClimb(0))
 
-
-        # scale capability
-        colorScaleCan = darkened(red) if robot.scaleCapability else red
-        appendButton("CAN put cube on scale", (.25, .25), colorScaleCan, lambda x: self.changeScale(1))
+        # row 3
 
         # ground capability
         colorGroundCan = darkened(darkGreen) if robot.groundPickup else darkGreen
         appendButton("CAN pick up cubes off ground", (.25, .25), colorGroundCan, lambda x: self.changeGround(1))
 
-        # photo button
-        appendButton("Photo", (.25, .25), magenta, lambda x: self.switcher.switch("photo"))
+        # switch capability
+        colorSwitchCan = darkened(green) if robot.switchCapability else green
+        appendButton("CAN put cube on switch", (.25, .25), colorSwitchCan, lambda x: self.changeSwitch(1))
+
+        # scale capability
+        colorScaleCan = darkened(red) if robot.scaleCapability else red
+        appendButton("CAN put cube on scale", (.25, .25), colorScaleCan, lambda x: self.changeScale(1))
 
         # exchange capability
         colorExchangeCan = darkened(orange) if robot.exchangeCapability else orange
         appendButton("CAN put cube in exchange", (.25, .25), colorExchangeCan, lambda x: self.changeExchange(1))
 
-
-        # scale capability
-        colorScaleCant = darkened(red) if not robot.scaleCapability else red
-        appendButton("CAN'T put cube in scale", (.25, .25), colorScaleCant, lambda x: self.changeScale(0))
+        # row 4
 
         # ground capability
         colorGroundCant = darkened(darkGreen) if not robot.groundPickup else darkGreen
         appendButton("CAN'T pick up cubes off ground", (.25, .25), colorGroundCant, lambda x: self.changeGround(0))
 
-        # notes
-        self.notesInput = TextInput(size_hint=(.25, .25))
-        displist.append(self.notesInput)
+        # switch capability
+        colorSwitchCant = darkened(green) if not robot.switchCapability else green
+        appendButton("CAN'T put cube on switch", (.25, .25), colorSwitchCant, lambda x: self.changeSwitch(0))
+
+        # scale capability
+        colorScaleCant = darkened(red) if not robot.scaleCapability else red
+        appendButton("CAN'T put cube in scale", (.25, .25), colorScaleCant, lambda x: self.changeScale(0))
 
         # exchange capability
         colorExchangeCant = darkened(orange) if not robot.exchangeCapability else orange
