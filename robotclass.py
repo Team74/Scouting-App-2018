@@ -83,7 +83,8 @@ class Robot(object):
         url = "https://www.thebluealliance.com/team/%s" % self.teamNumber
         kyleishighlyunstraight = os.system("wget -qO- %s" % url)
         print(str(kyleishighlyunstraight))
-        parsed = re.search("\d(?=Rank )", str(kyleishighlyunstraight))
+        parser = re.compile(r"\d+(?=(<\/strong>))")
+        parsed = parser.match(str(kyleishighlyunstraight))
         print(parsed.group(0))
 
 class PitRobot(object):

@@ -40,7 +40,7 @@ class AutonLayout(StackLayout):
         try:
             self.switcher.robot.getStanding()
         except:
-            print("carl forgot to fix this")
+            print("carl has the big gay")
 
         #row 3
 
