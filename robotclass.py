@@ -1,6 +1,9 @@
 import sqlite3
 import mysql.connector
 import json
+import os
+import sys
+import re
 
 class Robot(object):
     def __init__(self, teamNumber, roundNumber, eventName, scouter, switch=0, scale=0, exchange=0, climb="did not climb", notes="", startingPosition="left", attemptedSwitchSide="left", autonSwitch=0, autonScale=0, autonExchange=0):
@@ -25,7 +28,7 @@ class Robot(object):
         self.reloadRobot(self.teamNumber, self.roundNumber)
 
     def dumpData(self): #function for putting all values into a list ordered like the sqlite database
-        return (self.teamNumber, self.roundNumber, self.eventName, self.scouter, self.switch, self.scale, self.exchange, self.climb, self.notes, self.startingPosition, self.attemptedSwitchSide, self.autonSwitch, self.autonScale, self.autonExchange) # this order matches that of the database
+        return (self.teamNumber, self.roundNumber, self.eventName, self.scouter, self.switch, self.scale, self.exchange, self.climb, self.notes, self.startingPosition, self.attemptedSwitchSide, self.autonSwitch, self.autonScale, self.autonExchange, self.miss) # this order matches that of the database
 
     def localSave(self, _): # _ is there for throwaway on_release argument passed by the button
         print("auton - saving %s" % self.teamNumber)
@@ -37,11 +40,11 @@ class Robot(object):
             database.execute("""
                 UPDATE matchdata SET
                 scouter=?, switch=?, scale=?, exchange=?, climb=?, notes=?,
-                startingPosition=?, attemptedSwitchSide=?, autonSwitch=?, autonScale=?, autonExchange=?
+                startingPosition=?, attemptedSwitchSide=?, autonSwitch=?, autonScale=?, autonExchange=?, miss=?
                 WHERE teamNumber=? AND roundNumber=? AND eventName=?""", self.dumpData()[3:] + self.dumpData()[:3]) #list splicing - gives all nonmeta (actual game data) values, then gives meta (team number, round, event, scouter) values
         else: #if there was not a match in the database:
             print("no match")
-            database.execute("INSERT INTO matchdata VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", self.dumpData())
+            database.execute("INSERT INTO matchdata VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", self.dumpData())
         database.commit()
         database.close()
 
@@ -72,9 +75,18 @@ class Robot(object):
         self.autonScale = robotData[12]
         self.autonExchange = robotData[13]
 
+        self.miss = robotData[14]
+
     def updateCycle(self, time):
         self.cubeCycle.append(time)
         print(self.cubeCycle)
+
+    def getStanding(self):
+        url = "https://www.thebluealliance.com/team/%s" % self.teamNumber
+        kyleishighlyunstraight = os.system("wget -qO- %s" % url)
+        print(str(kyleishighlyunstraight))
+        parsed = re.search("\d(?=Rank )", str(kyleishighlyunstraight))
+        print(parsed.group(0))
 
 class PitRobot(object):
     def __init__(self, teamNumber, drivetrain="tank variants", groundPickup=0, switchCapability=0, scaleCapability=0, exchangeCapability=0, climbCapability=0, image=None, notes=""):

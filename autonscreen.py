@@ -37,17 +37,24 @@ class AutonLayout(StackLayout):
         startLayout = StackLayout(size_hint=(.5, .5))
         displist.append(startLayout)
 
+        '''
+        try:
+            self.switcher.robot.getStanding()
+        except:
+            print("carl forgot to fix this")
+        '''
+
         #row 3
 
         # scale & exchange display
         switchLayout = StackLayout(size_hint=(.25, .5))
         displist.append(switchLayout)
         # displays cubes in switch in auton
-        appendLabel("Cubes put in switch in auton:\n" + str(self.switcher.robot.autonSwitch), (1, .5), darkened(purple), switchLayout)
+        switchAuton = appendLabel("Cubes put in switch in auton:\n\n" + str(self.switcher.robot.autonSwitch), (1, .5), darkened(purple), switchLayout)
         # decrement AutonSwitchDisp
-        appendButton("-", (.5, .5), darkened(purple), lambda x : self.changeSwitch(-1), switchLayout)
+        appendButton("-", (.5, .5), darkened(purple), lambda x : self.changeSwitch(-1, switchAuton), switchLayout)
         # increment AutonSwitchDisp
-        appendButton('+', (.5, .5), darkened(purple), lambda x : self.changeSwitch(1), switchLayout)
+        appendButton('+', (.5, .5), darkened(purple), lambda x : self.changeSwitch(1, switchAuton), switchLayout)
         # multi row 1
         multiLayout = StackLayout(size_hint=(.25, .5))
         displist.append(multiLayout)
