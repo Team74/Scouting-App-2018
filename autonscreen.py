@@ -37,10 +37,10 @@ class AutonLayout(StackLayout):
         startLayout = StackLayout(size_hint=(.5, .5))
         displist.append(startLayout)
 
-        try:
-            self.switcher.robot.getStanding()
-        except:
-            print("carl has the big gay")
+        #try:
+            #self.switcher.robot.getStanding()
+        #except:
+            #print("carl forgot to fix this")
 
         #row 3
 

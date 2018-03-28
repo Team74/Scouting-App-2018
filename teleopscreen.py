@@ -35,14 +35,18 @@ class TeleopLayout(StackLayout):
         magenta = [231/255, 58/255, 177/255]
         lightBlue = [28/255, 129/255, 201/255]
         orange = [255/255, 150/255, 75/255]
+        red = [1, 0, 0]
 
         # jacob wtf is this comment vv
-        # A layout that holds
-        screenLayout = StackLayout(size_hint=(.5, .5))
+        # A layout that holds downs
+        screenLayout = StackLayout(size_hint=(.25, .5))
         displist.append(screenLayout)
         # input for notes
         self.notesTextInput = TextInput(text=self.switcher.robot.notes, size_hint=(.5, .5))
         displist.append(self.notesTextInput)
+        # climb Layout
+        climbLayout = StackLayout(size_hint=(.25, .5))
+        displist.append(climbLayout)
         # switch layout
         switchLayout = StackLayout(size_hint=(.25, .5))
         displist.append(switchLayout)
@@ -52,9 +56,9 @@ class TeleopLayout(StackLayout):
         # exchange layout
         exchangeLayout = StackLayout(size_hint=(.25, .5))
         displist.append(exchangeLayout)
-        # climb Layout
-        climbLayout = StackLayout(size_hint=(.25, .5))
-        displist.append(climbLayout)
+        # miss Layout
+        missLayout = StackLayout(size_hint=(.25, .5))
+        displist.append(missLayout)
 
         # ---switchLayout--- #
         # displays cubes in switch
@@ -63,31 +67,23 @@ class TeleopLayout(StackLayout):
         appendButton("-", (.5, .5), darkened(purple), lambda x: self.changeSwitch(-1, swtLbl), switchLayout)
         # increment switchDisp
         appendButton("+", (.5, .5), darkened(purple), lambda x: self.changeSwitch(1, swtLbl), switchLayout)
+
         # --- screenLayout --- #
+        infoLayout = StackLayout(size_hint=(1, .5))
+        screenLayout.add_widget(infoLayout)
+        # menu button
+        appendButton("Menu", (1, .5), lightBlue, self.switchMenu, screenLayout)
+
+        # --- infoLayout --- #
+        # display round number
+        appendLabel("Round: " + str(self.switcher.robot.roundNumber), (1, (1/3)), darkened(green), infoLayout)
+        # displays scouter name
         # displays team number
-        appendLabel("Team: " + str(self.switcher.robot.teamNumber), (.5, .5), darkened(green), screenLayout)
+        appendLabel("Team: " + str(self.switcher.robot.teamNumber), (1, (1/3)), darkened(green), infoLayout)
         # made to crash the app to test our quick save feature
         #appendButton("Team: " + str(self.switcher.robot.teamNumber), (1/3, .5), darkened(green), lambda x: self.crash() , screenLayout)
         #
-        infoLayout = StackLayout(size_hint=(.5, .5))
-        screenLayout.add_widget(infoLayout)
-        # menu button
-        appendButton("Menu", (.5, .5), lightBlue, self.switchMenu, screenLayout)
-        # displays scouter name
-        scoutLayout = StackLayout(size_hint = (.5, .5))
-        screenLayout.add_widget(scoutLayout)
-
-        # --- infoLayout --- #
-        # displays event name
-        appendLabel("Event: " + self.switcher.robot.eventName, (1, .5), darkened(green), infoLayout)
-        # display round number
-        appendLabel("Round: " + str(self.switcher.robot.roundNumber), (1, .5), darkened(green), infoLayout)
-
-        # --- scoutLayout --- #
-        # displays scouter name
-        appendLabel("Scouter: " + self.switcher.robot.scouter, (1, .5), darkened(green), scoutLayout)
-        #
-        appendLabel("Rounds scouted: " + str(self.switcher.screens["login"].scoutNumber), (1, .5), darkened(green), scoutLayout)
+        appendLabel("Scouter: " + self.switcher.robot.scouter, (1, (1/3)), darkened(green), infoLayout)
 
         # --- climbLayout --- #
         # "assisted" button for climb options
@@ -122,6 +118,14 @@ class TeleopLayout(StackLayout):
         # increment exchangeDisp
         appendButton("+", (.5, .5), orange, lambda x: self.changeExchange(1, exchLbl), exchangeLayout)
 
+        # --- missLayout --- #
+        # miss cube displays
+        misLbl = appendLabel("Cubes the robot has missed:\n\n" + str(self.switcher.robot.miss), (1, .5), red, missLayout)
+        # dec miss
+        appendButton("-", (.5, .5), red, lambda x: self.changeMiss(-1, misLbl), missLayout)
+        #inc miss
+        appendButton("+", (.5, .5), red, lambda x: self.changeMiss(1, misLbl), missLayout)
+
         self.clear_widgets()
         for widg in displist:
             self.add_widget(widg)
@@ -145,6 +149,11 @@ class TeleopLayout(StackLayout):
         if self.switcher.robot.exchange < 0:
             self.switcher.robot.exchange = 0
         label.text = "Cubes put in exchange:\n\n" + str(self.switcher.robot.exchange)
+    def changeMiss(self, change, label):
+        self.switcher.robot.miss += change
+        if self.switcher.robot.miss < 0:
+            self.switcher.robot.miss = 0
+        label.text = "Cubes the robot has missed:\n\n" + str(self.switcher.robot.miss)
     def changeClimb(self, change):
         self.switcher.robot.notes = self.notesTextInput.text
         if change == "climbed":
