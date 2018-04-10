@@ -17,8 +17,9 @@ c = db.cursor()
 # ^^ is the number of cubes put in the scale in teleop
 # EE is the number of cubes put in the exchange in teleop
 
-def generateQR(roundNumber):
-    lastFive = c.execute("SELECT * FROM matchdata WHERE roundNumber>? AND roundNumber<=?", (roundNumber-20, roundNumber))
+def generateQR(roundNumber, rounds):
+    print("roundNumber %s, rounds %s" % (roundNumber, rounds))
+    lastFive = c.execute("SELECT * FROM matchdata WHERE roundNumber>? AND roundNumber<=?", (roundNumber-rounds, roundNumber))
     urlData = []
     for robot in lastFive:
         roundNum = "%03d" % int(robot[1]) if int(robot[1]) <= 999 else 999
@@ -35,6 +36,6 @@ def generateQR(roundNumber):
     fullURL = "http://a.hostx7.com/?a[]=" + "&a[]=".join(urlData)
 
     qr = pyqrcode.create(fullURL)
-    qr.png("url.png")
+    qr.png("url.png", scale=5)
 
-generateQR(63)
+generateQR(63, 20)
