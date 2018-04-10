@@ -31,19 +31,17 @@ class AutonLayout(StackLayout):
         lightBlue = [28/255, 129/255, 201/255]
         orange = [255/255, 150/255, 75/255]
         red = [1, 0, 0]
-        brown = [51/255, 0, 25,255]
+        brown = [81/255, 30/255, 55/255]
 
         metaInfo = StackLayout(size_hint=(.5, .5))
         displist.append(metaInfo)
         startLayout = StackLayout(size_hint=(.5, .5))
         displist.append(startLayout)
 
-        '''
-        try:
-            self.switcher.robot.getStanding()
-        except:
-            print("carl forgot to fix this")
-        '''
+        #try:
+            #self.switcher.robot.getStanding()
+        #except:
+            #print("carl forgot to fix this")
 
         #row 3
 
@@ -110,10 +108,10 @@ class AutonLayout(StackLayout):
 
         # --- crossLayout --- #
         cross1Color = darkened(brown) if self.switcher.robot.cross == "yes" else brown
-        appendButton("Robot crossed the line!!!!!!!!!!!", (1, .5), cross1Color, lambda x: self.changeCross("yes"), crossLayout)
+        appendButton("Robot crossed the line", (1, .5), cross1Color, lambda x: self.changeCross("yes"), crossLayout)
         #
         cross2Color = darkened(brown) if self.switcher.robot.cross == "no" else brown
-        appendButton("Don't pick this robot", (1, .5), lambda x: self.changeCross("no"), crossLayout)
+        appendButton("Robot didn't crossed the line", (1, .5), cross2Color, lambda x: self.changeCross("no"), crossLayout)
 
         # starting position display
         # left for starting position

@@ -7,6 +7,7 @@ class PitScoutingLayout(StackLayout):
     def __init__(self, screenSwitcher):
         self.switcher = screenSwitcher
         super(PitScoutingLayout, self).__init__()
+        self.notesInput = TextInput(text="ree")
 
     def display(self):
         displist = []
@@ -40,7 +41,7 @@ class PitScoutingLayout(StackLayout):
         appendButton("Photo", (.25, .25), purple, lambda x: self.switcher.switch("photo"))
 
         # notes
-        self.notesInput = TextInput(size_hint=(.25, .25))
+        self.notesInput = TextInput(text=robot.notes, size_hint=(.25, .25))
         displist.append(self.notesInput)
 
         # climb capability

@@ -7,8 +7,8 @@ database.execute("DELETE FROM matchdata")
 database.commit()
 database.close()
 
-for team in [421, 6635, 1003]:
-    for round in range(1,15):
+for team in [421]:
+    for round in range(1,64):
         robot = robotclass.Robot(
             team,
             round,

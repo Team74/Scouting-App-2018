@@ -2,8 +2,7 @@ import sqlite3
 import mysql.connector
 import json
 import os
-import sys
-import re
+import urllib.request
 
 class Robot(object):
     def __init__(self, teamNumber, roundNumber, eventName, scouter, switch=0, scale=0, exchange=0, climb="did not climb", notes="", startingPosition="left", attemptedSwitchSide="left", autonSwitch=0, autonScale=0, autonExchange=0, miss=0, cross=0):
@@ -23,12 +22,14 @@ class Robot(object):
         self.autonSwitch = autonSwitch # integer, how many cubes scored in switch
         self.autonScale = autonScale # integer, how many cubes scored in scale
         self.autonExchange = autonExchange # integer, how many cubes scored in scale
+        self.miss = miss
+        self.cross = cross
 
         self.reloadRobot(self.teamNumber, self.roundNumber)
         self.reloadRobot(self.teamNumber, self.roundNumber)
 
     def dumpData(self): #function for putting all values into a list ordered like the sqlite database
-        return (self.teamNumber, self.roundNumber, self.eventName, self.scouter, self.switch, self.scale, self.exchange, self.climb, self.notes, self.startingPosition, self.attemptedSwitchSide, self.autonSwitch, self.autonScale, self.autonExchange, self.miss) # this order matches that of the database
+        return (self.teamNumber, self.roundNumber, self.eventName, self.scouter, self.switch, self.scale, self.exchange, self.climb, self.notes, self.startingPosition, self.attemptedSwitchSide, self.autonSwitch, self.autonScale, self.autonExchange, self.miss, self.cross) # this order matches that of the database
 
     def localSave(self, _): # _ is there for throwaway on_release argument passed by the button
         print("auton - saving %s" % self.teamNumber)
@@ -40,11 +41,11 @@ class Robot(object):
             database.execute("""
                 UPDATE matchdata SET
                 scouter=?, switch=?, scale=?, exchange=?, climb=?, notes=?,
-                startingPosition=?, attemptedSwitchSide=?, autonSwitch=?, autonScale=?, autonExchange=?, miss=?
+                startingPosition=?, attemptedSwitchSide=?, autonSwitch=?, autonScale=?, autonExchange=?, miss=?, cross=?
                 WHERE teamNumber=? AND roundNumber=? AND eventName=?""", self.dumpData()[3:] + self.dumpData()[:3]) #list splicing - gives all nonmeta (actual game data) values, then gives meta (team number, round, event, scouter) values
         else: #if there was not a match in the database:
             print("no match")
-            database.execute("INSERT INTO matchdata VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", self.dumpData())
+            database.execute("INSERT INTO matchdata VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", self.dumpData())
         database.commit()
         database.close()
 
@@ -76,6 +77,7 @@ class Robot(object):
         self.autonExchange = robotData[13]
 
         self.miss = robotData[14]
+        self.cross = robotData[15]
 
     def updateCycle(self, time):
         self.cubeCycle.append(time)
@@ -83,9 +85,8 @@ class Robot(object):
 
     def getStanding(self):
         url = "https://www.thebluealliance.com/team/%s" % self.teamNumber
-        kyleishighlyunstraight = os.system("wget -qO- %s" % url)
-        print(str(kyleishighlyunstraight))
-        parsed = re.search("\d(?=Rank )", str(kyleishighlyunstraight))
+        siteText = urllib.request.urlopen(url)
+        parsed = re.search(r"Rank \d+", siteText.read())
         print(parsed.group(0))
 
 class PitRobot(object):
@@ -118,7 +119,7 @@ class PitRobot(object):
         cursor = database.cursor() # acts as a placeholder, allows for fetchone()
         cursor.execute("SELECT * FROM pitscoutingdata WHERE teamNumber=?", (self.teamNumber,))
         if not cursor.fetchone():
-            database.execute("INSERT INTO pitscoutingdata VALUES (?,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)", (self.teamNumber,))
+            database.execute("INSERT INTO pitscoutingdata VALUES (?,NULL,NULL,NULL,NULL,NULL,NULL,NULL,?)", (self.teamNumber, ""))
         database.commit()
         database.close()
 
@@ -172,11 +173,11 @@ def export(ip):
             mysqlc.execute("""
                 UPDATE matchdata SET
                 scouter=%s, switch=%s, scale=%s, exchange=%s, climb=%s, notes=%s,
-                startingPosition=%s, attemptedSwitchSide=%s, autonSwitch=%s, autonScale=%s, autonExchange=%s
+                startingPosition=%s, attemptedSwitchSide=%s, autonSwitch=%s, autonScale=%s, autonExchange=%s, miss=%s, cross=%s
                 WHERE teamNumber=%s AND roundNumber=%s AND eventName=%s
             """, row[3:] + row[:3]) # overwrite instead of make a new one
         else: # if there was no row found
-            mysqlc.execute("INSERT INTO matchdata VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", row) # make a new row
+            mysqlc.execute("INSERT INTO matchdata VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", row) # make a new row
     sqlitec.execute("SELECT * FROM pitscoutingdata")
     for pitscoutdata in sqlitec.fetchall(): # see robotclass PitRobot.dumpData() for order of row
         row = list(pitscoutdata)
