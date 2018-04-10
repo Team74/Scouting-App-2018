@@ -31,6 +31,7 @@ class AutonLayout(StackLayout):
         lightBlue = [28/255, 129/255, 201/255]
         orange = [255/255, 150/255, 75/255]
         red = [1, 0, 0]
+        brown = [51/255, 0, 25,255]
 
         metaInfo = StackLayout(size_hint=(.5, .5))
         displist.append(metaInfo)
@@ -65,8 +66,8 @@ class AutonLayout(StackLayout):
         # menu button
         appendButton(self.switcher.screens['login'].menuText, (.5, .5), lightBlue, lambda x: self.changeScreen(), metaInfo)
         #
-        scoutLayout = StackLayout(size_hint = (.5, .5))
-        metaInfo.add_widget(scoutLayout)
+        crossLayout = StackLayout(size_hint = (.5, .5))
+        metaInfo.add_widget(crossLayout)
         exchangeLayout = StackLayout(size_hint=(.25, .5))
         displist.append(exchangeLayout)
         # scale disp for auton
@@ -98,17 +99,21 @@ class AutonLayout(StackLayout):
 
         # --- infoLayout --- #
         # displays event name
-        appendLabel("Event: " + self.switcher.robot.eventName, (1, .5), darkened(green), infoLayout)
+        appendLabel("Event: " + self.switcher.robot.eventName, (1, .25), darkened(green), infoLayout)
         # display round number
-        appendLabel("Round: " + str(self.switcher.robot.roundNumber), (1, .5), darkened(green), infoLayout)
-
-        # --- scoutLayout --- #
+        appendLabel("Round: " + str(self.switcher.robot.roundNumber), (1, .25), darkened(green), infoLayout)
         # displays scouter name
         print(self.switcher.robot.scouter)
-        appendLabel("Scouter: " + self.switcher.robot.scouter, (1, .5), darkened(green), scoutLayout)
+        appendLabel("Scouter: " + self.switcher.robot.scouter, (1, .25), darkened(green), infoLayout)
         #
-        appendLabel("Rounds scouted: " + str(self.switcher.screens["login"].scoutNumber), (1, .5), darkened(green), scoutLayout)
+        appendLabel("Rounds scouted: " + str(self.switcher.screens["login"].scoutNumber), (1, .25), darkened(green), infoLayout)
 
+        # --- crossLayout --- #
+        cross1Color = darkened(brown) if self.switcher.robot.cross == "yes" else brown
+        appendButton("Robot crossed the line!!!!!!!!!!!", (1, .5), cross1Color, lambda x: self.changeCross("yes"), crossLayout)
+        #
+        cross2Color = darkened(brown) if self.switcher.robot.cross == "no" else brown
+        appendButton("Don't pick this robot", (1, .5), lambda x: self.changeCross("no"), crossLayout)
 
         # starting position display
         # left for starting position
@@ -153,4 +158,7 @@ class AutonLayout(StackLayout):
         label.text = "Cubes put in exchange in auton:\n\n" + str(self.switcher.robot.autonExchange)
     def changeStart(self, change):
         self.switcher.robot.startingPosition = change
+        self.display()
+    def changeCross(self, change):
+        self.switcher.robot.cross = change
         self.display()
