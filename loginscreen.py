@@ -1,9 +1,11 @@
+from kivy.uix.image import Image
 from kivy.uix.textinput import TextInput
 from kivy.uix.stacklayout import StackLayout
 from kivy.uix.popup import Popup
 
 from widgetpresets import *
 from robotclass import *
+from qrcodes import generateQR
 import sqlite3
 
 class LoginLayout(StackLayout):
@@ -14,6 +16,7 @@ class LoginLayout(StackLayout):
         self.last = ""
         self.ipInputTextHint = ""
         self.menuText = 'Teleop'
+        self.QRRounds = 5
 
     def display(self):
         if not self.switcher.screens["dataview"].fromDataView == 1:
@@ -83,15 +86,15 @@ class LoginLayout(StackLayout):
         def pitScoutingSwitch(_):
             self.switcher.screens["pitscouting selecter"].query = ""
             self.switcher.switch("pitscouting selecter")
-        pitScout = ColorButton("Pit Scouting", ((1/6), .25),fairBlue)
+        pitScout = ColorButton("Pit Scouting", ((1/5), .25),fairBlue)
         pitScout.bind(on_release=pitScoutingSwitch)
         displist.append(pitScout)
 
-        dataview = ColorButton('dataview', ((1/6), .25), fairBlue)
+        dataview = ColorButton('dataview', ((1/5), .25), fairBlue)
         dataview.bind(on_release=lambda x: self.switcher.switch("dataview"))
         displist.append(dataview)
 
-        exportLayout = StackLayout(size_hint=(1/6, .25))
+        exportLayout = StackLayout(size_hint=(1/5, .25))
         displist.append(exportLayout)
 
         exportButton = ColorButton('Export All', (1, .5), fairBlue)
@@ -109,7 +112,32 @@ class LoginLayout(StackLayout):
 
         exportButton.bind(on_release=exportBind)
 
-        goButton = bigButton("Go", fairBlue)
+        QRLayout = StackLayout(size_hint=(1/5, .25))
+        displist.append(QRLayout)
+
+        QRExport = ColorButton("Export %s rounds with QR" % self.QRRounds, (1, .5), fairBlue)
+        QRRoundInc = ColorButton("+", (.5, .5), fairBlue)
+        QRRoundDec = ColorButton("-", (.5, .5), fairBlue)
+        QRLayout.add_widget(QRExport)
+        QRLayout.add_widget(QRRoundDec)
+        QRLayout.add_widget(QRRoundInc)
+        def QRChange(change):
+            self.QRRounds += change
+            QRExport.text = "Export %s rounds with QR" % self.QRRounds
+        def QRBind(_):
+            generateQR(int(self.roundInput.text), self.QRRounds)
+            content = StackLayout()
+            content.add_widget(Image(source="url.png", size_hint=(.8, .8), nocache=True))
+            backButton = ColorButton("Back", (1, .2), fairBlue)
+            content.add_widget(backButton)
+            popup = Popup(title='Time to switch.', content=content, auto_dismiss=False)
+            backButton.bind(on_press=popup.dismiss)
+            popup.open()
+        QRExport.bind(on_release=QRBind)
+        QRRoundInc.bind(on_release=lambda _: QRChange(1))
+        QRRoundDec.bind(on_release=lambda _: QRChange(-1))
+
+        goButton = ColorButton("Go", (1/5, .25), fairBlue)
         def teleopSwitch(_):
             number = "1234567890"
             #checking to see if team number and round number are input correctly so we dont have data type mismatch in sql database
