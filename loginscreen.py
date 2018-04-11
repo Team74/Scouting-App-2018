@@ -5,7 +5,7 @@ from kivy.uix.popup import Popup
 
 from widgetpresets import *
 from robotclass import *
-from qrcodes import generateQR
+#from qrcodes import generateQR
 import sqlite3
 
 class LoginLayout(StackLayout):
@@ -121,6 +121,7 @@ class LoginLayout(StackLayout):
         QRLayout.add_widget(QRExport)
         QRLayout.add_widget(QRRoundDec)
         QRLayout.add_widget(QRRoundInc)
+        """
         def QRChange(change):
             self.QRRounds += change
             QRExport.text = "Export %s rounds with QR" % self.QRRounds
@@ -135,7 +136,7 @@ class LoginLayout(StackLayout):
             popup.open()
         QRExport.bind(on_release=QRBind)
         QRRoundInc.bind(on_release=lambda _: QRChange(1))
-        QRRoundDec.bind(on_release=lambda _: QRChange(-1))
+        QRRoundDec.bind(on_release=lambda _: QRChange(-1))"""
 
         goButton = ColorButton("Go", (1/5, .25), fairBlue)
         def teleopSwitch(_):

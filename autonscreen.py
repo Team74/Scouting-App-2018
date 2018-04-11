@@ -31,7 +31,7 @@ class AutonLayout(StackLayout):
         lightBlue = [28/255, 129/255, 201/255]
         orange = [255/255, 150/255, 75/255]
         red = [1, 0, 0]
-        brown = [81/255, 30/255, 55/255]
+        brown = [111/255, 60/255, 85/255]
 
         metaInfo = StackLayout(size_hint=(.5, .5))
         displist.append(metaInfo)
