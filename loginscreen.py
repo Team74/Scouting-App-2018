@@ -1,12 +1,28 @@
 from kivy.uix.image import Image
+from kivy.uix.popup import Popup
+from kivy.graphics.svg import Svg
+from kivy.uix.widget import Widget
 from kivy.uix.textinput import TextInput
 from kivy.uix.stacklayout import StackLayout
-from kivy.uix.popup import Popup
+from kivy.lang import Builder
 
 from widgetpresets import *
 from robotclass import *
-#from qrcodes import generateQR
+from qrcodes import generateRealQR
 import sqlite3
+
+Builder.load_string("""
+<SvgWidget>:
+    do_rotation: False
+
+""")
+
+class SvgWidget(Widget):
+    def __init__(self, filename, **kwargs):
+        super(SvgWidget, self).__init__(**kwargs)
+        with self.canvas:
+            svg = Svg(filename)
+        self.size = 10000, 10000
 
 class LoginLayout(StackLayout):
     def __init__(self, screenSwitcher):
@@ -121,22 +137,24 @@ class LoginLayout(StackLayout):
         QRLayout.add_widget(QRExport)
         QRLayout.add_widget(QRRoundDec)
         QRLayout.add_widget(QRRoundInc)
-        """
         def QRChange(change):
             self.QRRounds += change
             QRExport.text = "Export %s rounds with QR" % self.QRRounds
         def QRBind(_):
-            generateQR(int(self.roundInput.text), self.QRRounds)
+            generateRealQR(int(self.roundInput.text), self.QRRounds)
             content = StackLayout()
-            content.add_widget(Image(source="url.png", size_hint=(.8, .8), nocache=True))
             backButton = ColorButton("Back", (1, .2), fairBlue)
             content.add_widget(backButton)
-            popup = Popup(title='Time to switch.', content=content, auto_dismiss=False)
+            content.add_widget(SvgWidget("url.svg", size_hint=(1, .8)))
+            #QRImage = Image(source="url.png", size_hint=(.8, .8), nocache=True)
+            #QRImage.width = QRImage.height
+            #content.add_widget(QRImage)
+            popup = Popup(title='QR code', content=content, auto_dismiss=False)
             backButton.bind(on_press=popup.dismiss)
             popup.open()
         QRExport.bind(on_release=QRBind)
         QRRoundInc.bind(on_release=lambda _: QRChange(1))
-        QRRoundDec.bind(on_release=lambda _: QRChange(-1))"""
+        QRRoundDec.bind(on_release=lambda _: QRChange(-1))
 
         goButton = ColorButton("Go", (1/5, .25), fairBlue)
         def teleopSwitch(_):

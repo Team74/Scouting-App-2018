@@ -158,7 +158,7 @@ def export(ip):
     if not ip: # testing if the ip actually exists
         return "enter IP here"
     try: #TIMEOUT IS IN SECONDS, NOT MILLISECONDS
-        mysqldb = mysql.connector.connect(connection_timeout=1, user="jaga663", passwd="chaos", host=ip, database="Scouting2018")
+        mysqldb = mysql.connector.connect(connection_timeout=5, user="jaga663", passwd="chaos", host=ip, database="Scouting2018")
     except mysql.connector.errors.InterfaceError: # thrown when timeout hits or if the ip is incorrect
         return "incorrect IP"
     ipSave(ip) # from robotclass
@@ -173,7 +173,7 @@ def export(ip):
             mysqlc.execute("""
                 UPDATE matchdata SET
                 scouter=%s, switch=%s, scale=%s, exchange=%s, climb=%s, notes=%s,
-                startingPosition=%s, attemptedSwitchSide=%s, autonSwitch=%s, autonScale=%s, autonExchange=%s, miss=%s, cross=%s
+                startingPosition=%s, attemptedSwitchSide=%s, autonSwitch=%s, autonScale=%s, autonExchange=%s, miss=%s, `cross`=%s
                 WHERE teamNumber=%s AND roundNumber=%s AND eventName=%s
             """, row[3:] + row[:3]) # overwrite instead of make a new one
         else: # if there was no row found
