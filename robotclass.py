@@ -5,7 +5,7 @@ import os
 import urllib.request
 
 class Robot(object):
-    def __init__(self, teamNumber, roundNumber, eventName, scouter, switch=0, scale=0, exchange=0, climb="did not climb", notes="", startingPosition="left", attemptedSwitchSide="left", autonSwitch=0, autonScale=0, autonExchange=0, miss=0, cross=0):
+    def __init__(self, teamNumber, roundNumber, eventName, scouter, switch=0, scale=0, exchange=0, climb="did not climb", notes="", startingPosition="left", attemptedSwitchSide="none", autonSwitch=0, autonScale=0, autonExchange=0, miss=0, cross=0):
         self.teamNumber = teamNumber
         self.roundNumber = roundNumber
         self.eventName = eventName
@@ -41,7 +41,7 @@ class Robot(object):
             database.execute("""
                 UPDATE matchdata SET
                 scouter=?, switch=?, scale=?, exchange=?, climb=?, notes=?,
-                startingPosition=?, attemptedSwitchSide=?, autonSwitch=?, autonScale=?, autonExchange=?, miss=?, cross=?
+                startingPosition=?, attemptedSwitchSide=?, autonSwitch=?, autonScale=?, autonExchange=?, miss=?, `cross`=?
                 WHERE teamNumber=? AND roundNumber=? AND eventName=?""", self.dumpData()[3:] + self.dumpData()[:3]) #list splicing - gives all nonmeta (actual game data) values, then gives meta (team number, round, event, scouter) values
         else: #if there was not a match in the database:
             print("no match")
@@ -168,12 +168,13 @@ def export(ip):
     sqlitec.execute("SELECT * FROM matchdata") # first upload all match data
     for row in sqlitec.fetchall(): # see robotclass Robot.dumpData() for order of row
         mysqlc.execute("SELECT * FROM matchdata WHERE teamNumber=%s AND roundNumber=%s AND eventName=%s", row[:3])
+        print(row[:3])
         if mysqlc.fetchone(): # if a row similar to the one in the mysql database exists
             print(len(row[3:] + row[:3]))
             mysqlc.execute("""
                 UPDATE matchdata SET
                 scouter=%s, switch=%s, scale=%s, exchange=%s, climb=%s, notes=%s,
-                startingPosition=%s, attemptedSwitchSide=%s, autonSwitch=%s, autonScale=%s, autonExchange=%s, miss=%s, cross=%s
+                startingPosition=%s, attemptedSwitchSide=%s, autonSwitch=%s, autonScale=%s, autonExchange=%s, miss=%s, `cross`=%s
                 WHERE teamNumber=%s AND roundNumber=%s AND eventName=%s
             """, row[3:] + row[:3]) # overwrite instead of make a new one
         else: # if there was no row found

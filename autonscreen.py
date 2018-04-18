@@ -31,7 +31,7 @@ class AutonLayout(StackLayout):
         lightBlue = [28/255, 129/255, 201/255]
         orange = [255/255, 150/255, 75/255]
         red = [1, 0, 0]
-        brown = [111/255, 60/255, 85/255]
+        brown = [211/255, 160/255, 185/255]
 
         metaInfo = StackLayout(size_hint=(.5, .5))
         displist.append(metaInfo)
@@ -111,7 +111,7 @@ class AutonLayout(StackLayout):
         appendButton("Robot crossed the line", (1, .5), cross1Color, lambda x: self.changeCross("yes"), crossLayout)
         #
         cross2Color = darkened(brown) if self.switcher.robot.cross == "no" else brown
-        appendButton("Robot didn't crossed the line", (1, .5), cross2Color, lambda x: self.changeCross("no"), crossLayout)
+        appendButton("Robot didn't cross the line", (1, .5), cross2Color, lambda x: self.changeCross("no"), crossLayout)
 
         # starting position display
         # left for starting position
@@ -132,6 +132,9 @@ class AutonLayout(StackLayout):
         self.switcher.robot.autonSwitch += change
         if self.switcher.robot.autonSwitch < 0:
             self.switcher.robot.autonSwitch = 0
+        if self.switcher.robot.cross != "yes" and change == 1:
+            self.switcher.robot.cross = "yes"
+            self.display()
         label.text = "Cubes put in switch in auton:\n\n" + str(self.switcher.robot.autonSwitch)
     def changeScreen(self):
         if self.switcher.screens["login"].changer == 1:
@@ -148,6 +151,9 @@ class AutonLayout(StackLayout):
         self.switcher.robot.autonScale += change
         if self.switcher.robot.autonScale < 0:
             self.switcher.robot.autonScale = 0
+        if self.switcher.robot.cross != "yes"  and change == 1:
+            self.switcher.robot.cross = "yes"
+            self.display()
         label.text = "Cubes put in scale in auton:\n\n" + str(self.switcher.robot.autonScale)
     def changeExchange(self, change, label):
         self.switcher.robot.autonExchange += change
