@@ -8,7 +8,8 @@ from kivy.lang import Builder
 
 from widgetpresets import *
 from robotclass import *
-from qrcodes import generateRealQR
+from qrcodes import generateRealQR, generateQR
+#from webview import Wv
 import sqlite3
 
 Builder.load_string("""
@@ -141,7 +142,7 @@ class LoginLayout(StackLayout):
             self.QRRounds += change
             QRExport.text = "Export %s rounds with QR" % self.QRRounds
         def QRBind(_):
-            generateRealQR(int(self.roundInput.text), self.QRRounds)
+            generateQR(int(self.roundInput.text), self.QRRounds)
             content = StackLayout()
             backButton = ColorButton("Back", (1, .2), fairBlue)
             content.add_widget(backButton)
@@ -149,6 +150,7 @@ class LoginLayout(StackLayout):
             #QRImage = Image(source="url.png", size_hint=(.8, .8), nocache=True)
             #QRImage.width = QRImage.height
             #content.add_widget(QRImage)
+            #content.add_widget(Wv())
             popup = Popup(title='QR code', content=content, auto_dismiss=False)
             backButton.bind(on_press=popup.dismiss)
             popup.open()
